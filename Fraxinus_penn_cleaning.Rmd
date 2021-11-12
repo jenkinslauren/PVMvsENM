@@ -76,7 +76,7 @@ if (file.exists(speciesFileName)) {
 }
 ```
 
-Calculating coordinate uncertainty:
+Working with imprecise coordinates:
 ```{r}
 llOcc <- cbind(occs$longitude, occs$latitude)
 coordPrecis <- coordPrecision(llOcc)
@@ -377,7 +377,7 @@ ggplot(data = world) +
     theme(panel.grid.major = element_line(color = gray(0.5), linetype = "dashed", 
         size = 0.5), panel.background = element_rect(fill = "lavender"))
 ```
-
+Final plot:
 ```{r}
 speciesSf_filtered_final <- speciesSf %>%
   mutate(within_range = lengths(st_within(x = speciesSfAlb,
