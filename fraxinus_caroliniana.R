@@ -46,9 +46,17 @@ dirCreate('./regions/bien_range_map')
 ll <- c('longitude', 'latitude')
 
 species <- 'Fraxinus caroliniana'
+
 BIEN_ranges_species(species, directory = './regions/bien_range_map')
 bienRange <- BIEN_ranges_load_species(species)
 bienRangeAlb <- sp::spTransform(bienRange, getCRS('albersNA'), TRUE)
+
+# Little range maps
+littleFileName <- '/Users/laurenjenkins/Documents/MOBOT/PVMvsENM/data_and_analyses/range_maps/little/fraxinus_caroliniana/fraxcaro.shp'
+littleRange <- shapefile(littleFileName)
+projection(littleRange) <- getCRS('wgs84')
+# littleRange <- littleRange[littleRange$CODE == 1,]
+dirCreate('./regions/little_range_map')
 
 # name file by when it was obtained
 speciesFileName <- paste0('./species_records/00_', 
@@ -78,13 +86,33 @@ occs <- occsRaw[!(is.na(occsRaw$longitude) | is.na(occsRaw$latitude) | is.na(occ
 occsSp <- SpatialPointsDataFrame(occs[, ll], data = occs, proj4 = getCRS('wgs84', TRUE))
 # occsSp <- sp::spTransform(occsSp, getCRS('albersNA', TRUE))
 
-# png('./figures_and_tables/occurrences_raw.png', width=1200, height=1000)
-
+par(mfrow=c(1,2))
 # plot BIEN
-plot(occsSp, main = 'BIEN range map')
-plot(bienRange, col = alpha('green', 0.4), border = 'green', add = TRUE)
-points(occsSp, pch = 16, cex = 0.9, col = 'black')
+# plot(occsSp, main = 'BIEN range map')
+plot(occsSp, pch = 16, cex = 0.5, col = 'black', main = 'BIEN range map')
+plot(bienRange, col = alpha('blue', 0.4), border = 'blue', add = TRUE)
+map("state", add = TRUE)
 map("world", add = TRUE)
 
+# plot Little
+# plot(occsSp, main = 'Little range map')
+plot(occsSp, pch = 16, cex = 0.5, col = 'black', main = 'Little range map')
+plot(littleRange, col = alpha('green', 0.4), border = 'green', add = TRUE)
+map("state", add = TRUE)
+map("world", add = TRUE)
+
+# find which entries are outside the Little range for data cleaning/inspection
+extractNA <- extract(littleRange, occsSp)
+# determine which indices are outside range
+indexNA <- which(!complete.cases(x))
+outsideLittleRange <- occsSp$locality[indexNA]
+
 title(sub=date(), outer=TRUE, cex.sub=0.7, line=-2)
+
+
+## visualize environmental data
+climate <- stack(listFiles('./data_and_analyses/env_data/Lorenz et al 2016 North America 21Kybp to 2100 CE/V2/ccsm3_22-0k_all_tifs/0BP'))
+names(climate) <- paste0(prefix(1:50, 2))
+climate
+plot(climate)
 

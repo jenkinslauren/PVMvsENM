@@ -1,0 +1,192 @@
+---
+title: "Bad Buffer Example"
+author: "Lauren Jenkins"
+date: "11/11/2021"
+output: html_document
+---
+
+In the interest of time, load previous workspace. For this example, we'll be using green ash.
+```{r, include=FALSE}
+rm(list = ls())
+setwd('/Users/laurenjenkins/Documents/MOBOT/PVMvsENM/')
+ll <- c('longitude', 'latitude')
+species <- "fraxinus pennsylvanica"
+title <- expression(paste(italic("Fraxinus pennsylvanica"), " occurrences"))
+load('./03 - Modeling Workspace - Frax_Penn Cleaning')
+
+library(gridExtra)
+```
+
+Calculate bad buffer, as an example:
+```{r}
+# in this case, the default crs is nad27
+rangeMap_badBuffer <- st_transform(rangeMap, default_crs)
+speciesSfThinAlb_badBuffer <- st_transform(speciesSfThin, default_crs)
+speciesSfAlb_badBuffer <- st_transform(speciesSf, default_crs)
+
+range_buffer_badBuffer <- st_buffer(rangeMap_badBuffer, dist = buffer_distance)
+
+speciesSf_filtered_badBuffer <- speciesSfAlb_badBuffer %>%
+  mutate(within_range = lengths(st_within(x = speciesSfAlb_badBuffer,
+                                          y = rangeMap_badBuffer)),
+         within_buffer = lengths(st_within(x = speciesSfAlb_badBuffer,
+                                           y = range_buffer_badBuffer)))
+thinnedSf_filtered_badBuffer <- speciesSfThinAlb_badBuffer %>% 
+  mutate(within_range = lengths(st_within(x = speciesSfThinAlb_badBuffer,
+                                          y = rangeMap_badBuffer)),
+         within_buffer = lengths(st_within(x = speciesSfThinAlb_badBuffer,
+                                           y = range_buffer_badBuffer)))
+
+range_buffer_badBuffer <- range_buffer_badBuffer %>% filter(AREA == max(range_buffer_badBuffer$AREA))
+range_buffer <- range_buffer %>% filter(AREA == max(range_buffer$AREA))
+```
+
+Map with bad buffer. 
+It's hard to tell that the buffer is rigid zoomed out, so we'll zoom in later.
+```{r}
+badBufferPlot <- ggplot(data = world) +
+  theme_bw() +
+  geom_sf(fill = "white") +
+  geom_sf(data = states, fill = NA) + 
+  geom_sf(data = canada, fill = NA) +
+  geom_sf(data = rangeMap_badBuffer, 
+          color = 'darkgreen',
+          fill = 'green', 
+          alpha = 0.4, 
+          inherit.aes = FALSE) +
+  geom_sf(data = range_buffer_badBuffer,
+          color = 'yellow',
+          fill = NA,
+          inherit.aes = FALSE) +
+  geom_sf(data = speciesSf_filtered_badBuffer,
+          size = 0.75,
+          aes(color = within_buffer > 0),
+          inherit.aes = FALSE) +
+  scale_colour_manual(values = setNames(c('black','red'),c(T, F)), guide = "none") +
+  guides(fill = "none") +
+  coord_sf(xlim = c(min(thinned$longitude) - 5, max(thinned$longitude) + 5), 
+           ylim = c(min(thinned$latitude), max(thinned$latitude) + 5), expand = TRUE) +
+  xlab("Longitude") +
+  ylab("Latitude") +
+  ggtitle(title, subtitle = paste0("(Cleaned, thinned, and duplicates eliminated, with BAD buffer = ",
+                                   buffer_distance, " km)")) +
+  theme(panel.grid.major = element_line(color = gray(0.5), linetype = "dashed", 
+                                        size = 0.5), panel.background = element_rect(fill = "lavender"))
+
+badBufferPlot
+```
+
+Zoomed in map of Florida with bad buffer:
+```{r}
+badBufferPlotZoom <- ggplot(data = world) +
+  theme_bw() +
+  geom_sf(fill = "white") +
+  geom_sf(data = states, fill = NA) + 
+  geom_sf(data = canada, fill = NA) +
+  geom_sf(data = rangeMap_badBuffer, 
+          color = 'darkgreen',
+          fill = 'green', 
+          alpha = 0.4, 
+          inherit.aes = FALSE) +
+  geom_sf(data = range_buffer_badBuffer,
+          color = 'yellow',
+          fill = NA,
+          inherit.aes = FALSE) +
+  geom_sf(data = speciesSf_filtered_badBuffer,
+          pch = 16, 
+          cex = 0.75, 
+          aes(color = within_buffer > 0),
+          inherit.aes = FALSE) +
+  scale_colour_manual(values = setNames(c('black','red'),c(T, F)), guide = "none") +
+  guides(fill = "none") +
+  coord_sf(xlim = c(-90, -80), 
+           ylim = c(27, 33), expand = TRUE) + 
+  xlab("Longitude") + 
+  ylab("Latitude") +
+  ggtitle(title, subtitle = paste0("(Cleaned, thinned, and duplicates eliminated, with BAD buffer = ",
+                                   buffer_distance, " km)")) +
+  theme(panel.grid.major = element_line(color = gray(0.5), linetype = "dashed", 
+                                        size = 0.5), panel.background = element_rect(fill = "lavender"))
+
+badBufferPlotZoom
+```
+
+Map with normal buffer:
+```{r}
+bufferPlot <- ggplot(data = world) +
+  theme_bw() +
+  geom_sf(fill = "white") +
+  geom_sf(data = states, fill = NA) + 
+  geom_sf(data = canada, fill = NA) +
+  geom_sf(data = rangeMap, 
+          color = 'darkgreen',
+          fill = 'green', 
+          alpha = 0.4, 
+          inherit.aes = FALSE) +
+  geom_sf(data = range_buffer,
+          color = 'yellow',
+          fill = NA,
+          inherit.aes = FALSE) +
+  geom_sf(data = speciesSf_filtered,
+          size = 0.75,
+          aes(color = within_buffer > 0),
+          inherit.aes = FALSE) +
+  scale_colour_manual(values = setNames(c('black','red'),c(T, F)), guide = "none") +
+  guides(fill = "none") +
+  coord_sf(xlim = c(min(thinned$longitude) - 5, max(thinned$longitude) + 5), 
+           ylim = c(min(thinned$latitude), max(thinned$latitude) + 5), expand = TRUE) +
+  xlab("Longitude") +
+  ylab("Latitude") +
+  ggtitle(title, subtitle = paste0("(Cleaned, thinned, and duplicates eliminated, with buffer = ",
+                                   buffer_distance, " km)")) +
+  theme(panel.grid.major = element_line(color = gray(0.5), linetype = "dashed", 
+                                        size = 0.5), panel.background = element_rect(fill = "lavender"))
+
+bufferPlot
+```
+
+Fixed buffer, zoomed in.
+```{r}
+bufferPlotZoom <- ggplot(data = world) +
+  theme_bw() +
+  geom_sf(fill = "white") +
+  geom_sf(data = states, fill = NA) + 
+  geom_sf(data = canada, fill = NA) +
+  geom_sf(data = rangeMap, 
+          color = 'darkgreen',
+          fill = 'green', 
+          alpha = 0.4, 
+          inherit.aes = FALSE) +
+  geom_sf(data = range_buffer,
+          color = 'yellow',
+          fill = NA,
+          inherit.aes = FALSE) +
+  geom_sf(data = speciesSf_filtered,
+          pch = 16, 
+          cex = 0.75, 
+          aes(color = within_buffer > 0),
+          inherit.aes = FALSE) +
+  scale_colour_manual(values = setNames(c('black','red'),c(T, F)), guide = "none") +
+  guides(fill = "none") +
+  coord_sf(xlim = c(-90, -80), 
+           ylim = c(27, 33), expand = TRUE) + 
+  xlab("Longitude") + 
+  ylab("Latitude") +
+  ggtitle(title, subtitle = paste0("(Cleaned, thinned, and duplicates eliminated, with buffer = ",
+                                   buffer_distance, " km)")) +
+  theme(panel.grid.major = element_line(color = gray(0.5), linetype = "dashed", 
+                                        size = 0.5), panel.background = element_rect(fill = "lavender"))
+
+bufferPlotZoom
+```
+
+
+Side by side of whole range:
+```{r}
+grid.arrange(badBufferPlot, bufferPlot, ncol = 2)
+```
+
+Side by side of zoomed in:
+```{r}
+grid.arrange(badBufferPlotZoom, bufferPlotZoom, ncol = 2)
+```

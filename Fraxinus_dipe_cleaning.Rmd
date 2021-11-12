@@ -1,0 +1,256 @@
+---
+title: "Fraxinus_dipe_cleaning"
+author: "Lauren Jenkins"
+date: "11/5/2021"
+output: html_notebook
+---
+
+```{r, include = FALSE}
+rm(list = ls())
+setwd('/Users/laurenjenkins/Documents/MOBOT/PVMvsENM/')
+ll <- c('longitude', 'latitude')
+load('./01 - Modeling Workspace - Fraxinus Range Maps (BIEN + Little)')
+
+```
+
+```{r, include = FALSE}
+# Load packages
+library(enmSdm)
+
+# for handling rasters
+library(raster)
+# library(rgeos) # not used, but may be helpful when debugging
+
+# visualization tools
+library(sp)
+library(sf)
+library(maps)
+library(ggplot2)
+library(rnaturalearth)
+library(rnaturalearthdata)
+
+# additional tools
+library(tools)
+library(units)
+library(dplyr)
+
+default_crs = sf::st_crs(4267)
+```
+
+Cleaning *Fraxinus dipetala*.
+Standard cleaning procedures: 
+* remove records without coordinates or dates
+* remove records before 1900
+* date_collected column is recorded twice, remove one of them
+
+```{r, include = FALSE}
+load('./species_records/00_fraxinus_dipetala_bien_all_occurrences.rda')
+# 283 occurrences
+
+# remove records without coordinates or dates to ensure locational reliability
+occs <- occsRaw[!(is.na(occsRaw$longitude) | is.na(occsRaw$latitude) | is.na(occsRaw$date_collected)), ]
+
+# remove records before 1900
+occs$Year <- substr(occs$date_collected, 1, 4)
+occs <- occs[occs$Year >= 1900, ]
+# 273 occurrences
+
+# date_collected column is there twice, remove one of them
+occs[18] <- NULL
+
+saveRDS(occs, './species_records/01_fraxinus_dipetala_retained_records.rds')
+```
+
+Calculating coordinate precision.
+```{r}
+llOcc <- cbind(occs$longitude, occs$latitude)
+coordPrecision <- coordPrecision(llOcc)
+precision <- data.frame(llOcc, coordPrecision)
+
+hist(precision$coordPrecision,
+     breaks=100,
+     xlab='Coord Precision (m)',
+     ylab='Number of records',
+     main='',
+     col='red'
+)
+```
+
+```{r}
+llOcc <- cbind(occs$longitude, occs$latitude)
+coordPrecision <- coordPrecision(llOcc, dms = TRUE)
+precision <- data.frame(llOcc, coordPrecision)
+
+hist(precision$coordPrecision,
+     breaks=100,
+     xlab='Coord Precision (m)',
+     ylab='Number of records',
+     main='',
+     col='red'
+)
+
+# use pmax to find max per element
+```
+
+Create spatial object for plotting.
+Map of all observations:
+
+```{r}
+# Convert to spatial object for plotting
+par(mfrow=c(1,1))
+occsSp <- SpatialPointsDataFrame(occs[, ll], data = occs, proj4 = getCRS('nad27', TRUE))
+plot(littleRange_FraxDipe, col = alpha('blue', 0.4), border = 'blue', main = 'Little range map')
+plot(occsSp, pch = 16, cex = 0.5, col = 'black', add = TRUE)
+map("state", add = TRUE)
+map("world", add = TRUE)
+```
+
+Thin data.
+Don't need to make folds because data is sparse, only 273 occurrences.
+```{r}
+thinned <- geoThinApprox(occs, 1000, c('longitude', 'latitude'))
+# 197 occurrences
+
+finalThinned <- elimCellDups(thinned, raster::raster(), longLat = c('longitude', 'latitude'))
+
+saveRDS(finalThinned, './species_records/02_fraxinus_dipetala_thinned_records.rds')
+```
+
+```{r, include = FALSE}
+# install.packages("sf")
+library(sf)
+
+# nad27 = 4267
+speciesSf <- st_as_sf(x = finalThinned,
+                      coords = c(x = 'longitude',
+                                 y = 'latitude'),
+                      crs = getCRS('nad27'))
+speciesSfThin <- st_as_sf(x = thinned,
+                      coords = c(x = 'longitude',
+                                 y = 'latitude'),
+                      crs = getCRS('nad27'))
+```
+
+Thinned occurrences before eliminating cell duplicates (no range map).
+```{r}
+world <- ne_countries(scale = "medium", returnclass = "sf")
+states <- st_as_sf(map("state", plot = FALSE, fill = TRUE))
+states$ID <- toTitleCase(states$ID)
+
+title <- expression(paste(italic("Fraxinus dipetala "), "occurrences"))
+
+ggplot(data = world) +
+  theme_bw() +
+  geom_sf(fill = "white") +
+  geom_sf(data = states, fill = NA) + 
+  geom_sf(data = speciesSfThin, col = alpha('blue'), cex = 0.75) +
+  coord_sf(xlim = c(min(thinned$longitude), max(thinned$longitude)), 
+           ylim = c(min(thinned$latitude), max(thinned$latitude)), expand = TRUE) +
+  xlab("Longitude") + 
+  ylab("Latitude") +
+  ggtitle(title, subtitle = "(Cleaned and thinned)") +
+    theme(panel.grid.major = element_line(color = gray(0.5), linetype = "dashed", 
+        size = 0.5), panel.background = element_rect(fill = "lavender"))
+
+```
+
+Set buffer.
+```{r}
+buffer_distance <- as_units(75, "km")
+#rangeMap <- sp::spTransform(littleRange_FraxPenn, getCRS('nad27'), TRUE)
+rangeMap <- st_transform(st_as_sf(x = littleRange_FraxDipe), getCRS('albersNA'))
+# rangeMap <- sp::spTransform(littleRange_FraxPenn, getCRS('nad27'), TRUE)
+
+# alt options:
+# try converting to albers 
+
+# convert to SpatialPolygonsDataFrame object (sp package)
+# then use rgeos::gBuffer()
+
+range_buffer <- st_buffer(rangeMap, dist = buffer_distance)
+#range_buffer <- rgeos::gBuffer(rangeMap, width = buffer_distance)
+#rangeMap <- st_as_sf(x = rangeMap, crs = 4267)
+#range_buffer <- st_as_sf(x = range_buffer, crs = 4267)
+
+speciesSfThinAlb <- st_transform(speciesSfThin, getCRS('albersNA'))
+speciesSfAlb <- st_transform(speciesSf, getCRS('albersNA'))
+
+thinnedSf_filtered <- speciesSfThinAlb %>% 
+  mutate(within_range = lengths(st_within(x = speciesSfThinAlb, 
+                                          y = rangeMap)),
+         within_buffer = lengths(st_within(x = speciesSfThinAlb, 
+                                          y = range_buffer)))
+speciesSf_filtered <- speciesSfAlb %>% 
+  mutate(within_range = lengths(st_within(x = speciesSfAlb, 
+                                          y = rangeMap)),
+         within_buffer = lengths(st_within(x = speciesSfAlb, 
+                                          y = range_buffer)))
+```
+
+Thinned with range maps, before elimCellDups.
+```{r}
+ggplot(data = world) +
+  theme_bw() +
+  geom_sf(fill = "white") +
+  geom_sf(data = states, fill = NA) +
+  geom_sf(data = rangeMap, 
+          color = 'darkgreen',
+          fill = 'green', 
+          alpha = 0.4, 
+          inherit.aes = FALSE) +
+  geom_sf(data = range_buffer,
+          color = 'yellow',
+          fill = NA,
+          inherit.aes = FALSE) +
+  geom_sf(data = thinnedSf_filtered,
+          size = 0.75, 
+          aes(color = within_buffer > 0),
+          inherit.aes = FALSE) +
+  scale_colour_manual(values = setNames(c('black','red'),c(T, F)), guide = "none") +
+  guides(fill = "none") +
+  coord_sf(xlim = c(min(thinned$longitude) - 2, max(thinned$longitude)), 
+           ylim = c(min(thinned$latitude) - 2, max(thinned$latitude)), expand = TRUE) +
+  xlab("Longitude") + 
+  ylab("Latitude") +
+  ggtitle(title, subtitle = "(Cleaned and thinned, with buffer = 75 km)") +
+    theme(panel.grid.major = element_line(color = gray(0.5), linetype = "dashed", 
+        size = 0.5), panel.background = element_rect(fill = "lavender"))
+```
+
+Full range (thinned, cleaned, and eliminated cell duplicates).
+Excludes occurrences outside the buffers.
+```{r}
+# filter out the occurrences outside the buffer
+ggplot(data = world) +
+  theme_bw() +
+  geom_sf(fill = "white") +
+  geom_sf(data = states, fill = NA) +
+  geom_sf(data = rangeMap, 
+          color = 'darkgreen',
+          fill = 'green', 
+          alpha = 0.4, 
+          inherit.aes = FALSE) +
+  geom_sf(data = range_buffer,
+          color = 'yellow',
+          fill = NA,
+          inherit.aes = FALSE) +
+  geom_sf(data = speciesSf_filtered[which(speciesSf_filtered$within_buffer > 0),],
+          size = 0.75,
+          aes(color = within_buffer > 0),
+          inherit.aes = FALSE) +
+  scale_colour_manual(values = setNames(c('black','red'),c(T, F)), guide = "none") +
+  guides(fill = "none") +
+  coord_sf(xlim = c(min(thinned$longitude) - 2, max(thinned$longitude)), 
+           ylim = c(min(thinned$latitude) - 2, max(thinned$latitude)), expand = TRUE) +
+  xlab("Longitude") +
+  ylab("Latitude") +
+  ggtitle(title, subtitle = "(Cleaned, thinned, and duplicates eliminated, with buffer = 75 km)") +
+  theme(panel.grid.major = element_line(color = gray(0.5), linetype = "dashed", 
+        size = 0.5), panel.background = element_rect(fill = "lavender"))
+```
+How many occurrences are outside of the buffer?
+```{r}
+print(paste0("Number of occurrences outside buffer = ", 
+             length(which(speciesSf_filtered$within_buffer == 0))))
+```
+

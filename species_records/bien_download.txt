@@ -1,2 +1,1118 @@
- Data representing species records were downloaded from BIEN on Tue Oct  5 13:42:31 2021.
- Bien Version 4.1
+      scrubbed_species_binomial       country state_province     county
+NA                         <NA>          <NA>           <NA>       <NA>
+NA.1                       <NA>          <NA>           <NA>       <NA>
+NA.2                       <NA>          <NA>           <NA>       <NA>
+1041     Fraxinus pennsylvanica United States       Kentucky    Hopkins
+1169     Fraxinus pennsylvanica United States       Kentucky    Hopkins
+1330     Fraxinus pennsylvanica United States       Kentucky Muhlenberg
+1361     Fraxinus pennsylvanica United States       Kentucky    Simpson
+1536     Fraxinus pennsylvanica United States       Kentucky    Hopkins
+1684     Fraxinus pennsylvanica United States       Kentucky Muhlenberg
+2797     Fraxinus pennsylvanica United States       Kentucky   Carlisle
+3469     Fraxinus pennsylvanica United States       Kentucky   Edmonson
+4903     Fraxinus pennsylvanica United States       Kentucky       Pike
+6414     Fraxinus pennsylvanica United States       Kentucky    Garrard
+6638     Fraxinus pennsylvanica United States       Kentucky  Henderson
+6663     Fraxinus pennsylvanica United States       Kentucky  Henderson
+6874     Fraxinus pennsylvanica United States       Kentucky  Henderson
+6880     Fraxinus pennsylvanica United States       Kentucky  Henderson
+6900     Fraxinus pennsylvanica United States       Kentucky  Henderson
+7333     Fraxinus pennsylvanica United States       Kentucky    Garrard
+7569     Fraxinus pennsylvanica United States       Kentucky    Garrard
+NA.3                       <NA>          <NA>           <NA>       <NA>
+NA.4                       <NA>          <NA>           <NA>       <NA>
+9271     Fraxinus pennsylvanica United States       Kentucky    Hickman
+NA.5                       <NA>          <NA>           <NA>       <NA>
+NA.6                       <NA>          <NA>           <NA>       <NA>
+NA.7                       <NA>          <NA>           <NA>       <NA>
+NA.8                       <NA>          <NA>           <NA>       <NA>
+9575     Fraxinus pennsylvanica United States       Kentucky    Hickman
+NA.9                       <NA>          <NA>           <NA>       <NA>
+NA.10                      <NA>          <NA>           <NA>       <NA>
+NA.11                      <NA>          <NA>           <NA>       <NA>
+NA.12                      <NA>          <NA>           <NA>       <NA>
+NA.13                      <NA>          <NA>           <NA>       <NA>
+10180    Fraxinus pennsylvanica United States       Kentucky      Logan
+10503    Fraxinus pennsylvanica United States       Kentucky    Madison
+10568    Fraxinus pennsylvanica United States       Kentucky    Daviess
+10569    Fraxinus pennsylvanica United States       Kentucky   Marshall
+10586    Fraxinus pennsylvanica United States       Kentucky  Jefferson
+10774    Fraxinus pennsylvanica United States       Kentucky    Daviess
+10984    Fraxinus pennsylvanica United States       Kentucky    Daviess
+11126    Fraxinus pennsylvanica United States       Kentucky     Graves
+11695    Fraxinus pennsylvanica United States       Kentucky  Henderson
+22388    Fraxinus pennsylvanica United States       Kentucky    Hopkins
+22595    Fraxinus pennsylvanica United States       Kentucky    Hopkins
+22906    Fraxinus pennsylvanica United States       Kentucky    Hopkins
+                                                                 locality latitude longitude date_collected
+NA                                                                   <NA>       NA        NA           <NA>
+NA.1                                                                 <NA>       NA        NA           <NA>
+NA.2                                                                 <NA>       NA        NA           <NA>
+1041                                                                 <NA> 37.19000 -87.72000     1986-12-01
+1169                                                                 <NA> 37.33000 -87.36000     1987-02-01
+1330                                                                 <NA> 37.33000 -87.18000     1987-02-01
+1361                                                                 <NA> 36.81000 -86.52000     1986-08-01
+1536                                                                 <NA> 37.19000 -87.72000     1986-12-01
+1684                                                                 <NA> 37.33000 -87.18000     1987-02-01
+2797                               7.2 km WSW Bardwell, 1.7 km SE Laketon 36.85306 -89.08889     1975-07-09
+3469                                                                 <NA> 37.14000 -86.35000     1986-06-01
+4903  Along west side of Russell Fork, lots of boulders and rock shelters 37.29880 -82.31707     2011-06-17
+6414                                  Wallacetown Rd; Dolomitic foothills 37.54703 -84.38895     2011-05-02
+6638                                                                 <NA> 37.89000 -87.56000     1986-12-01
+6663                                                                 <NA> 37.89000 -87.56000     1986-12-01
+6874                                                                 <NA> 37.89000 -87.56000     1986-12-01
+6880                                                                 <NA> 37.89000 -87.48000     1986-12-01
+6900                                                                 <NA> 37.81000 -87.44000     1986-12-01
+7333                                                                Knobs 37.49334 -84.43868     2010-05-06
+7569                           Dix River South OF HWY 52; Inner Bluegrass 37.64135 -84.66132     2011-04-30
+NA.3                                                                 <NA>       NA        NA           <NA>
+NA.4                                                                 <NA>       NA        NA           <NA>
+9271                                                                 <NA> 36.61000 -89.04000     1986-06-01
+NA.5                                                                 <NA>       NA        NA           <NA>
+NA.6                                                                 <NA>       NA        NA           <NA>
+NA.7                                                                 <NA>       NA        NA           <NA>
+NA.8                                                                 <NA>       NA        NA           <NA>
+9575                                                                 <NA> 36.61000 -89.04000     1986-06-01
+NA.9                                                                 <NA>       NA        NA           <NA>
+NA.10                                                                <NA>       NA        NA           <NA>
+NA.11                                                                <NA>       NA        NA           <NA>
+NA.12                                                                <NA>       NA        NA           <NA>
+NA.13                                                                <NA>       NA        NA           <NA>
+10180                                                                <NA> 37.03000 -86.88000     1986-06-01
+10503    At Taylor Fork Creek Crossing ca. 25 meters north of foot bridge 37.71638 -84.29570     2016-09-15
+10568                                                                <NA> 37.86000 -87.02000     1986-09-01
+10569                                                                <NA> 36.86000 -88.32000     1986-07-01
+10586                            Eastwood Eastwood, 700 Fisherville Road. 38.23305 -85.45583     1998-12-29
+10774                                                                <NA> 37.64000 -87.28000     1986-09-01
+10984                                                                <NA> 37.64000 -87.28000     1986-09-01
+11126                                                                <NA> 36.53000 -88.73000     1986-05-01
+11695                                                                <NA> 37.81000 -87.43000     1986-12-01
+22388                                                                <NA> 37.31000 -87.40000     1987-02-01
+22595                                                                <NA> 37.19000 -87.73000     1987-02-01
+22906                                                                <NA> 37.19000 -87.61000     1987-01-01
+      datasource                                                   dataset  dataowner
+NA          <NA>                                                      <NA>       <NA>
+NA.1        <NA>                                                      <NA>       <NA>
+NA.2        <NA>                                                      <NA>       <NA>
+1041         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+1169         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+1330         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+1361         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+1536         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+1684         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+2797         NCU                                                       NCU        NCU
+3469         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+4903        GBIF                                                       EKY        EKY
+6414        GBIF                                                       EKY        EKY
+6638         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+6663         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+6874         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+6880         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+6900         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+7333        GBIF                                                       EKY        EKY
+7569        GBIF                                                       EKY        EKY
+NA.3        <NA>                                                      <NA>       <NA>
+NA.4        <NA>                                                      <NA>       <NA>
+9271         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+NA.5        <NA>                                                      <NA>       <NA>
+NA.6        <NA>                                                      <NA>       <NA>
+NA.7        <NA>                                                      <NA>       <NA>
+NA.8        <NA>                                                      <NA>       <NA>
+9575         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+NA.9        <NA>                                                      <NA>       <NA>
+NA.10       <NA>                                                      <NA>       <NA>
+NA.11       <NA>                                                      <NA>       <NA>
+NA.12       <NA>                                                      <NA>       <NA>
+NA.13       <NA>                                                      <NA>       <NA>
+10180        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+10503       GBIF                                                       EKY        EKY
+10568        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+10569        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+10586       GBIF                                                     UConn      UConn
+10774        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+10984        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+11126        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+11695        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+22388        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+22595        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+22906        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+      custodial_institution_codes               collection_code datasource_id catalog_number
+NA                           <NA>                          <NA>            NA           <NA>
+NA.1                         <NA>                          <NA>            NA           <NA>
+NA.2                         <NA>                          <NA>            NA           <NA>
+1041                         <NA>                          <NA>            31           <NA>
+1169                         <NA>                          <NA>            31           <NA>
+1330                         <NA>                          <NA>            31           <NA>
+1361                         <NA>                          <NA>            31           <NA>
+1536                         <NA>                          <NA>            31           <NA>
+1684                         <NA>                          <NA>            31           <NA>
+2797                          NCU urn:lsid:biocol.org:col:15495           196         538269
+3469                         <NA>                          <NA>            31           <NA>
+4903                          EKY                          <NA>          4371     1978075060
+6414                          EKY                          <NA>          4371     1978001180
+6638                         <NA>                          <NA>            31           <NA>
+6663                         <NA>                          <NA>            31           <NA>
+6874                         <NA>                          <NA>            31           <NA>
+6880                         <NA>                          <NA>            31           <NA>
+6900                         <NA>                          <NA>            31           <NA>
+7333                          EKY                          <NA>          4371     1978075117
+7569                          EKY                          <NA>          4371     1978001201
+NA.3                         <NA>                          <NA>            NA           <NA>
+NA.4                         <NA>                          <NA>            NA           <NA>
+9271                         <NA>                          <NA>            31           <NA>
+NA.5                         <NA>                          <NA>            NA           <NA>
+NA.6                         <NA>                          <NA>            NA           <NA>
+NA.7                         <NA>                          <NA>            NA           <NA>
+NA.8                         <NA>                          <NA>            NA           <NA>
+9575                         <NA>                          <NA>            31           <NA>
+NA.9                         <NA>                          <NA>            NA           <NA>
+NA.10                        <NA>                          <NA>            NA           <NA>
+NA.11                        <NA>                          <NA>            NA           <NA>
+NA.12                        <NA>                          <NA>            NA           <NA>
+NA.13                        <NA>                          <NA>            NA           <NA>
+10180                        <NA>                          <NA>            31           <NA>
+10503                         EKY                          <NA>          4371     1978007296
+10568                        <NA>                          <NA>            31           <NA>
+10569                        <NA>                          <NA>            31           <NA>
+10586                       UConn                          CONN          1807      415946858
+10774                        <NA>                          <NA>            31           <NA>
+10984                        <NA>                          <NA>            31           <NA>
+11126                        <NA>                          <NA>            31           <NA>
+11695                        <NA>                          <NA>            31           <NA>
+22388                        <NA>                          <NA>            31           <NA>
+22595                        <NA>                          <NA>            31           <NA>
+22906                        <NA>                          <NA>            31           <NA>
+                       recorded_by record_number date_collected identified_by date_identified
+NA                            <NA>          <NA>           <NA>          <NA>            <NA>
+NA.1                          <NA>          <NA>           <NA>          <NA>            <NA>
+NA.2                          <NA>          <NA>           <NA>          <NA>            <NA>
+1041                          <NA>         10043     1986-12-01          <NA>            <NA>
+1169                          <NA>         10035     1987-02-01          <NA>            <NA>
+1330                          <NA>         10006     1987-02-01          <NA>            <NA>
+1361                          <NA>         10057     1986-08-01          <NA>            <NA>
+1536                          <NA>         10039     1986-12-01          <NA>            <NA>
+1684                          <NA>         10024     1987-02-01          <NA>            <NA>
+2797                 Wilson, Larry           814     1975-07-09          <NA>            <NA>
+3469                          <NA>         10045     1986-06-01          <NA>            <NA>
+4903    Julie B. Clark; Chip Clark           884     2011-06-17          <NA>            <NA>
+6414                 W.W. Overbeck          1175     2011-05-02          <NA>            <NA>
+6638                          <NA>         10037     1986-12-01          <NA>            <NA>
+6663                          <NA>         10016     1986-12-01          <NA>            <NA>
+6874                          <NA>         10031     1986-12-01          <NA>            <NA>
+6880                          <NA>         10014     1986-12-01          <NA>            <NA>
+6900                          <NA>         10010     1986-12-01          <NA>            <NA>
+7333                W. W. Overbeck           434     2010-05-06          <NA>            <NA>
+7569                 W.W. Overbeck          1448     2011-04-30          <NA>            <NA>
+NA.3                          <NA>          <NA>           <NA>          <NA>            <NA>
+NA.4                          <NA>          <NA>           <NA>          <NA>            <NA>
+9271                          <NA>         30012     1986-06-01          <NA>            <NA>
+NA.5                          <NA>          <NA>           <NA>          <NA>            <NA>
+NA.6                          <NA>          <NA>           <NA>          <NA>            <NA>
+NA.7                          <NA>          <NA>           <NA>          <NA>            <NA>
+NA.8                          <NA>          <NA>           <NA>          <NA>            <NA>
+9575                          <NA>         30011     1986-06-01          <NA>            <NA>
+NA.9                          <NA>          <NA>           <NA>          <NA>            <NA>
+NA.10                         <NA>          <NA>           <NA>          <NA>            <NA>
+NA.11                         <NA>          <NA>           <NA>          <NA>            <NA>
+NA.12                         <NA>          <NA>           <NA>          <NA>            <NA>
+NA.13                         <NA>          <NA>           <NA>          <NA>            <NA>
+10180                         <NA>         10021     1986-06-01          <NA>            <NA>
+10503 Thomas McFadden; Brad Ruhfel           278     2016-09-15          <NA>            <NA>
+10568                         <NA>         10007     1986-09-01          <NA>            <NA>
+10569                         <NA>         10023     1986-07-01          <NA>            <NA>
+10586                   Jody Foley             2     1998-12-29          <NA>            <NA>
+10774                         <NA>         10036     1986-09-01          <NA>            <NA>
+10984                         <NA>         10055     1986-09-01          <NA>            <NA>
+11126                         <NA>         10047     1986-05-01          <NA>            <NA>
+11695                         <NA>         10029     1986-12-01          <NA>            <NA>
+22388                         <NA>         10005     1987-02-01          <NA>            <NA>
+22595                         <NA>         10008     1987-02-01          <NA>            <NA>
+22906                         <NA>         10052     1987-01-01          <NA>            <NA>
+      identification_remarks observation_type
+NA                      <NA>             <NA>
+NA.1                    <NA>             <NA>
+NA.2                    <NA>             <NA>
+1041                    <NA>             plot
+1169                    <NA>             plot
+1330                    <NA>             plot
+1361                    <NA>             plot
+1536                    <NA>             plot
+1684                    <NA>             plot
+2797                    <NA>         specimen
+3469                    <NA>             plot
+4903                    <NA>         specimen
+6414                    <NA>         specimen
+6638                    <NA>             plot
+6663                    <NA>             plot
+6874                    <NA>             plot
+6880                    <NA>             plot
+6900                    <NA>             plot
+7333                    <NA>         specimen
+7569                    <NA>         specimen
+NA.3                    <NA>             <NA>
+NA.4                    <NA>             <NA>
+9271                    <NA>             plot
+NA.5                    <NA>             <NA>
+NA.6                    <NA>             <NA>
+NA.7                    <NA>             <NA>
+NA.8                    <NA>             <NA>
+9575                    <NA>             plot
+NA.9                    <NA>             <NA>
+NA.10                   <NA>             <NA>
+NA.11                   <NA>             <NA>
+NA.12                   <NA>             <NA>
+NA.13                   <NA>             <NA>
+10180                   <NA>             plot
+10503                   <NA>         specimen
+10568                   <NA>             plot
+10569                   <NA>             plot
+10586                   <NA>         specimen
+10774                   <NA>             plot
+10984                   <NA>             plot
+11126                   <NA>             plot
+11695                   <NA>             plot
+22388                   <NA>             plot
+22595                   <NA>             plot
+22906                   <NA>             plot
+ [ reached 'max' / getOption("max.print") -- omitted 155 rows ]
+      scrubbed_species_binomial       country state_province     county
+NA                         <NA>          <NA>           <NA>       <NA>
+NA.1                       <NA>          <NA>           <NA>       <NA>
+NA.2                       <NA>          <NA>           <NA>       <NA>
+1041     Fraxinus pennsylvanica United States       Kentucky    Hopkins
+1169     Fraxinus pennsylvanica United States       Kentucky    Hopkins
+1330     Fraxinus pennsylvanica United States       Kentucky Muhlenberg
+1361     Fraxinus pennsylvanica United States       Kentucky    Simpson
+1536     Fraxinus pennsylvanica United States       Kentucky    Hopkins
+1684     Fraxinus pennsylvanica United States       Kentucky Muhlenberg
+2797     Fraxinus pennsylvanica United States       Kentucky   Carlisle
+3469     Fraxinus pennsylvanica United States       Kentucky   Edmonson
+4903     Fraxinus pennsylvanica United States       Kentucky       Pike
+6414     Fraxinus pennsylvanica United States       Kentucky    Garrard
+6638     Fraxinus pennsylvanica United States       Kentucky  Henderson
+6663     Fraxinus pennsylvanica United States       Kentucky  Henderson
+6874     Fraxinus pennsylvanica United States       Kentucky  Henderson
+6880     Fraxinus pennsylvanica United States       Kentucky  Henderson
+6900     Fraxinus pennsylvanica United States       Kentucky  Henderson
+7333     Fraxinus pennsylvanica United States       Kentucky    Garrard
+7569     Fraxinus pennsylvanica United States       Kentucky    Garrard
+NA.3                       <NA>          <NA>           <NA>       <NA>
+NA.4                       <NA>          <NA>           <NA>       <NA>
+9271     Fraxinus pennsylvanica United States       Kentucky    Hickman
+NA.5                       <NA>          <NA>           <NA>       <NA>
+NA.6                       <NA>          <NA>           <NA>       <NA>
+NA.7                       <NA>          <NA>           <NA>       <NA>
+NA.8                       <NA>          <NA>           <NA>       <NA>
+9575     Fraxinus pennsylvanica United States       Kentucky    Hickman
+NA.9                       <NA>          <NA>           <NA>       <NA>
+NA.10                      <NA>          <NA>           <NA>       <NA>
+NA.11                      <NA>          <NA>           <NA>       <NA>
+NA.12                      <NA>          <NA>           <NA>       <NA>
+NA.13                      <NA>          <NA>           <NA>       <NA>
+10180    Fraxinus pennsylvanica United States       Kentucky      Logan
+10503    Fraxinus pennsylvanica United States       Kentucky    Madison
+10568    Fraxinus pennsylvanica United States       Kentucky    Daviess
+10569    Fraxinus pennsylvanica United States       Kentucky   Marshall
+10586    Fraxinus pennsylvanica United States       Kentucky  Jefferson
+10774    Fraxinus pennsylvanica United States       Kentucky    Daviess
+10984    Fraxinus pennsylvanica United States       Kentucky    Daviess
+11126    Fraxinus pennsylvanica United States       Kentucky     Graves
+11695    Fraxinus pennsylvanica United States       Kentucky  Henderson
+22388    Fraxinus pennsylvanica United States       Kentucky    Hopkins
+22595    Fraxinus pennsylvanica United States       Kentucky    Hopkins
+22906    Fraxinus pennsylvanica United States       Kentucky    Hopkins
+                                                                 locality latitude longitude date_collected
+NA                                                                   <NA>       NA        NA           <NA>
+NA.1                                                                 <NA>       NA        NA           <NA>
+NA.2                                                                 <NA>       NA        NA           <NA>
+1041                                                                 <NA> 37.19000 -87.72000     1986-12-01
+1169                                                                 <NA> 37.33000 -87.36000     1987-02-01
+1330                                                                 <NA> 37.33000 -87.18000     1987-02-01
+1361                                                                 <NA> 36.81000 -86.52000     1986-08-01
+1536                                                                 <NA> 37.19000 -87.72000     1986-12-01
+1684                                                                 <NA> 37.33000 -87.18000     1987-02-01
+2797                               7.2 km WSW Bardwell, 1.7 km SE Laketon 36.85306 -89.08889     1975-07-09
+3469                                                                 <NA> 37.14000 -86.35000     1986-06-01
+4903  Along west side of Russell Fork, lots of boulders and rock shelters 37.29880 -82.31707     2011-06-17
+6414                                  Wallacetown Rd; Dolomitic foothills 37.54703 -84.38895     2011-05-02
+6638                                                                 <NA> 37.89000 -87.56000     1986-12-01
+6663                                                                 <NA> 37.89000 -87.56000     1986-12-01
+6874                                                                 <NA> 37.89000 -87.56000     1986-12-01
+6880                                                                 <NA> 37.89000 -87.48000     1986-12-01
+6900                                                                 <NA> 37.81000 -87.44000     1986-12-01
+7333                                                                Knobs 37.49334 -84.43868     2010-05-06
+7569                           Dix River South OF HWY 52; Inner Bluegrass 37.64135 -84.66132     2011-04-30
+NA.3                                                                 <NA>       NA        NA           <NA>
+NA.4                                                                 <NA>       NA        NA           <NA>
+9271                                                                 <NA> 36.61000 -89.04000     1986-06-01
+NA.5                                                                 <NA>       NA        NA           <NA>
+NA.6                                                                 <NA>       NA        NA           <NA>
+NA.7                                                                 <NA>       NA        NA           <NA>
+NA.8                                                                 <NA>       NA        NA           <NA>
+9575                                                                 <NA> 36.61000 -89.04000     1986-06-01
+NA.9                                                                 <NA>       NA        NA           <NA>
+NA.10                                                                <NA>       NA        NA           <NA>
+NA.11                                                                <NA>       NA        NA           <NA>
+NA.12                                                                <NA>       NA        NA           <NA>
+NA.13                                                                <NA>       NA        NA           <NA>
+10180                                                                <NA> 37.03000 -86.88000     1986-06-01
+10503    At Taylor Fork Creek Crossing ca. 25 meters north of foot bridge 37.71638 -84.29570     2016-09-15
+10568                                                                <NA> 37.86000 -87.02000     1986-09-01
+10569                                                                <NA> 36.86000 -88.32000     1986-07-01
+10586                            Eastwood Eastwood, 700 Fisherville Road. 38.23305 -85.45583     1998-12-29
+10774                                                                <NA> 37.64000 -87.28000     1986-09-01
+10984                                                                <NA> 37.64000 -87.28000     1986-09-01
+11126                                                                <NA> 36.53000 -88.73000     1986-05-01
+11695                                                                <NA> 37.81000 -87.43000     1986-12-01
+22388                                                                <NA> 37.31000 -87.40000     1987-02-01
+22595                                                                <NA> 37.19000 -87.73000     1987-02-01
+22906                                                                <NA> 37.19000 -87.61000     1987-01-01
+      datasource                                                   dataset  dataowner
+NA          <NA>                                                      <NA>       <NA>
+NA.1        <NA>                                                      <NA>       <NA>
+NA.2        <NA>                                                      <NA>       <NA>
+1041         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+1169         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+1330         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+1361         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+1536         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+1684         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+2797         NCU                                                       NCU        NCU
+3469         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+4903        GBIF                                                       EKY        EKY
+6414        GBIF                                                       EKY        EKY
+6638         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+6663         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+6874         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+6880         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+6900         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+7333        GBIF                                                       EKY        EKY
+7569        GBIF                                                       EKY        EKY
+NA.3        <NA>                                                      <NA>       <NA>
+NA.4        <NA>                                                      <NA>       <NA>
+9271         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+NA.5        <NA>                                                      <NA>       <NA>
+NA.6        <NA>                                                      <NA>       <NA>
+NA.7        <NA>                                                      <NA>       <NA>
+NA.8        <NA>                                                      <NA>       <NA>
+9575         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+NA.9        <NA>                                                      <NA>       <NA>
+NA.10       <NA>                                                      <NA>       <NA>
+NA.11       <NA>                                                      <NA>       <NA>
+NA.12       <NA>                                                      <NA>       <NA>
+NA.13       <NA>                                                      <NA>       <NA>
+10180        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+10503       GBIF                                                       EKY        EKY
+10568        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+10569        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+10586       GBIF                                                     UConn      UConn
+10774        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+10984        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+11126        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+11695        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+22388        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+22595        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+22906        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+      custodial_institution_codes               collection_code datasource_id catalog_number
+NA                           <NA>                          <NA>            NA           <NA>
+NA.1                         <NA>                          <NA>            NA           <NA>
+NA.2                         <NA>                          <NA>            NA           <NA>
+1041                         <NA>                          <NA>            31           <NA>
+1169                         <NA>                          <NA>            31           <NA>
+1330                         <NA>                          <NA>            31           <NA>
+1361                         <NA>                          <NA>            31           <NA>
+1536                         <NA>                          <NA>            31           <NA>
+1684                         <NA>                          <NA>            31           <NA>
+2797                          NCU urn:lsid:biocol.org:col:15495           196         538269
+3469                         <NA>                          <NA>            31           <NA>
+4903                          EKY                          <NA>          4371     1978075060
+6414                          EKY                          <NA>          4371     1978001180
+6638                         <NA>                          <NA>            31           <NA>
+6663                         <NA>                          <NA>            31           <NA>
+6874                         <NA>                          <NA>            31           <NA>
+6880                         <NA>                          <NA>            31           <NA>
+6900                         <NA>                          <NA>            31           <NA>
+7333                          EKY                          <NA>          4371     1978075117
+7569                          EKY                          <NA>          4371     1978001201
+NA.3                         <NA>                          <NA>            NA           <NA>
+NA.4                         <NA>                          <NA>            NA           <NA>
+9271                         <NA>                          <NA>            31           <NA>
+NA.5                         <NA>                          <NA>            NA           <NA>
+NA.6                         <NA>                          <NA>            NA           <NA>
+NA.7                         <NA>                          <NA>            NA           <NA>
+NA.8                         <NA>                          <NA>            NA           <NA>
+9575                         <NA>                          <NA>            31           <NA>
+NA.9                         <NA>                          <NA>            NA           <NA>
+NA.10                        <NA>                          <NA>            NA           <NA>
+NA.11                        <NA>                          <NA>            NA           <NA>
+NA.12                        <NA>                          <NA>            NA           <NA>
+NA.13                        <NA>                          <NA>            NA           <NA>
+10180                        <NA>                          <NA>            31           <NA>
+10503                         EKY                          <NA>          4371     1978007296
+10568                        <NA>                          <NA>            31           <NA>
+10569                        <NA>                          <NA>            31           <NA>
+10586                       UConn                          CONN          1807      415946858
+10774                        <NA>                          <NA>            31           <NA>
+10984                        <NA>                          <NA>            31           <NA>
+11126                        <NA>                          <NA>            31           <NA>
+11695                        <NA>                          <NA>            31           <NA>
+22388                        <NA>                          <NA>            31           <NA>
+22595                        <NA>                          <NA>            31           <NA>
+22906                        <NA>                          <NA>            31           <NA>
+                       recorded_by record_number date_collected identified_by date_identified
+NA                            <NA>          <NA>           <NA>          <NA>            <NA>
+NA.1                          <NA>          <NA>           <NA>          <NA>            <NA>
+NA.2                          <NA>          <NA>           <NA>          <NA>            <NA>
+1041                          <NA>         10043     1986-12-01          <NA>            <NA>
+1169                          <NA>         10035     1987-02-01          <NA>            <NA>
+1330                          <NA>         10006     1987-02-01          <NA>            <NA>
+1361                          <NA>         10057     1986-08-01          <NA>            <NA>
+1536                          <NA>         10039     1986-12-01          <NA>            <NA>
+1684                          <NA>         10024     1987-02-01          <NA>            <NA>
+2797                 Wilson, Larry           814     1975-07-09          <NA>            <NA>
+3469                          <NA>         10045     1986-06-01          <NA>            <NA>
+4903    Julie B. Clark; Chip Clark           884     2011-06-17          <NA>            <NA>
+6414                 W.W. Overbeck          1175     2011-05-02          <NA>            <NA>
+6638                          <NA>         10037     1986-12-01          <NA>            <NA>
+6663                          <NA>         10016     1986-12-01          <NA>            <NA>
+6874                          <NA>         10031     1986-12-01          <NA>            <NA>
+6880                          <NA>         10014     1986-12-01          <NA>            <NA>
+6900                          <NA>         10010     1986-12-01          <NA>            <NA>
+7333                W. W. Overbeck           434     2010-05-06          <NA>            <NA>
+7569                 W.W. Overbeck          1448     2011-04-30          <NA>            <NA>
+NA.3                          <NA>          <NA>           <NA>          <NA>            <NA>
+NA.4                          <NA>          <NA>           <NA>          <NA>            <NA>
+9271                          <NA>         30012     1986-06-01          <NA>            <NA>
+NA.5                          <NA>          <NA>           <NA>          <NA>            <NA>
+NA.6                          <NA>          <NA>           <NA>          <NA>            <NA>
+NA.7                          <NA>          <NA>           <NA>          <NA>            <NA>
+NA.8                          <NA>          <NA>           <NA>          <NA>            <NA>
+9575                          <NA>         30011     1986-06-01          <NA>            <NA>
+NA.9                          <NA>          <NA>           <NA>          <NA>            <NA>
+NA.10                         <NA>          <NA>           <NA>          <NA>            <NA>
+NA.11                         <NA>          <NA>           <NA>          <NA>            <NA>
+NA.12                         <NA>          <NA>           <NA>          <NA>            <NA>
+NA.13                         <NA>          <NA>           <NA>          <NA>            <NA>
+10180                         <NA>         10021     1986-06-01          <NA>            <NA>
+10503 Thomas McFadden; Brad Ruhfel           278     2016-09-15          <NA>            <NA>
+10568                         <NA>         10007     1986-09-01          <NA>            <NA>
+10569                         <NA>         10023     1986-07-01          <NA>            <NA>
+10586                   Jody Foley             2     1998-12-29          <NA>            <NA>
+10774                         <NA>         10036     1986-09-01          <NA>            <NA>
+10984                         <NA>         10055     1986-09-01          <NA>            <NA>
+11126                         <NA>         10047     1986-05-01          <NA>            <NA>
+11695                         <NA>         10029     1986-12-01          <NA>            <NA>
+22388                         <NA>         10005     1987-02-01          <NA>            <NA>
+22595                         <NA>         10008     1987-02-01          <NA>            <NA>
+22906                         <NA>         10052     1987-01-01          <NA>            <NA>
+      identification_remarks observation_type
+NA                      <NA>             <NA>
+NA.1                    <NA>             <NA>
+NA.2                    <NA>             <NA>
+1041                    <NA>             plot
+1169                    <NA>             plot
+1330                    <NA>             plot
+1361                    <NA>             plot
+1536                    <NA>             plot
+1684                    <NA>             plot
+2797                    <NA>         specimen
+3469                    <NA>             plot
+4903                    <NA>         specimen
+6414                    <NA>         specimen
+6638                    <NA>             plot
+6663                    <NA>             plot
+6874                    <NA>             plot
+6880                    <NA>             plot
+6900                    <NA>             plot
+7333                    <NA>         specimen
+7569                    <NA>         specimen
+NA.3                    <NA>             <NA>
+NA.4                    <NA>             <NA>
+9271                    <NA>             plot
+NA.5                    <NA>             <NA>
+NA.6                    <NA>             <NA>
+NA.7                    <NA>             <NA>
+NA.8                    <NA>             <NA>
+9575                    <NA>             plot
+NA.9                    <NA>             <NA>
+NA.10                   <NA>             <NA>
+NA.11                   <NA>             <NA>
+NA.12                   <NA>             <NA>
+NA.13                   <NA>             <NA>
+10180                   <NA>             plot
+10503                   <NA>         specimen
+10568                   <NA>             plot
+10569                   <NA>             plot
+10586                   <NA>         specimen
+10774                   <NA>             plot
+10984                   <NA>             plot
+11126                   <NA>             plot
+11695                   <NA>             plot
+22388                   <NA>             plot
+22595                   <NA>             plot
+22906                   <NA>             plot
+ [ reached 'max' / getOption("max.print") -- omitted 155 rows ]
+      scrubbed_species_binomial       country state_province     county
+NA                         <NA>          <NA>           <NA>       <NA>
+NA.1                       <NA>          <NA>           <NA>       <NA>
+NA.2                       <NA>          <NA>           <NA>       <NA>
+1041     Fraxinus pennsylvanica United States       Kentucky    Hopkins
+1169     Fraxinus pennsylvanica United States       Kentucky    Hopkins
+1330     Fraxinus pennsylvanica United States       Kentucky Muhlenberg
+1361     Fraxinus pennsylvanica United States       Kentucky    Simpson
+1536     Fraxinus pennsylvanica United States       Kentucky    Hopkins
+1684     Fraxinus pennsylvanica United States       Kentucky Muhlenberg
+2797     Fraxinus pennsylvanica United States       Kentucky   Carlisle
+3469     Fraxinus pennsylvanica United States       Kentucky   Edmonson
+4903     Fraxinus pennsylvanica United States       Kentucky       Pike
+6414     Fraxinus pennsylvanica United States       Kentucky    Garrard
+6638     Fraxinus pennsylvanica United States       Kentucky  Henderson
+6663     Fraxinus pennsylvanica United States       Kentucky  Henderson
+6874     Fraxinus pennsylvanica United States       Kentucky  Henderson
+6880     Fraxinus pennsylvanica United States       Kentucky  Henderson
+6900     Fraxinus pennsylvanica United States       Kentucky  Henderson
+7333     Fraxinus pennsylvanica United States       Kentucky    Garrard
+7569     Fraxinus pennsylvanica United States       Kentucky    Garrard
+NA.3                       <NA>          <NA>           <NA>       <NA>
+NA.4                       <NA>          <NA>           <NA>       <NA>
+9271     Fraxinus pennsylvanica United States       Kentucky    Hickman
+NA.5                       <NA>          <NA>           <NA>       <NA>
+NA.6                       <NA>          <NA>           <NA>       <NA>
+NA.7                       <NA>          <NA>           <NA>       <NA>
+NA.8                       <NA>          <NA>           <NA>       <NA>
+9575     Fraxinus pennsylvanica United States       Kentucky    Hickman
+NA.9                       <NA>          <NA>           <NA>       <NA>
+NA.10                      <NA>          <NA>           <NA>       <NA>
+NA.11                      <NA>          <NA>           <NA>       <NA>
+NA.12                      <NA>          <NA>           <NA>       <NA>
+NA.13                      <NA>          <NA>           <NA>       <NA>
+10180    Fraxinus pennsylvanica United States       Kentucky      Logan
+10503    Fraxinus pennsylvanica United States       Kentucky    Madison
+10568    Fraxinus pennsylvanica United States       Kentucky    Daviess
+10569    Fraxinus pennsylvanica United States       Kentucky   Marshall
+10586    Fraxinus pennsylvanica United States       Kentucky  Jefferson
+10774    Fraxinus pennsylvanica United States       Kentucky    Daviess
+10984    Fraxinus pennsylvanica United States       Kentucky    Daviess
+11126    Fraxinus pennsylvanica United States       Kentucky     Graves
+11695    Fraxinus pennsylvanica United States       Kentucky  Henderson
+22388    Fraxinus pennsylvanica United States       Kentucky    Hopkins
+22595    Fraxinus pennsylvanica United States       Kentucky    Hopkins
+22906    Fraxinus pennsylvanica United States       Kentucky    Hopkins
+                                                                 locality latitude longitude date_collected
+NA                                                                   <NA>       NA        NA           <NA>
+NA.1                                                                 <NA>       NA        NA           <NA>
+NA.2                                                                 <NA>       NA        NA           <NA>
+1041                                                                 <NA> 37.19000 -87.72000     1986-12-01
+1169                                                                 <NA> 37.33000 -87.36000     1987-02-01
+1330                                                                 <NA> 37.33000 -87.18000     1987-02-01
+1361                                                                 <NA> 36.81000 -86.52000     1986-08-01
+1536                                                                 <NA> 37.19000 -87.72000     1986-12-01
+1684                                                                 <NA> 37.33000 -87.18000     1987-02-01
+2797                               7.2 km WSW Bardwell, 1.7 km SE Laketon 36.85306 -89.08889     1975-07-09
+3469                                                                 <NA> 37.14000 -86.35000     1986-06-01
+4903  Along west side of Russell Fork, lots of boulders and rock shelters 37.29880 -82.31707     2011-06-17
+6414                                  Wallacetown Rd; Dolomitic foothills 37.54703 -84.38895     2011-05-02
+6638                                                                 <NA> 37.89000 -87.56000     1986-12-01
+6663                                                                 <NA> 37.89000 -87.56000     1986-12-01
+6874                                                                 <NA> 37.89000 -87.56000     1986-12-01
+6880                                                                 <NA> 37.89000 -87.48000     1986-12-01
+6900                                                                 <NA> 37.81000 -87.44000     1986-12-01
+7333                                                                Knobs 37.49334 -84.43868     2010-05-06
+7569                           Dix River South OF HWY 52; Inner Bluegrass 37.64135 -84.66132     2011-04-30
+NA.3                                                                 <NA>       NA        NA           <NA>
+NA.4                                                                 <NA>       NA        NA           <NA>
+9271                                                                 <NA> 36.61000 -89.04000     1986-06-01
+NA.5                                                                 <NA>       NA        NA           <NA>
+NA.6                                                                 <NA>       NA        NA           <NA>
+NA.7                                                                 <NA>       NA        NA           <NA>
+NA.8                                                                 <NA>       NA        NA           <NA>
+9575                                                                 <NA> 36.61000 -89.04000     1986-06-01
+NA.9                                                                 <NA>       NA        NA           <NA>
+NA.10                                                                <NA>       NA        NA           <NA>
+NA.11                                                                <NA>       NA        NA           <NA>
+NA.12                                                                <NA>       NA        NA           <NA>
+NA.13                                                                <NA>       NA        NA           <NA>
+10180                                                                <NA> 37.03000 -86.88000     1986-06-01
+10503    At Taylor Fork Creek Crossing ca. 25 meters north of foot bridge 37.71638 -84.29570     2016-09-15
+10568                                                                <NA> 37.86000 -87.02000     1986-09-01
+10569                                                                <NA> 36.86000 -88.32000     1986-07-01
+10586                            Eastwood Eastwood, 700 Fisherville Road. 38.23305 -85.45583     1998-12-29
+10774                                                                <NA> 37.64000 -87.28000     1986-09-01
+10984                                                                <NA> 37.64000 -87.28000     1986-09-01
+11126                                                                <NA> 36.53000 -88.73000     1986-05-01
+11695                                                                <NA> 37.81000 -87.43000     1986-12-01
+22388                                                                <NA> 37.31000 -87.40000     1987-02-01
+22595                                                                <NA> 37.19000 -87.73000     1987-02-01
+22906                                                                <NA> 37.19000 -87.61000     1987-01-01
+      datasource                                                   dataset  dataowner
+NA          <NA>                                                      <NA>       <NA>
+NA.1        <NA>                                                      <NA>       <NA>
+NA.2        <NA>                                                      <NA>       <NA>
+1041         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+1169         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+1330         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+1361         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+1536         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+1684         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+2797         NCU                                                       NCU        NCU
+3469         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+4903        GBIF                                                       EKY        EKY
+6414        GBIF                                                       EKY        EKY
+6638         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+6663         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+6874         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+6880         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+6900         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+7333        GBIF                                                       EKY        EKY
+7569        GBIF                                                       EKY        EKY
+NA.3        <NA>                                                      <NA>       <NA>
+NA.4        <NA>                                                      <NA>       <NA>
+9271         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+NA.5        <NA>                                                      <NA>       <NA>
+NA.6        <NA>                                                      <NA>       <NA>
+NA.7        <NA>                                                      <NA>       <NA>
+NA.8        <NA>                                                      <NA>       <NA>
+9575         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+NA.9        <NA>                                                      <NA>       <NA>
+NA.10       <NA>                                                      <NA>       <NA>
+NA.11       <NA>                                                      <NA>       <NA>
+NA.12       <NA>                                                      <NA>       <NA>
+NA.13       <NA>                                                      <NA>       <NA>
+10180        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+10503       GBIF                                                       EKY        EKY
+10568        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+10569        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+10586       GBIF                                                     UConn      UConn
+10774        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+10984        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+11126        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+11695        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+22388        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+22595        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+22906        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+      custodial_institution_codes               collection_code datasource_id catalog_number
+NA                           <NA>                          <NA>            NA           <NA>
+NA.1                         <NA>                          <NA>            NA           <NA>
+NA.2                         <NA>                          <NA>            NA           <NA>
+1041                         <NA>                          <NA>            31           <NA>
+1169                         <NA>                          <NA>            31           <NA>
+1330                         <NA>                          <NA>            31           <NA>
+1361                         <NA>                          <NA>            31           <NA>
+1536                         <NA>                          <NA>            31           <NA>
+1684                         <NA>                          <NA>            31           <NA>
+2797                          NCU urn:lsid:biocol.org:col:15495           196         538269
+3469                         <NA>                          <NA>            31           <NA>
+4903                          EKY                          <NA>          4371     1978075060
+6414                          EKY                          <NA>          4371     1978001180
+6638                         <NA>                          <NA>            31           <NA>
+6663                         <NA>                          <NA>            31           <NA>
+6874                         <NA>                          <NA>            31           <NA>
+6880                         <NA>                          <NA>            31           <NA>
+6900                         <NA>                          <NA>            31           <NA>
+7333                          EKY                          <NA>          4371     1978075117
+7569                          EKY                          <NA>          4371     1978001201
+NA.3                         <NA>                          <NA>            NA           <NA>
+NA.4                         <NA>                          <NA>            NA           <NA>
+9271                         <NA>                          <NA>            31           <NA>
+NA.5                         <NA>                          <NA>            NA           <NA>
+NA.6                         <NA>                          <NA>            NA           <NA>
+NA.7                         <NA>                          <NA>            NA           <NA>
+NA.8                         <NA>                          <NA>            NA           <NA>
+9575                         <NA>                          <NA>            31           <NA>
+NA.9                         <NA>                          <NA>            NA           <NA>
+NA.10                        <NA>                          <NA>            NA           <NA>
+NA.11                        <NA>                          <NA>            NA           <NA>
+NA.12                        <NA>                          <NA>            NA           <NA>
+NA.13                        <NA>                          <NA>            NA           <NA>
+10180                        <NA>                          <NA>            31           <NA>
+10503                         EKY                          <NA>          4371     1978007296
+10568                        <NA>                          <NA>            31           <NA>
+10569                        <NA>                          <NA>            31           <NA>
+10586                       UConn                          CONN          1807      415946858
+10774                        <NA>                          <NA>            31           <NA>
+10984                        <NA>                          <NA>            31           <NA>
+11126                        <NA>                          <NA>            31           <NA>
+11695                        <NA>                          <NA>            31           <NA>
+22388                        <NA>                          <NA>            31           <NA>
+22595                        <NA>                          <NA>            31           <NA>
+22906                        <NA>                          <NA>            31           <NA>
+                       recorded_by record_number date_collected identified_by date_identified
+NA                            <NA>          <NA>           <NA>          <NA>            <NA>
+NA.1                          <NA>          <NA>           <NA>          <NA>            <NA>
+NA.2                          <NA>          <NA>           <NA>          <NA>            <NA>
+1041                          <NA>         10043     1986-12-01          <NA>            <NA>
+1169                          <NA>         10035     1987-02-01          <NA>            <NA>
+1330                          <NA>         10006     1987-02-01          <NA>            <NA>
+1361                          <NA>         10057     1986-08-01          <NA>            <NA>
+1536                          <NA>         10039     1986-12-01          <NA>            <NA>
+1684                          <NA>         10024     1987-02-01          <NA>            <NA>
+2797                 Wilson, Larry           814     1975-07-09          <NA>            <NA>
+3469                          <NA>         10045     1986-06-01          <NA>            <NA>
+4903    Julie B. Clark; Chip Clark           884     2011-06-17          <NA>            <NA>
+6414                 W.W. Overbeck          1175     2011-05-02          <NA>            <NA>
+6638                          <NA>         10037     1986-12-01          <NA>            <NA>
+6663                          <NA>         10016     1986-12-01          <NA>            <NA>
+6874                          <NA>         10031     1986-12-01          <NA>            <NA>
+6880                          <NA>         10014     1986-12-01          <NA>            <NA>
+6900                          <NA>         10010     1986-12-01          <NA>            <NA>
+7333                W. W. Overbeck           434     2010-05-06          <NA>            <NA>
+7569                 W.W. Overbeck          1448     2011-04-30          <NA>            <NA>
+NA.3                          <NA>          <NA>           <NA>          <NA>            <NA>
+NA.4                          <NA>          <NA>           <NA>          <NA>            <NA>
+9271                          <NA>         30012     1986-06-01          <NA>            <NA>
+NA.5                          <NA>          <NA>           <NA>          <NA>            <NA>
+NA.6                          <NA>          <NA>           <NA>          <NA>            <NA>
+NA.7                          <NA>          <NA>           <NA>          <NA>            <NA>
+NA.8                          <NA>          <NA>           <NA>          <NA>            <NA>
+9575                          <NA>         30011     1986-06-01          <NA>            <NA>
+NA.9                          <NA>          <NA>           <NA>          <NA>            <NA>
+NA.10                         <NA>          <NA>           <NA>          <NA>            <NA>
+NA.11                         <NA>          <NA>           <NA>          <NA>            <NA>
+NA.12                         <NA>          <NA>           <NA>          <NA>            <NA>
+NA.13                         <NA>          <NA>           <NA>          <NA>            <NA>
+10180                         <NA>         10021     1986-06-01          <NA>            <NA>
+10503 Thomas McFadden; Brad Ruhfel           278     2016-09-15          <NA>            <NA>
+10568                         <NA>         10007     1986-09-01          <NA>            <NA>
+10569                         <NA>         10023     1986-07-01          <NA>            <NA>
+10586                   Jody Foley             2     1998-12-29          <NA>            <NA>
+10774                         <NA>         10036     1986-09-01          <NA>            <NA>
+10984                         <NA>         10055     1986-09-01          <NA>            <NA>
+11126                         <NA>         10047     1986-05-01          <NA>            <NA>
+11695                         <NA>         10029     1986-12-01          <NA>            <NA>
+22388                         <NA>         10005     1987-02-01          <NA>            <NA>
+22595                         <NA>         10008     1987-02-01          <NA>            <NA>
+22906                         <NA>         10052     1987-01-01          <NA>            <NA>
+      identification_remarks observation_type
+NA                      <NA>             <NA>
+NA.1                    <NA>             <NA>
+NA.2                    <NA>             <NA>
+1041                    <NA>             plot
+1169                    <NA>             plot
+1330                    <NA>             plot
+1361                    <NA>             plot
+1536                    <NA>             plot
+1684                    <NA>             plot
+2797                    <NA>         specimen
+3469                    <NA>             plot
+4903                    <NA>         specimen
+6414                    <NA>         specimen
+6638                    <NA>             plot
+6663                    <NA>             plot
+6874                    <NA>             plot
+6880                    <NA>             plot
+6900                    <NA>             plot
+7333                    <NA>         specimen
+7569                    <NA>         specimen
+NA.3                    <NA>             <NA>
+NA.4                    <NA>             <NA>
+9271                    <NA>             plot
+NA.5                    <NA>             <NA>
+NA.6                    <NA>             <NA>
+NA.7                    <NA>             <NA>
+NA.8                    <NA>             <NA>
+9575                    <NA>             plot
+NA.9                    <NA>             <NA>
+NA.10                   <NA>             <NA>
+NA.11                   <NA>             <NA>
+NA.12                   <NA>             <NA>
+NA.13                   <NA>             <NA>
+10180                   <NA>             plot
+10503                   <NA>         specimen
+10568                   <NA>             plot
+10569                   <NA>             plot
+10586                   <NA>         specimen
+10774                   <NA>             plot
+10984                   <NA>             plot
+11126                   <NA>             plot
+11695                   <NA>             plot
+22388                   <NA>             plot
+22595                   <NA>             plot
+22906                   <NA>             plot
+ [ reached 'max' / getOption("max.print") -- omitted 155 rows ]
+      scrubbed_species_binomial       country state_province     county
+NA                         <NA>          <NA>           <NA>       <NA>
+NA.1                       <NA>          <NA>           <NA>       <NA>
+NA.2                       <NA>          <NA>           <NA>       <NA>
+1041     Fraxinus pennsylvanica United States       Kentucky    Hopkins
+1169     Fraxinus pennsylvanica United States       Kentucky    Hopkins
+1330     Fraxinus pennsylvanica United States       Kentucky Muhlenberg
+1361     Fraxinus pennsylvanica United States       Kentucky    Simpson
+1536     Fraxinus pennsylvanica United States       Kentucky    Hopkins
+1684     Fraxinus pennsylvanica United States       Kentucky Muhlenberg
+2797     Fraxinus pennsylvanica United States       Kentucky   Carlisle
+3469     Fraxinus pennsylvanica United States       Kentucky   Edmonson
+4903     Fraxinus pennsylvanica United States       Kentucky       Pike
+6414     Fraxinus pennsylvanica United States       Kentucky    Garrard
+6638     Fraxinus pennsylvanica United States       Kentucky  Henderson
+6663     Fraxinus pennsylvanica United States       Kentucky  Henderson
+6874     Fraxinus pennsylvanica United States       Kentucky  Henderson
+6880     Fraxinus pennsylvanica United States       Kentucky  Henderson
+6900     Fraxinus pennsylvanica United States       Kentucky  Henderson
+7333     Fraxinus pennsylvanica United States       Kentucky    Garrard
+7569     Fraxinus pennsylvanica United States       Kentucky    Garrard
+NA.3                       <NA>          <NA>           <NA>       <NA>
+NA.4                       <NA>          <NA>           <NA>       <NA>
+9271     Fraxinus pennsylvanica United States       Kentucky    Hickman
+NA.5                       <NA>          <NA>           <NA>       <NA>
+NA.6                       <NA>          <NA>           <NA>       <NA>
+NA.7                       <NA>          <NA>           <NA>       <NA>
+NA.8                       <NA>          <NA>           <NA>       <NA>
+9575     Fraxinus pennsylvanica United States       Kentucky    Hickman
+NA.9                       <NA>          <NA>           <NA>       <NA>
+NA.10                      <NA>          <NA>           <NA>       <NA>
+NA.11                      <NA>          <NA>           <NA>       <NA>
+NA.12                      <NA>          <NA>           <NA>       <NA>
+NA.13                      <NA>          <NA>           <NA>       <NA>
+10180    Fraxinus pennsylvanica United States       Kentucky      Logan
+10503    Fraxinus pennsylvanica United States       Kentucky    Madison
+10568    Fraxinus pennsylvanica United States       Kentucky    Daviess
+10569    Fraxinus pennsylvanica United States       Kentucky   Marshall
+10586    Fraxinus pennsylvanica United States       Kentucky  Jefferson
+10774    Fraxinus pennsylvanica United States       Kentucky    Daviess
+10984    Fraxinus pennsylvanica United States       Kentucky    Daviess
+11126    Fraxinus pennsylvanica United States       Kentucky     Graves
+11695    Fraxinus pennsylvanica United States       Kentucky  Henderson
+22388    Fraxinus pennsylvanica United States       Kentucky    Hopkins
+22595    Fraxinus pennsylvanica United States       Kentucky    Hopkins
+22906    Fraxinus pennsylvanica United States       Kentucky    Hopkins
+                                                                 locality latitude longitude date_collected
+NA                                                                   <NA>       NA        NA           <NA>
+NA.1                                                                 <NA>       NA        NA           <NA>
+NA.2                                                                 <NA>       NA        NA           <NA>
+1041                                                                 <NA> 37.19000 -87.72000     1986-12-01
+1169                                                                 <NA> 37.33000 -87.36000     1987-02-01
+1330                                                                 <NA> 37.33000 -87.18000     1987-02-01
+1361                                                                 <NA> 36.81000 -86.52000     1986-08-01
+1536                                                                 <NA> 37.19000 -87.72000     1986-12-01
+1684                                                                 <NA> 37.33000 -87.18000     1987-02-01
+2797                               7.2 km WSW Bardwell, 1.7 km SE Laketon 36.85306 -89.08889     1975-07-09
+3469                                                                 <NA> 37.14000 -86.35000     1986-06-01
+4903  Along west side of Russell Fork, lots of boulders and rock shelters 37.29880 -82.31707     2011-06-17
+6414                                  Wallacetown Rd; Dolomitic foothills 37.54703 -84.38895     2011-05-02
+6638                                                                 <NA> 37.89000 -87.56000     1986-12-01
+6663                                                                 <NA> 37.89000 -87.56000     1986-12-01
+6874                                                                 <NA> 37.89000 -87.56000     1986-12-01
+6880                                                                 <NA> 37.89000 -87.48000     1986-12-01
+6900                                                                 <NA> 37.81000 -87.44000     1986-12-01
+7333                                                                Knobs 37.49334 -84.43868     2010-05-06
+7569                           Dix River South OF HWY 52; Inner Bluegrass 37.64135 -84.66132     2011-04-30
+NA.3                                                                 <NA>       NA        NA           <NA>
+NA.4                                                                 <NA>       NA        NA           <NA>
+9271                                                                 <NA> 36.61000 -89.04000     1986-06-01
+NA.5                                                                 <NA>       NA        NA           <NA>
+NA.6                                                                 <NA>       NA        NA           <NA>
+NA.7                                                                 <NA>       NA        NA           <NA>
+NA.8                                                                 <NA>       NA        NA           <NA>
+9575                                                                 <NA> 36.61000 -89.04000     1986-06-01
+NA.9                                                                 <NA>       NA        NA           <NA>
+NA.10                                                                <NA>       NA        NA           <NA>
+NA.11                                                                <NA>       NA        NA           <NA>
+NA.12                                                                <NA>       NA        NA           <NA>
+NA.13                                                                <NA>       NA        NA           <NA>
+10180                                                                <NA> 37.03000 -86.88000     1986-06-01
+10503    At Taylor Fork Creek Crossing ca. 25 meters north of foot bridge 37.71638 -84.29570     2016-09-15
+10568                                                                <NA> 37.86000 -87.02000     1986-09-01
+10569                                                                <NA> 36.86000 -88.32000     1986-07-01
+10586                            Eastwood Eastwood, 700 Fisherville Road. 38.23305 -85.45583     1998-12-29
+10774                                                                <NA> 37.64000 -87.28000     1986-09-01
+10984                                                                <NA> 37.64000 -87.28000     1986-09-01
+11126                                                                <NA> 36.53000 -88.73000     1986-05-01
+11695                                                                <NA> 37.81000 -87.43000     1986-12-01
+22388                                                                <NA> 37.31000 -87.40000     1987-02-01
+22595                                                                <NA> 37.19000 -87.73000     1987-02-01
+22906                                                                <NA> 37.19000 -87.61000     1987-01-01
+      datasource                                                   dataset  dataowner
+NA          <NA>                                                      <NA>       <NA>
+NA.1        <NA>                                                      <NA>       <NA>
+NA.2        <NA>                                                      <NA>       <NA>
+1041         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+1169         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+1330         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+1361         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+1536         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+1684         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+2797         NCU                                                       NCU        NCU
+3469         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+4903        GBIF                                                       EKY        EKY
+6414        GBIF                                                       EKY        EKY
+6638         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+6663         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+6874         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+6880         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+6900         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+7333        GBIF                                                       EKY        EKY
+7569        GBIF                                                       EKY        EKY
+NA.3        <NA>                                                      <NA>       <NA>
+NA.4        <NA>                                                      <NA>       <NA>
+9271         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+NA.5        <NA>                                                      <NA>       <NA>
+NA.6        <NA>                                                      <NA>       <NA>
+NA.7        <NA>                                                      <NA>       <NA>
+NA.8        <NA>                                                      <NA>       <NA>
+9575         FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+NA.9        <NA>                                                      <NA>       <NA>
+NA.10       <NA>                                                      <NA>       <NA>
+NA.11       <NA>                                                      <NA>       <NA>
+NA.12       <NA>                                                      <NA>       <NA>
+NA.13       <NA>                                                      <NA>       <NA>
+10180        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+10503       GBIF                                                       EKY        EKY
+10568        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+10569        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+10586       GBIF                                                     UConn      UConn
+10774        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+10984        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+11126        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+11695        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+22388        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+22595        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+22906        FIA U.S. Forest Inventory and Analysis (FIA) National Program Greg Reams
+      custodial_institution_codes               collection_code datasource_id catalog_number
+NA                           <NA>                          <NA>            NA           <NA>
+NA.1                         <NA>                          <NA>            NA           <NA>
+NA.2                         <NA>                          <NA>            NA           <NA>
+1041                         <NA>                          <NA>            31           <NA>
+1169                         <NA>                          <NA>            31           <NA>
+1330                         <NA>                          <NA>            31           <NA>
+1361                         <NA>                          <NA>            31           <NA>
+1536                         <NA>                          <NA>            31           <NA>
+1684                         <NA>                          <NA>            31           <NA>
+2797                          NCU urn:lsid:biocol.org:col:15495           196         538269
+3469                         <NA>                          <NA>            31           <NA>
+4903                          EKY                          <NA>          4371     1978075060
+6414                          EKY                          <NA>          4371     1978001180
+6638                         <NA>                          <NA>            31           <NA>
+6663                         <NA>                          <NA>            31           <NA>
+6874                         <NA>                          <NA>            31           <NA>
+6880                         <NA>                          <NA>            31           <NA>
+6900                         <NA>                          <NA>            31           <NA>
+7333                          EKY                          <NA>          4371     1978075117
+7569                          EKY                          <NA>          4371     1978001201
+NA.3                         <NA>                          <NA>            NA           <NA>
+NA.4                         <NA>                          <NA>            NA           <NA>
+9271                         <NA>                          <NA>            31           <NA>
+NA.5                         <NA>                          <NA>            NA           <NA>
+NA.6                         <NA>                          <NA>            NA           <NA>
+NA.7                         <NA>                          <NA>            NA           <NA>
+NA.8                         <NA>                          <NA>            NA           <NA>
+9575                         <NA>                          <NA>            31           <NA>
+NA.9                         <NA>                          <NA>            NA           <NA>
+NA.10                        <NA>                          <NA>            NA           <NA>
+NA.11                        <NA>                          <NA>            NA           <NA>
+NA.12                        <NA>                          <NA>            NA           <NA>
+NA.13                        <NA>                          <NA>            NA           <NA>
+10180                        <NA>                          <NA>            31           <NA>
+10503                         EKY                          <NA>          4371     1978007296
+10568                        <NA>                          <NA>            31           <NA>
+10569                        <NA>                          <NA>            31           <NA>
+10586                       UConn                          CONN          1807      415946858
+10774                        <NA>                          <NA>            31           <NA>
+10984                        <NA>                          <NA>            31           <NA>
+11126                        <NA>                          <NA>            31           <NA>
+11695                        <NA>                          <NA>            31           <NA>
+22388                        <NA>                          <NA>            31           <NA>
+22595                        <NA>                          <NA>            31           <NA>
+22906                        <NA>                          <NA>            31           <NA>
+                       recorded_by record_number date_collected identified_by date_identified
+NA                            <NA>          <NA>           <NA>          <NA>            <NA>
+NA.1                          <NA>          <NA>           <NA>          <NA>            <NA>
+NA.2                          <NA>          <NA>           <NA>          <NA>            <NA>
+1041                          <NA>         10043     1986-12-01          <NA>            <NA>
+1169                          <NA>         10035     1987-02-01          <NA>            <NA>
+1330                          <NA>         10006     1987-02-01          <NA>            <NA>
+1361                          <NA>         10057     1986-08-01          <NA>            <NA>
+1536                          <NA>         10039     1986-12-01          <NA>            <NA>
+1684                          <NA>         10024     1987-02-01          <NA>            <NA>
+2797                 Wilson, Larry           814     1975-07-09          <NA>            <NA>
+3469                          <NA>         10045     1986-06-01          <NA>            <NA>
+4903    Julie B. Clark; Chip Clark           884     2011-06-17          <NA>            <NA>
+6414                 W.W. Overbeck          1175     2011-05-02          <NA>            <NA>
+6638                          <NA>         10037     1986-12-01          <NA>            <NA>
+6663                          <NA>         10016     1986-12-01          <NA>            <NA>
+6874                          <NA>         10031     1986-12-01          <NA>            <NA>
+6880                          <NA>         10014     1986-12-01          <NA>            <NA>
+6900                          <NA>         10010     1986-12-01          <NA>            <NA>
+7333                W. W. Overbeck           434     2010-05-06          <NA>            <NA>
+7569                 W.W. Overbeck          1448     2011-04-30          <NA>            <NA>
+NA.3                          <NA>          <NA>           <NA>          <NA>            <NA>
+NA.4                          <NA>          <NA>           <NA>          <NA>            <NA>
+9271                          <NA>         30012     1986-06-01          <NA>            <NA>
+NA.5                          <NA>          <NA>           <NA>          <NA>            <NA>
+NA.6                          <NA>          <NA>           <NA>          <NA>            <NA>
+NA.7                          <NA>          <NA>           <NA>          <NA>            <NA>
+NA.8                          <NA>          <NA>           <NA>          <NA>            <NA>
+9575                          <NA>         30011     1986-06-01          <NA>            <NA>
+NA.9                          <NA>          <NA>           <NA>          <NA>            <NA>
+NA.10                         <NA>          <NA>           <NA>          <NA>            <NA>
+NA.11                         <NA>          <NA>           <NA>          <NA>            <NA>
+NA.12                         <NA>          <NA>           <NA>          <NA>            <NA>
+NA.13                         <NA>          <NA>           <NA>          <NA>            <NA>
+10180                         <NA>         10021     1986-06-01          <NA>            <NA>
+10503 Thomas McFadden; Brad Ruhfel           278     2016-09-15          <NA>            <NA>
+10568                         <NA>         10007     1986-09-01          <NA>            <NA>
+10569                         <NA>         10023     1986-07-01          <NA>            <NA>
+10586                   Jody Foley             2     1998-12-29          <NA>            <NA>
+10774                         <NA>         10036     1986-09-01          <NA>            <NA>
+10984                         <NA>         10055     1986-09-01          <NA>            <NA>
+11126                         <NA>         10047     1986-05-01          <NA>            <NA>
+11695                         <NA>         10029     1986-12-01          <NA>            <NA>
+22388                         <NA>         10005     1987-02-01          <NA>            <NA>
+22595                         <NA>         10008     1987-02-01          <NA>            <NA>
+22906                         <NA>         10052     1987-01-01          <NA>            <NA>
+      identification_remarks observation_type
+NA                      <NA>             <NA>
+NA.1                    <NA>             <NA>
+NA.2                    <NA>             <NA>
+1041                    <NA>             plot
+1169                    <NA>             plot
+1330                    <NA>             plot
+1361                    <NA>             plot
+1536                    <NA>             plot
+1684                    <NA>             plot
+2797                    <NA>         specimen
+3469                    <NA>             plot
+4903                    <NA>         specimen
+6414                    <NA>         specimen
+6638                    <NA>             plot
+6663                    <NA>             plot
+6874                    <NA>             plot
+6880                    <NA>             plot
+6900                    <NA>             plot
+7333                    <NA>         specimen
+7569                    <NA>         specimen
+NA.3                    <NA>             <NA>
+NA.4                    <NA>             <NA>
+9271                    <NA>             plot
+NA.5                    <NA>             <NA>
+NA.6                    <NA>             <NA>
+NA.7                    <NA>             <NA>
+NA.8                    <NA>             <NA>
+9575                    <NA>             plot
+NA.9                    <NA>             <NA>
+NA.10                   <NA>             <NA>
+NA.11                   <NA>             <NA>
+NA.12                   <NA>             <NA>
+NA.13                   <NA>             <NA>
+10180                   <NA>             plot
+10503                   <NA>         specimen
+10568                   <NA>             plot
+10569                   <NA>             plot
+10586                   <NA>         specimen
+10774                   <NA>             plot
+10984                   <NA>             plot
+11126                   <NA>             plot
+11695                   <NA>             plot
+22388                   <NA>             plot
+22595                   <NA>             plot
+22906                   <NA>             plot
+ [ reached 'max' / getOption("max.print") -- omitted 155 rows ]
+ [1] "Fraxinus americana"      "Fraxinus pennsylvanica"  "Fraxinus nigra"          "Fraxinus gooddingii"    
+ [5] "Fraxinus dipetala"       "Fraxinus velutina"       "Fraxinus latifolia"      "Fraxinus profunda"      
+ [9] "Fraxinus caroliniana"    "Fraxinus cuspidata"      "Fraxinus greggii"        "Fraxinus quadrangulata" 
+[13] "Fraxinus anomala"        "Fraxinus rufescens"      "Fraxinus purpusii"       "Fraxinus papillosa"     
+[17] "Fraxinus pringlei"       "Fraxinus uhdei"          "Fraxinus berlandieriana" "Fraxinus dubia"         
+ [1] "Fraxinus americana"      "Fraxinus pennsylvanica"  "Fraxinus nigra"          "Fraxinus gooddingii"    
+ [5] "Fraxinus dipetala"       "Fraxinus velutina"       "Fraxinus latifolia"      "Fraxinus profunda"      
+ [9] "Fraxinus caroliniana"    "Fraxinus cuspidata"      "Fraxinus greggii"        "Fraxinus quadrangulata" 
+[13] "Fraxinus anomala"        "Fraxinus rufescens"      "Fraxinus purpusii"       "Fraxinus papillosa"     
+[17] "Fraxinus pringlei"       "Fraxinus uhdei"          "Fraxinus berlandieriana" "Fraxinus dubia"         
