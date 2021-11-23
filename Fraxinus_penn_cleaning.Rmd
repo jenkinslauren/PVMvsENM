@@ -5,13 +5,14 @@ date: "10/29/2021"
 output: html_document
 ---
 In the interest of time, load range maps from previous workspace.
-```{r, include=FALSE}
+```{r}
 rm(list = ls())
 setwd('/Users/laurenjenkins/Documents/MOBOT/PVMvsENM/')
+load('./01 - Modeling Workspace - Fraxinus Range Maps (BIEN + Little)')
 ll <- c('longitude', 'latitude')
 species <- "fraxinus pennsylvanica"
+range <- littleRange_FraxPenn
 title <- expression(paste(italic("Fraxinus pennsylvanica"), " occurrences"))
-load('./01 - Modeling Workspace - Fraxinus Range Maps (BIEN + Little)')
 ```
 
 ```{r, include = FALSE}
@@ -40,11 +41,11 @@ library(dplyr)
 default_crs = sf::st_crs(4267)
 ```
 
-Cleaning *Fraxinus pennsylvanica*.
-Standard cleaning procedures: 
-* remove records without coordinates or dates
-* remove records before 1900
-* date_collected column is recorded twice, remove one of them
+Cleaning *Fraxinus pennsylvanica*.  
+Standard cleaning procedures:  
+* remove records without coordinates or dates  
+* remove records before 1900  
+* date_collected column is recorded twice, remove one of them  
 
 ```{r, include = FALSE}
 speciesFileName <- paste0('./species_records/01_', 
@@ -52,7 +53,7 @@ speciesFileName <- paste0('./species_records/01_',
                                    replacement = '_'), '_retained_records.rds')
 
 if (file.exists(speciesFileName)) {
-  load(speciesFileName)
+  occs <- readRDS(speciesFileName)
 } else {
   load(paste0('./species_records/00_', 
               gsub(tolower(species), pattern = ' ', 
@@ -118,7 +119,7 @@ Map of all observations:
 # Convert to spatial object for plotting
 par(mfrow=c(1,1))
 occsSp <- SpatialPointsDataFrame(occs[, ll], data = occs, proj4 = getCRS('nad27', TRUE))
-plot(littleRange_FraxPenn, col = alpha('blue', 0.4), border = 'blue', 
+plot(range, col = alpha('blue', 0.4), border = 'blue', 
      main = "Little range map, all observations not cleaned")
 plot(occsSp, pch = 16, cex = 0.3, col = 'black', add = TRUE)
 map("state", add = TRUE)
@@ -183,7 +184,7 @@ thinnedSp <- SpatialPointsDataFrame(thinned[, ll], data = thinned,
                                          proj4 = getCRS('nad27', TRUE))
 plot(thinnedSp, pch = 16, cex = 0.5, col = "red", 
      main = 'BIEN occurrences thinned, before eliminating cell duplicates')
-plot(littleRange_FraxPenn, col = alpha('blue', 0.4), border = 'blue', add = TRUE)
+plot(range, col = alpha('blue', 0.4), border = 'blue', add = TRUE)
 map("state", add = TRUE)
 map("world", add = TRUE)
 ```
@@ -229,13 +230,16 @@ bufferFileName <- paste0('./cleaning_records/',
                               replacement = '_'), '_buffer.rData')
 
 if (file.exists(bufferFileName)) {
+  rangeMap <- st_transform(st_as_sf(x = range), getCRS('albersNA'))
+  speciesSfThinAlb <- st_transform(speciesSfThin, getCRS('albersNA'))
+  speciesSfAlb <- st_transform(speciesSf, getCRS('albersNA'))
   load(bufferFileName)
 } else {
   # choose a buffer that will include 97% (0.03 * # of occurrences) of the observations
   # you can change this value based on the threshold you want for your buffer
   threshold <- ceiling(0.03 * nrow(speciesSf))
   
-  rangeMap <- st_transform(st_as_sf(x = littleRange_FraxPenn), getCRS('albersNA'))
+  rangeMap <- st_transform(st_as_sf(x = range), getCRS('albersNA'))
   speciesSfThinAlb <- st_transform(speciesSfThin, getCRS('albersNA'))
   speciesSfAlb <- st_transform(speciesSf, getCRS('albersNA'))
   

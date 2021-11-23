@@ -6,15 +6,19 @@ output: html_document
 ---
 
 In the interest of time, load range maps from previous workspace.
+111 = full species name all lowercase
+222 = abreviated species name (ex. Frax_Dipe)
+333 = species name with first letter capital
+444 = abreviated species name (ex. FraxDipe)
 ```{r, include=FALSE}
 rm(list = ls())
 setwd('/Users/laurenjenkins/Documents/MOBOT/PVMvsENM/')
-ll <- c('longitude', 'latitude')
-*species <- "enter species name here"
-*speciesAb <- "enter species abbreviation"
-*range <- paste0("littleRange_", speciesAb)
-*title <- expression(paste(italic("add species name here"), " occurrences"))
 load('./01 - Modeling Workspace - Fraxinus Range Maps (BIEN + Little)')
+ll <- c('longitude', 'latitude')
+species <- "111"
+speciesAb <- "222"
+range <- 'littleRange_444'
+title <- expression(paste(italic("333"), " occurrences"))
 ```
 
 Load required packages.
@@ -44,7 +48,7 @@ library(dplyr)
 default_crs = sf::st_crs(4267)
 ```
 
-Cleaning *species name*.
+Cleaning *333*.
 Standard cleaning procedures: 
 * remove records without coordinates or dates
 * remove records before 1900
@@ -56,22 +60,21 @@ speciesFileName <- paste0('./species_records/01_',
                                    replacement = '_'), '_retained_records.rds')
 
 if (file.exists(speciesFileName)) {
-  load(speciesFileName)
+  occs <- readRDS(speciesFileName)
 } else {
   load(paste0('./species_records/00_', 
               gsub(tolower(species), pattern = ' ', 
                    replacement = '_'), '_bien_all_occurrences.rda'))
   
-  # 93,206 occurrences
+  # X occurrences
   
   # remove records without coordinates or dates to ensure locational reliability
   occs <- occsRaw[!(is.na(occsRaw$longitude) | is.na(occsRaw$latitude) | is.na(occsRaw$date_collected)), ]
-  # 93,084 occurrences
   
   # remove records before 1900
   occs$Year <- substr(occs$date_collected, 1, 4)
   occs <- occs[occs$Year >= 1900, ]
-  # 93,000 occurrences
+  # X occurrences
   
   # date_collected column is there twice, remove one of them
   occs[18] <- NULL
@@ -399,6 +402,7 @@ print(paste0("Number of occurrences outside buffer = ",
 ```
 
 ```{r}
-save.image('./03 - Modeling Workspace - Enter Sp Cleaning')
-# load('./03 - Modeling Workspace - Frax_Penn Cleaning')
+imageName <- paste0("./03 - Modeling Workspace - ", speciesAb, " Cleaning")
+save.image(imageName)
+# load(imageName)
 ```
