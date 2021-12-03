@@ -3,7 +3,7 @@
 # # # # # # # # # # # # # # # #
 
 rm(list=ls())
-setwd("/Users/laurenjenkins/Documents/MOBOT/PVMvsENM/")
+setwd("/Volumes/LJ MacBook Backup/MOBOT/PVMvsENM")
 library(ncdf4)
 library(raster)
 
