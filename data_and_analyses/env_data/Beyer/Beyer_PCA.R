@@ -168,7 +168,7 @@ for (i in 1:length(clim)) {
 
 plot(stack(pcPrediction))
 
-outfile <- outfile <- paste0('./data_and_analyses/env_data/Beyer/tifs/pca_output', '.tif')
+outfile <- './data_and_analyses/env_data/Beyer/tifs/pca_output.tif'
 writeRaster(stack(pcPrediction), outfile, format = 'GTiff', overwrite = T)
 save.image('./PCA_Beyer')
 
