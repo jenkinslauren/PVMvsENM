@@ -12,6 +12,7 @@ fileList <- list.files(path = './data_and_analyses/env_data/Beyer/tifs',
                    pattern='*.tif', all.files=TRUE, full.names=TRUE)
 clim <- lapply(fileList, brick)
 clim <- stack(clim)
+climDf <- as.data.frame(clim)
 
 climList <- list()
 vars <- c('BIO1', paste0('BIO', 4:19), 'cloudiness', 'relative_humidity')
@@ -26,8 +27,6 @@ for(i in 1:22) {
 }
 
 clim <- lapply(climList, stack)
-
-climDf <- as.data.frame(clim)
 
 # build climate over all time periods, not just the latest
 # using 10,000 random backgound points, extracted climate at these points
@@ -60,7 +59,7 @@ df <- data.frame()
 # list of dataframes containing the data for each variable
 # so, listofDf[1] = bioclim1, listofDf[2] = bioclim4
 # recall the last 2 variables (18 & 19) = cloudiness & relative_humidity
-randomBgSites <- randomPoints(clim, 10000)
+randomBgSites <- randomPoints(clim[[1]], 10000)
 df <- lapply(bricks, buildClim)
 
 stackDfs <- list()
@@ -103,14 +102,11 @@ climxDf <- as.data.frame(climx)
 names(climxDf) <- c("bio1", "bio10", "bio11", "bio12", "bio13", "bio14", "bio15", "bio16",
                     "bio17", "bio18", "bio19", "bio4", "bio5", "bio6", "bio7",
                     "bio8", "bio9", "cloudiness", "relative_humidity")
-names(climDf) <- c("bio1", "bio4", "bio5", "bio6", "bio7", "bio8", "bio9", "bio10",
-                   "bio11", "bio12", "bio13", "bio14", "bio15", "bio16", "bio17",
-                   "bio18", "bio19", "cloudiness", "relative_humidity")
-names(clim) <- c(rep("bio1",22), rep("bio4",22), rep("bio5",22), rep("bio6",22), 
-                 rep("bio7",22), rep("bio8",22), rep("bio9",22), rep("bio10",22),
-                 rep("bio11",22), rep("bio12",22), rep("bio13",22), rep("bio14",22), 
-                 rep("bio15",22), rep("bio16",22), rep("bio17",22),rep("bio18",22), 
-                 rep("bio19",22), rep("cloudiness",22), rep("relative_humidity",22))
+names(climDf) <- c(rep("bio1",22), rep("bio10",22), rep("bio11",22), rep("bio12",22), 
+                 rep("bio13",22), rep("bio14",22), rep("bio15",22), rep("bio16",22),
+                 rep("bio17",22), rep("bio18",22), rep("bio19",22), rep("bio4",22), 
+                 rep("bio5",22), rep("bio6",22), rep("bio7",22),rep("bio8",22), 
+                 rep("bio9",22), rep("cloudiness",22), rep("relative_humidity",22))
 
 # crops to NA, don't need to
 # 		clim <- crop(clim, nam0Sp)
@@ -146,29 +142,25 @@ pca <- prcomp(climxDf, center = TRUE, scale = TRUE)
 # df <- cbind(climDf, pca_scores)
 # biplot(pca, xlabs=rep('.', nrow(pca$x)))
 
-clim <- lapply(fileList, brick)
 # want bricks by timestep, not by variable
 # brick[["bio1.22"]]
-# clim <- stack(clim)
-names(clim) <- c(rep("bio1",22), rep("bio10",22), rep("bio11",22), rep("bio12",22), 
-                 rep("bio13",22), rep("bio14",22), rep("bio15",22), rep("bio16",22),
-                 rep("bio17",22), rep("bio18",22), rep("bio19",22), rep("bio4",22), 
-                 rep("bio5",22), rep("bio6",22), rep("bio7",22),rep("bio8",22), 
-                 rep("bio9",22), rep("cloudiness",22), rep("relative_humidity",22))
+# names(clim) <- c("bio1", "bio10", "bio11", "bio12", "bio13", "bio14", "bio15", "bio16",
+#                  "bio17", "bio18", "bio19", "bio4", "bio5", "bio6", "bio7",
+#                  "bio8", "bio9", "cloudiness", "relative_humidity")
 
 pcPrediction <- list()
 for (i in 1:length(clim)) {
-  names(clim[[i]]) <- c("bio1", "bio4", "bio5", "bio6", "bio7", "bio8", "bio9", "bio10",
-                        "bio11", "bio12", "bio13", "bio14", "bio15", "bio16", "bio17",
-                        "bio18", "bio19", "cloudiness", "relative_humidity")
+  names(clim[[i]]) <- c("bio1", "bio10", "bio11", "bio12", "bio13", "bio14", "bio15", "bio16",
+                        "bio17", "bio18", "bio19", "bio4", "bio5", "bio6", "bio7",
+                        "bio8", "bio9", "cloudiness", "relative_humidity")
   pcPrediction[i] <- raster::predict(clim[[i]], pca, index = 1:3)
   names(pcPrediction[[i]]) <- paste0("pc", 1:3, "_", (i-1)*1000, "KYBP")
 }
 
-
-plot(stack(pcPrediction))
+stackPca <- stack(pcPrediction)
+plot(stackPca)
 
 outfile <- './data_and_analyses/env_data/Beyer/tifs/pca_output.tif'
-writeRaster(stack(pcPrediction), outfile, format = 'GTiff', overwrite = T)
+writeRaster(stackPca, outfile, format = 'GTiff', overwrite = T)
 save.image('./PCA_Beyer')
 

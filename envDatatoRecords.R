@@ -8,11 +8,18 @@ setwd('/Volumes/LJ MacBook Backup/MOBOT/PVMvsENM')
 
 envDataPca <- brick('./data_and_analyses/env_data/Beyer/tifs/pca_output.tif')
 
-studyRegion <- rgdal::readOGR(dsn = './data_and_analyses/study_region', 'study_region')
-studyRegion <- crop(studyRegion, extent(-178.2166, 83.7759, -55.90223, 83.6236))
-projection(studyRegion) <- getCRS("WGS84")
-studyExtent <- extent(studyRegion)
-save(studyExtent, file='./data_and_analyses/study_region/Study Region Extent.Rdata', compress=TRUE)
+if (file.exists('./data_and_analyses/study_region/Study Region.Rdata') & 
+    file.exists('./data_and_analyses/study_region/Study Region Extent.Rdata')) {
+  load('./data_and_analyses/study_region/Study Region.Rdata')
+  load('./data_and_analyses/study_region/Study Region Extent.Rdata')
+} else {
+  studyRegion <- rgdal::readOGR(dsn = './data_and_analyses/study_region', 'study_region')
+  studyRegion <- crop(studyRegion, extent(-178.2166, 83.7759, -55.90223, 83.6236))
+  projection(studyRegion) <- getCRS("WGS84")
+  studyExtent <- extent(studyRegion)
+  save(studyRegion, file='./data_and_analyses/study_region/Study Region.Rdata', compress=TRUE)
+  save(studyExtent, file='./data_and_analyses/study_region/Study Region Extent.Rdata', compress=TRUE)
+}
 
 envDataClipped <- list()
 for (i in 1:nlayers(envDataPca)) {
@@ -25,6 +32,8 @@ for (i in 1:nlayers(envDataPca)) {
 
 envData <- stack(envDataClipped)
 plot(envData)
+writeRaster(envData, './data_and_analyses/env_data/Beyer/envDataClipped.tif', 
+            format = 'GTiff', overwrite = T)
 
 # load data for focal species
 ll <- c('longitude', 'latitude')
@@ -58,5 +67,5 @@ plot(water, col = 'blue', add = TRUE)
 map("state", add = TRUE)
 map("world", add = TRUE)
 
-
-
+# save workspace
+save.image('./04 - Modeling Workspace - Clipping Environmental Data')
