@@ -1,14 +1,14 @@
 ---
-title: "Fraxinus_dipe_cleaning"
+title: "Fraxinus dipetala cleaning"
 author: "Lauren Jenkins"
-date: "11/5/2021"
+date: "5 November 2021"
 output: html_notebook
 ---
 
 In the interest of time, load range maps from previous workspace.
 ```{r, include=FALSE}
 rm(list = ls())
-setwd('/Users/laurenjenkins/Documents/MOBOT/PVMvsENM/')
+setwd('/Volumes/LJ MacBook Backup/MOBOT/PVMvsENM')
 load('./01 - Modeling Workspace - Fraxinus Range Maps (BIEN + Little)')
 ll <- c('longitude', 'latitude')
 species <- "fraxinus dipetala"
@@ -57,7 +57,7 @@ speciesFileName <- paste0('./species_records/01_',
 if (file.exists(speciesFileName)) {
   occs <- readRDS(speciesFileName)
 } else {
-  load(paste0('./species_records/00_', 
+  load(file = paste0('./species_records/00_', 
               gsub(tolower(species), pattern = ' ', 
                    replacement = '_'), '_bien_all_occurrences.rda'))
   # 283 occurrences
@@ -107,13 +107,13 @@ hist(precision$coordPrecisDMS,
 )
 ```
 
-Find the max between two precision measurements and remove occurrences where precision > 100m.
+Find the max between two precision measurements and remove occurrences where precision > 1,000m.
 ```{r}
 pmaxPrecision <- pmax(coordPrecis, coordPrecisDMS)
 occs <- data.frame(occs, pmaxPrecision)
-print(paste0("Number of occurrences with precision > 100 m = ", 
-             length(which(occs$pmaxPrecision > 100))))
-occs <- occs[which(occs$pmaxPrecision <= 100), ]
+print(paste0("Number of occurrences with precision > 1000 m = ", 
+             length(which(occs$pmaxPrecision > 1000))))
+occs <- occs[which(occs$pmaxPrecision <= 1000), ]
 ```
 
 Create spatial object for plotting.
@@ -161,7 +161,7 @@ if (file.exists(thinnedFileName)) {
     currentFold <- thin(data.frame(folds[i]))
     thinnedFolds[[i]] <- currentFold
     i <- i + 1
-    if (i > k) {
+    if (i > (k+1)) {
       break
     }
   }
@@ -353,7 +353,14 @@ speciesSf_filtered_final <- speciesSf %>%
                                           y = range_buffer))) %>%
   filter(within_buffer > 0)
 
-range_buffer_final <- range_buffer %>% filter(AREA == max(range_buffer$AREA))
+# range_buffer_final <- range_buffer %>% filter(AREA == max(range_buffer$AREA))
+range_buffer_final <- st_union(range_buffer)
+
+cleanedRecordsFileName <- paste0('./cleaning_records/', 
+                         gsub(tolower(species), pattern = ' ', 
+                              replacement = '_'), '_finalRecords.rData')
+
+save(speciesSf_filtered_final, range_buffer_final, file = cleanedRecordsFileName)
 
 ggplot(data = world) +
   theme_bw() +
@@ -365,7 +372,7 @@ ggplot(data = world) +
           fill = 'green', 
           alpha = 0.4, 
           inherit.aes = FALSE) +
-  geom_sf(data = range_buffer,
+  geom_sf(data = range_buffer_final,
           color = 'yellow',
           fill = NA,
           inherit.aes = FALSE) +
@@ -389,8 +396,10 @@ ggplot(data = world) +
 
 ```
 
+How many occurrences are in the final dataset?
 How many occurrences are outside of the buffer?
 ```{r}
+print(paste0('Final number of occurrences = ', nrow(speciesSf_filtered_final)))
 print(paste0("Number of occurrences outside buffer = ", 
              length(which(speciesSf_filtered$within_buffer == 0))))
 ```
@@ -400,3 +409,4 @@ imageName <- paste0("./03 - Modeling Workspace - ", speciesAb, " Cleaning")
 save.image(imageName)
 # load(imageName)
 ```
+

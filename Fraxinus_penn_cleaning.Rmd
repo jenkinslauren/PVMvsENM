@@ -1,20 +1,27 @@
 ---
-title: "Fraxinus_cleaning"
+title: "Fraxinus pennsylvanica cleaning"
 author: "Lauren Jenkins"
-date: "10/29/2021"
+date: "13 December 2021"
 output: html_document
 ---
+
 In the interest of time, load range maps from previous workspace.
-```{r}
+111 = full species name all lowercase
+222 = abreviated species name (ex. Frax_Dipe)
+333 = species name with first letter capital
+444 = abreviated species name (ex. FraxDipe)
+```{r, include=FALSE}
 rm(list = ls())
-setwd('/Users/laurenjenkins/Documents/MOBOT/PVMvsENM/')
+# setwd('/Users/laurenjenkins/Documents/MOBOT/PVMvsENM/')
 load('./01 - Modeling Workspace - Fraxinus Range Maps (BIEN + Little)')
 ll <- c('longitude', 'latitude')
 species <- "fraxinus pennsylvanica"
+speciesAb <- "Frax_Penn"
 range <- littleRange_FraxPenn
 title <- expression(paste(italic("Fraxinus pennsylvanica"), " occurrences"))
 ```
 
+Load required packages.
 ```{r, include = FALSE}
 # Load packages
 library(enmSdm)
@@ -41,11 +48,11 @@ library(dplyr)
 default_crs = sf::st_crs(4267)
 ```
 
-Cleaning *Fraxinus pennsylvanica*.  
-Standard cleaning procedures:  
-* remove records without coordinates or dates  
-* remove records before 1900  
-* date_collected column is recorded twice, remove one of them  
+Cleaning *Fraxinus pennsylvanica*.
+Standard cleaning procedures: 
+* remove records without coordinates or dates
+* remove records before 1900
+* date_collected column is recorded twice, remove one of them
 
 ```{r, include = FALSE}
 speciesFileName <- paste0('./species_records/01_', 
@@ -59,16 +66,15 @@ if (file.exists(speciesFileName)) {
               gsub(tolower(species), pattern = ' ', 
                    replacement = '_'), '_bien_all_occurrences.rda'))
   
-  # 93,206 occurrences
+  # X occurrences
   
   # remove records without coordinates or dates to ensure locational reliability
   occs <- occsRaw[!(is.na(occsRaw$longitude) | is.na(occsRaw$latitude) | is.na(occsRaw$date_collected)), ]
-  # 93,084 occurrences
   
   # remove records before 1900
   occs$Year <- substr(occs$date_collected, 1, 4)
   occs <- occs[occs$Year >= 1900, ]
-  # 93,000 occurrences
+  # X occurrences
   
   # date_collected column is there twice, remove one of them
   occs[18] <- NULL
@@ -77,7 +83,7 @@ if (file.exists(speciesFileName)) {
 }
 ```
 
-Working with imprecise coordinates:
+Dealing with imprecise coordinates DMS = FALSE.
 ```{r}
 llOcc <- cbind(occs$longitude, occs$latitude)
 coordPrecis <- coordPrecision(llOcc)
@@ -91,6 +97,8 @@ hist(precision$coordPrecis,
      col='red'
 )
 ```
+
+Dealing with imprecise coordinates DMS = TRUE.
 ```{r}
 llOcc <- cbind(occs$longitude, occs$latitude)
 coordPrecisDMS <- coordPrecision(llOcc, dms = TRUE)
@@ -104,12 +112,14 @@ hist(precision$coordPrecisDMS,
      col='red'
 )
 ```
+
+Find the max between two precision measurements and remove occurrences where precision > 1,000m.
 ```{r}
 pmaxPrecision <- pmax(coordPrecis, coordPrecisDMS)
 occs <- data.frame(occs, pmaxPrecision)
-print(paste0("Number of occurrences with precision > 100 m = ", 
-             length(which(occs$pmaxPrecision > 100))))
-occs <- occs[which(occs$pmaxPrecision <= 100), ]
+print(paste0("Number of occurrences with precision > 1,000 m = ", 
+             length(which(occs$pmaxPrecision > 1000))))
+occs <- occs[which(occs$pmaxPrecision <= 1000), ]
 ```
 
 Create spatial object for plotting.
@@ -119,9 +129,9 @@ Map of all observations:
 # Convert to spatial object for plotting
 par(mfrow=c(1,1))
 occsSp <- SpatialPointsDataFrame(occs[, ll], data = occs, proj4 = getCRS('nad27', TRUE))
-plot(range, col = alpha('blue', 0.4), border = 'blue', 
+plot(occsSp, pch = 16, cex = 0.3, col = 'red', 
      main = "Little range map, all observations not cleaned")
-plot(occsSp, pch = 16, cex = 0.3, col = 'black', add = TRUE)
+plot(range, col = alpha('blue', 0.4), border = 'blue', add = TRUE)
 map("state", add = TRUE)
 map("world", add = TRUE)
 ```
@@ -142,7 +152,8 @@ if (file.exists(thinnedFileName)) {
   occs$folds <- as.numeric(cut_number(occs$longitude, k))
   folds <- split(occs, occs$folds)
   
-  print(paste0("Does (# of occurrences) ", nrow(occs), 
+  # sanity check
+  print(paste0("Sanity check: does (# of occurrences) ", nrow(occs), 
                " = (# of occurrences in folds) ", sum(sapply(folds, nrow)), "?"))
   
   i <- 1 
@@ -158,7 +169,7 @@ if (file.exists(thinnedFileName)) {
     currentFold <- thin(data.frame(folds[i]))
     thinnedFolds[[i]] <- currentFold
     i <- i + 1
-    if (i > k) {
+    if (i > (k + 1)) {
       break
     }
   }
@@ -173,23 +184,18 @@ if (file.exists(thinnedFileName)) {
 
 ```
 
-Thinning with the above method gave 14,149 observations, while the longer method gave 14,117 observations.
-finalThinned with longer method gave 558 observations and the shorter method gave the same!
-
-After removing 18,214 imprecise coordinates, our thinned data had 515 observations and before removing cell duplicates, there were 14,119.
-
-Before eliminating cell duplicates (14,119 observations):
+Before eliminating cell duplicates (92,596 observations):
 ```{r}
 thinnedSp <- SpatialPointsDataFrame(thinned[, ll], data = thinned, 
                                          proj4 = getCRS('nad27', TRUE))
-plot(thinnedSp, pch = 16, cex = 0.5, col = "red", 
+plot(thinnedSp, pch = 16, cex = 0.3, col = "red", 
      main = 'BIEN occurrences thinned, before eliminating cell duplicates')
 plot(range, col = alpha('blue', 0.4), border = 'blue', add = TRUE)
 map("state", add = TRUE)
 map("world", add = TRUE)
 ```
 
-Using sf for spatial visualization:
+Using sf for spatial visualization (easily customizable):
 ```{r}
 speciesSf <- st_as_sf(x = finalThinned,
                       coords = c(x = 'longitude',
@@ -202,6 +208,7 @@ speciesSfThin <- st_as_sf(x = thinned,
 ```
 
 ```{r}
+# load country/world basemap data
 world <- ne_countries(scale = "medium", returnclass = "sf")
 states <- st_as_sf(ne_states(country = 'united states of america'))
 canada <- st_as_sf(ne_states(country = 'canada'))
@@ -230,9 +237,6 @@ bufferFileName <- paste0('./cleaning_records/',
                               replacement = '_'), '_buffer.rData')
 
 if (file.exists(bufferFileName)) {
-  rangeMap <- st_transform(st_as_sf(x = range), getCRS('albersNA'))
-  speciesSfThinAlb <- st_transform(speciesSfThin, getCRS('albersNA'))
-  speciesSfAlb <- st_transform(speciesSf, getCRS('albersNA'))
   load(bufferFileName)
 } else {
   # choose a buffer that will include 97% (0.03 * # of occurrences) of the observations
@@ -283,9 +287,11 @@ if (file.exists(bufferFileName)) {
   calculate_buffer(x)
 }
 
+load(bufferFileName)
 ```
 
-Thinned, before elimCellDups.
+Thinned, before elimCellDups with calculated buffer.
+Points that fall outside a buffer are colored red.
 ```{r}
 ggplot(data = world) +
   theme_bw() +
@@ -311,13 +317,19 @@ ggplot(data = world) +
            ylim = c(min(thinned$latitude), max(thinned$latitude) + 5), expand = TRUE) +
   xlab("Longitude") + 
   ylab("Latitude") +
-  ggtitle(title, subtitle = paste0("(Cleaned, thinned, and duplicates eliminated, with buffer = ",
-                                   buffer_distance, " km)")) +
-    theme(panel.grid.major = element_line(color = gray(0.5), linetype = "dashed", 
-        size = 0.5), panel.background = element_rect(fill = "lavender"))
+  ggtitle(title, 
+          subtitle = paste0("(Cleaned, thinned, before cell duplicates eliminated, buffer = ",
+                            buffer_distance, 
+                            " km)")) +
+  theme(panel.grid.major = element_line(color = gray(0.5), 
+                                        linetype = "dashed", 
+                                        size = 0.5), 
+        panel.background = element_rect(fill = "lavender"),
+        plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5))
 ```
 
-Full range.
+Full range with calculated buffer and cell duplicates eliminated.
 ```{r}
 ggplot(data = world) +
   theme_bw() +
@@ -345,43 +357,14 @@ ggplot(data = world) +
   ylab("Latitude") +
   ggtitle(title, subtitle = paste0("(Cleaned, thinned, and duplicates eliminated, with buffer = ",
                                    buffer_distance, " km)")) +
-  theme(panel.grid.major = element_line(color = gray(0.5), linetype = "dashed", 
-                                        size = 0.5), panel.background = element_rect(fill = "lavender"))
+  theme(panel.grid.major = element_line(color = gray(0.5), 
+                                        linetype = "dashed", 
+                                        size = 0.5), 
+        panel.background = element_rect(fill = "lavender"), 
+        plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5))
 ```
 
-Map again with buffer and ranges, focused on Florida to see buffer.
-```{r}
-ggplot(data = world) +
-  theme_bw() +
-  geom_sf(fill = "white") +
-  geom_sf(data = states, fill = NA) + 
-  geom_sf(data = canada, fill = NA) +
-  geom_sf(data = rangeMap, 
-          color = 'darkgreen',
-          fill = 'green', 
-          alpha = 0.4, 
-          inherit.aes = FALSE) +
-  geom_sf(data = range_buffer,
-          color = 'yellow',
-          fill = NA,
-          inherit.aes = FALSE) +
-  geom_sf(data = speciesSf_filtered,
-          pch = 16, 
-          cex = 0.75, 
-          aes(color = within_buffer > 0),
-          inherit.aes = FALSE) +
-  scale_colour_manual(values = setNames(c('black','red'),c(T, F)), guide = "none") +
-  guides(fill = "none") +
-  coord_sf(xlim = c(-90, -80), 
-           ylim = c(27, 33), expand = TRUE) + 
-  xlab("Longitude") + 
-  ylab("Latitude") +
-  ggtitle(title, subtitle = paste0("(Cleaned, thinned, and duplicates eliminated, with buffer = ",
-                                   buffer_distance, " km)")) +
-    theme(panel.grid.major = element_line(color = gray(0.5), linetype = "dashed", 
-        size = 0.5), panel.background = element_rect(fill = "lavender"))
-```
-Final plot:
 ```{r}
 speciesSf_filtered_final <- speciesSf %>%
   mutate(within_range = lengths(st_within(x = speciesSfAlb,
@@ -390,7 +373,14 @@ speciesSf_filtered_final <- speciesSf %>%
                                           y = range_buffer))) %>%
   filter(within_buffer > 0)
 
-range_buffer_final <- range_buffer %>% filter(AREA == max(range_buffer$AREA))
+# range_buffer_final <- range_buffer %>% filter(AREA == max(range_buffer$AREA))
+range_buffer_final <- st_union(range_buffer)
+
+cleanedRecordsFileName <- paste0('./cleaning_records/', 
+                         gsub(tolower(species), pattern = ' ', 
+                              replacement = '_'), '_finalRecords.rData')
+
+save(speciesSf_filtered_final, range_buffer_final, file = cleanedRecordsFileName)
 
 ggplot(data = world) +
   theme_bw() +
@@ -426,14 +416,16 @@ ggplot(data = world) +
 
 ```
 
+How many occurrences are in the final dataset?
 How many occurrences are outside of the buffer?
 ```{r}
+print(paste0('Final number of occurrences = ', nrow(speciesSf_filtered_final)))
 print(paste0("Number of occurrences outside buffer = ", 
              length(which(speciesSf_filtered$within_buffer == 0))))
 ```
 
 ```{r}
-save.image('./03 - Modeling Workspace - Frax_Penn Cleaning')
-# load('./03 - Modeling Workspace - Frax_Penn Cleaning')
+imageName <- paste0("./03 - Modeling Workspace - ", speciesAb, " Cleaning")
+save.image(imageName)
+# load(imageName)
 ```
-
