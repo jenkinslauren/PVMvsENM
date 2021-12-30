@@ -29,7 +29,7 @@ for(i in 1:22) {
 clim <- lapply(climList, stack)
 
 # build climate over all time periods, not just the latest
-# using 10,000 random backgound points, extracted climate at these points
+# using 10,000 random background points, extracted climate at these points
 # for each time period
 buildClim <- function(brick) {
   # df <- data.frame()

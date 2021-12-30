@@ -1,0 +1,161 @@
+---
+title: "Loading all models"
+author: "Lauren Jenkins"
+date: "17 December 2021"
+output: html_document
+---
+
+Set up environment.
+```{r, include = FALSE}
+rm(list = ls())
+setwd('/Volumes/LJ MacBook Backup/MOBOT/PVMvsENM')
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+
+library(raster)
+library(rgdal)
+library(enmSdm)
+library(terra)
+library(maxnet)
+library(sf)
+
+library(maps)
+library(rnaturalearth)
+library(rnaturalearthdata)
+library(rnaturalearthhires)
+```
+
+Fraxinus americana
+```{r}
+load(paste0('./05 - Modeling Workspace - ', 'Frax_Amer', ' Model Output'))
+plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
+                                                        italic('Fraxinus americana '),
+                                                        'occurrences')))
+plot(envMap, add = TRUE)
+plot(rangeMap, border = 'blue', add = TRUE)
+map("state", add = TRUE)
+map("world", add = TRUE)
+points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
+```
+
+Fraxinus anomala
+```{r}
+load(paste0('./05 - Modeling Workspace - ', 'Frax_Anom', ' Model Output'))
+plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
+                                                        italic('Fraxinus anomala '),
+                                                        'occurrences')))
+plot(envMap, add = TRUE)
+plot(rangeMap, border = 'blue', add = TRUE)
+map("state", add = TRUE)
+map("world", add = TRUE)
+points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
+```
+
+Fraxinus caroliniana
+```{r}
+load(paste0('./05 - Modeling Workspace - ', 'Frax_Caro', ' Model Output'))
+plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
+                                                        italic('Fraxinus caroliniana '),
+                                                        'occurrences')))
+plot(envMap, add = TRUE)
+plot(rangeMap, border = 'blue', add = TRUE)
+map("state", add = TRUE)
+map("world", add = TRUE)
+points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
+```
+
+Fraxinus cuspidata
+
+** Check values in E Texas.
+plot(raster)
+extract(raster, click(n=1))
+```{r}
+load(paste0('./05 - Modeling Workspace - ', 'Frax_Cusp', ' Model Output'))
+plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
+                                                        italic('Fraxinus cuspidata '),
+                                                        'occurrences')))
+plot(envMap, add = TRUE)
+plot(rangeMap, border = 'blue', add = TRUE)
+map("state", add = TRUE)
+map("world", add = TRUE)
+points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
+```
+
+Fraxinus greggii
+```{r}
+load(paste0('./05 - Modeling Workspace - ', 'Frax_Greg', ' Model Output'))
+plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
+                                                        italic('Fraxinus greggii '),
+                                                        'occurrences')))
+plot(envMap, add = TRUE)
+plot(rangeMap, border = 'blue', add = TRUE)
+map("state", add = TRUE)
+map("world", add = TRUE)
+points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
+```
+
+Fraxinus latifolia
+```{r}
+load(paste0('./05 - Modeling Workspace - ', 'Frax_Lati', ' Model Output'))
+plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
+                                                        italic('Fraxinus latifolia '),
+                                                        'occurrences')))
+plot(envMap, add = TRUE)
+plot(rangeMap, border = 'blue', add = TRUE)
+map("state", add = TRUE)
+map("world", add = TRUE)
+points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
+```
+
+Fraxinus nigra
+```{r}
+load(paste0('./05 - Modeling Workspace - ', 'Frax_Nigr', ' Model Output'))
+plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
+                                                        italic('Fraxinus nigra '),
+                                                        'occurrences')))
+plot(envMap, add = TRUE)
+plot(rangeMap, border = 'blue', add = TRUE)
+map("state", add = TRUE)
+map("world", add = TRUE)
+points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
+```
+
+Fraxinus pennsylvanica
+```{r}
+load(paste0('./05 - Modeling Workspace - ', 'Frax_Penn', ' Model Output'))
+plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
+                                                        italic('Fraxinus pennsylvanica '),
+                                                        'occurrences')))
+plot(envMap, add = TRUE)
+plot(rangeMap, border = 'blue', add = TRUE)
+map("state", add = TRUE)
+map("world", add = TRUE)
+points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
+```
+
+Fraxinus profunda
+```{r}
+load(paste0('./05 - Modeling Workspace - ', 'Frax_Prof', ' Model Output'))
+plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
+                                                        italic('Fraxinus profunda '),
+                                                        'occurrences')))
+plot(envMap, add = TRUE)
+plot(rangeMap, border = 'blue', add = TRUE)
+map("state", add = TRUE)
+map("world", add = TRUE)
+points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
+```
+
+Fraxinus quadrangulata
+```{r}
+load(paste0('./05 - Modeling Workspace - ', 'Frax_Quad', ' Model Output'))
+plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
+                                                        italic('Fraxinus quadrangulata '),
+                                                        'occurrences')))
+plot(envMap, add = TRUE)
+plot(rangeMap, border = 'blue', add = TRUE)
+map("state", add = TRUE)
+map("world", add = TRUE)
+points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
+```

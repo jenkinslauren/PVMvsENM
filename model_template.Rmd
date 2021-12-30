@@ -1,19 +1,23 @@
 ---
-title: "111"
+title: "111 model"
 author: "Lauren Jenkins"
-date: "12/7/2021"
+date: "7 December 2021"
 output: html_document
 ---
 
-111 = full species (fraxinus_americana)
-222 = species abreviated (Frax_Amer)
-333 = range (littleRange_FraxAmer)
+Last updated: 16 December 2021
+** Don't forget to update title and date above! **
+111 = full species name with first letter capital (Fraxinus pennsylvanica)
+222 = full species name, all lowercase, _ inbetween (fraxinus_pennsylvanica)
+333 = abreviated species name (ex. FraxPenn)
+444 = abreviated with _ inbetween 
 
 Setup environment:
 ```{r, include = FALSE}
 rm(list = ls())
 library(dplyr)
 library(ggplot2)
+library(tidyr)
 
 library(raster)
 library(rgdal)
@@ -28,60 +32,69 @@ library(rnaturalearthdata)
 library(rnaturalearthhires)
 
 setwd('/Volumes/LJ MacBook Backup/MOBOT/PVMvsENM')
+```
+
+Load PCA environment and set constants:
+```{r}
+# load PCA data
 load('./PCA_Beyer')
-load('./03 - Modeling Workspace - 222 Cleaning')
-```
 
-Constants:
-```{r}
+# set constants
 ll <- c('longitude', 'latitude')
-species <- '111'
-speciesAb <- '222'
-rangeModel <- littleRange_333
+sp <- '111'
+species <- '222'
+speciesAb <- '333'
+speciesAb_ <- '444'
 ```
 
-Load environmental PCA data:
+Load environmental PCA rasters. If already clipped, load that. Otherwise, clip the data to present.
 ```{r, include = FALSE}
-pcPrediction <- list()
-for (i in 1:length(clim)) {
-  names(clim[[i]]) <- c("bio1", "bio10", "bio11", "bio12", "bio13", "bio14", "bio15", "bio16",
-                        "bio17", "bio18", "bio19", "bio4", "bio5", "bio6", "bio7",
-                        "bio8", "bio9", "cloudiness", "relative_humidity")
-  pcPrediction[i] <- raster::predict(clim[[i]], pca, index = 1:3)
-  names(pcPrediction[[i]]) <- paste0("pc", 1:3, "_", (i-1)*1000, "KYBP")
-}
-```
-
-```{r}
-envDataPca <- stack(pcPrediction)
-# plot(envDataPca)
-envPresences <- stack(envDataPca[[1:3]])
-names(envPresences) <- paste0('pca', 1:3)
-```
-
-Define study region & extent.
-```{r}
-if (file.exists('./data_and_analyses/study_region/Study Region.Rdata') & 
-    file.exists('./data_and_analyses/study_region/Study Region Extent.Rdata')) {
-  load('./data_and_analyses/study_region/Study Region.Rdata')
-  load('./data_and_analyses/study_region/Study Region Extent.Rdata')
-} else {
-  studyRegion <- rgdal::readOGR(dsn = './data_and_analyses/study_region', 'study_region')
-  studyRegion <- crop(studyRegion, extent(-178.2166, 83.7759, -55.90223, 83.6236))
-  projection(studyRegion) <- getCRS("WGS84")
-  studyExtent <- extent(studyRegion)
-  save(studyRegion, file='./data_and_analyses/study_region/Study Region.Rdata', compress=TRUE)
-  save(studyExtent, file='./data_and_analyses/study_region/Study Region Extent.Rdata', compress=TRUE)
-}
-```
-
-Clip environmental PCA's to study extent & visualize:
-```{r, include = FALSE}
-fileName <- paste0('./data_and_analyses/env_data/Beyer/envDataClipped_', species, '.tif')
+# if already clipped, load clipped environmental data
+fileName <- paste0('./data_and_analyses/env_data/Beyer/envDataClipped.tif')
 if (file.exists(fileName)) {
   envData <- brick(fileName)
+  # rename raster layers to pc's
   names(envData) <- paste0('pca', 1:3)
 } else {
+  pcPrediction <- list()
+  # label each env layer by variable and year
+  for (i in 1:length(clim)) {
+    names(clim[[i]]) <- c("bio1", "bio10", "bio11", "bio12", "bio13", "bio14", "bio15", "bio16",
+                          "bio17", "bio18", "bio19", "bio4", "bio5", "bio6", "bio7",
+                          "bio8", "bio9", "cloudiness", "relative_humidity")
+    pcPrediction[i] <- raster::predict(clim[[i]], pca, index = 1:3)
+    names(pcPrediction[[i]]) <- paste0("pc", 1:3, "_", (i-1)*1000, "KYBP")
+  }
+  
+  envDataPca <- stack(pcPrediction)
+  
+  # keep only rasters (first three rasters) from present (0 KYBP)
+  envPresences <- stack(envDataPca[[1:3]])
+  names(envPresences) <- paste0('pca', 1:3)
+  
+  # check projections = wgs84
+  print("Ensure that the projection of these rasters is WGS84:")
+  print(paste0("Projection of envPresences = ", projection(envPresences)))
+  
+  # define study region & extent, load if already defined
+  if (file.exists('./data_and_analyses/study_region/Study Region.Rdata') & 
+      file.exists('./data_and_analyses/study_region/Study Region Extent.Rdata')) {
+    load('./data_and_analyses/study_region/Study Region.Rdata')
+    load('./data_and_analyses/study_region/Study Region Extent.Rdata')
+  } else {
+    studyRegion <- rgdal::readOGR(dsn = './data_and_analyses/study_region', 'study_region')
+    studyRegion <- crop(studyRegion, extent(-178.2166, 83.7759, -55.90223, 83.6236))
+    projection(studyRegion) <- getCRS("WGS84")
+    studyExtent <- extent(studyRegion)
+    save(studyRegion, 
+         file='./data_and_analyses/study_region/Study Region.Rdata', 
+         compress=TRUE)
+    save(studyExtent, 
+         file='./data_and_analyses/study_region/Study Region Extent.Rdata', 
+         compress=TRUE)
+  }
+  
+  # clip environmental PCAs to study extent for given species, visualize, and save:
   envDataClipped <- list()
   for (i in 1:nlayers(envPresences)) {
     x <- envPresences[[i]]
@@ -90,44 +103,47 @@ if (file.exists(fileName)) {
     projection(x) <- getCRS("WGS84")
     envDataClipped[[i]] <- x
     envData <- stack(envDataClipped)
-    # plot(envData)
-    writeRaster(envData, fileName, 
-                format = 'GTiff', overwrite = T)
+    plot(envData)
+    writeRaster(envData, fileName, format = 'GTiff', overwrite = T)
   }
 }
 ```
 
 Load records for given species.
 ```{r}
-records <- paste0('./cleaning_records/', 
-                         species, '_finalRecords.rData')
-# records <- paste0('./species_records/02_', species, '_thinned_records.rData')
-load(records)
-records <- speciesSf_filtered_final # 515 observations
-records <- as(records, 'Spatial')
-records <- as.data.frame(records)
-colnames(records)[26:27] <- c('longitude', 'latitude')
+recordsRaw <- paste0('./cleaning_records/', species, '_finalRecords.rData')
+load(recordsRaw)
+recordsRaw <- data.frame(speciesSf_filtered_final) # 542 observations
+recordsRaw$geometry <- gsub("[c()]", "", recordsRaw$geometry)
+recordsRaw <- separate(data = recordsRaw, 
+                    col = 'geometry', 
+                    into = ll, 
+                    sep = "\\,")
+recordsRaw$longitude <- as.double(recordsRaw$longitude)
+recordsRaw$latitude <- as.double(recordsRaw$latitude)
 ```
 
 Match environmental data to records.
 ```{r}
-envSpecies <- extract(envData, cbind(records$longitude, records$latitude))
-envSpecies <- as.data.frame(envSpecies)
-records <- cbind(records, envSpecies)
+occsEnv <- raster::extract(envData, 
+                              cbind(recordsRaw$longitude, 
+                                    recordsRaw$latitude))
+occsEnvDf <- as.data.frame(occsEnv)
+records <- cbind(recordsRaw, occsEnvDf)
 ```
 
 Remove records that fall in the water & visualize.
 ```{r}
 # records in the water:
-if (any(is.na(rowSums(envSpecies)))) {
-  water <- records[which(is.na(rowSums(envSpecies))), ] 
+if (any(is.na(rowSums(occsEnvDf)))) {
+  water <- records[which(is.na(rowSums(occsEnvDf))), ] 
   water <- SpatialPointsDataFrame(water[,ll], data = water,
                                 proj4 = getCRS('wgs84', TRUE))
 }
 
 # remove records in water from dataset:
-if (any(is.na(rowSums(envSpecies)))) records <-
-  records[-which(is.na(rowSums(envSpecies))), ]
+if (any(is.na(rowSums(occsEnvDf)))) records <-
+  records[-which(is.na(rowSums(occsEnvDf))), ]
 
 # visualize the points that fall in the water
 # convert to sp object
@@ -136,7 +152,7 @@ recordsSp <- SpatialPointsDataFrame(records[, ll], data = records,
 
 # visualize
 plot(recordsSp, pch = 16, cex = 0.5, col = "red", 
-     main = 'BIEN occurrences thinned')
+     main = substitute(paste(italic('111 '), 'occurrences (BIEN) thinned')))
 if (exists("water")) {
   plot(water, col = 'blue', add = TRUE)
 }
@@ -146,17 +162,41 @@ map("world", add = TRUE)
 
 Save workspace.
 ```{r}
-save.image(paste0('./04 - Modeling Workspace - Clipping Environmental Data - ', species))
-# load('./04 - Modeling Workspace - Clipping Environmental Data')
+save.image(paste0('./04 - Modeling Workspace - Clipping ', sp))
+# load(paste0('./04 - Modeling Workspace - Clipping ', sp))
+```
+
+Load cleaned records data.
+```{r}
+load(paste0('./03 - Modeling Workspace - ', speciesAb_, ' Cleaning'))
+rangeMap <- littleRange_333
+```
+
+```{r, warning = FALSE}
+# use the buffer/calibration region for extracting background sites
+calibRegionSpAlb <- as(range_buffer_final, 'Spatial')
+calibRegionSpAlb <- sp::spTransform(calibRegionSpAlb, getCRS('albersNA', TRUE))
+calibRegionSpWgs <- sp::spTransform(calibRegionSpAlb, getCRS('wgs84', TRUE))
+
+# get 10,000 random background sites from calibration region
+bgTestSpAlb <- spsample(calibRegionSpAlb, n=10000, type='random')
+bgTestSp <- sp::spTransform(bgTestSpAlb, getCRS('wgs84', TRUE))
+randomBgSites <- as.data.frame(coordinates(bgTestSp))
+names(randomBgSites) <- ll
+
+
+# sanity check: plot the background sites
+plot(bgTestSp, pch = 16, cex = 0.5, col = "red", 
+     main = substitute(paste(italic('111 '), 'background sites')))
+plot(calibRegionSpWgs, add = TRUE, border = 'blue')
+map("state", add = TRUE)
+map("world", add = TRUE)
 ```
 
 ```{r}
+# extract environment at background sites
 climate <- envData
-# generate 10,000 background sites
-randomBgSites <- randomPoints(climate, 10000)
-
-# extract environment at sites
-randomBgEnv <- extract(climate, randomBgSites)
+randomBgEnv <- raster::extract(climate, randomBgSites)
 randomBgEnv <- as.data.frame(randomBgEnv)
 
 # remove any sites with NA for at least one variable
@@ -168,92 +208,116 @@ if (any(isNa)) {
 
 # combine with coordinates and rename coordinate fields
 randomBg <- cbind(randomBgSites, randomBgEnv)
-names(randomBg)[1:2] <- c('longitude', 'latitude')
+names(randomBg)[1:2] <- ll
+
 dir.create('./Background Sites', recursive=TRUE, showWarnings=FALSE)
-save(randomBg, file=
-    './Background Sites/Random Background Sites across Study Region.Rdata',
+save(randomBg, 
+     file = paste0('./Background Sites/Random Background Sites across Study Region - ', 
+                   speciesAb, '.Rdata'),
     compress=TRUE)
 ```
 
-Generate test background sites.
-```{r}
-load(paste0('./03 - Modeling Workspace - ', speciesAb, ' Cleaning')
-
-range_buffer_final <- as(range_buffer_final, Class = 'Spatial')
-calibRegionSpAlb <- range_buffer_final
-calibRegionSpAlb <- sp::spTransform(calibRegionSpAlb, getCRS('albersNA', TRUE))
-bgTestSpAlb <- spsample(calibRegionSpAlb, n = 11000, type = 'random', iter = 10)
-bgTestSp <- sp::spTransform(bgTestSpAlb, getCRS('wgs84', TRUE))
-bgTest <- as.data.frame(coordinates(bgTestSp))
-names(bgTest) <- ll
-calibRegionsSp <- calibRegionSpAlb
-
-rasts <- envData
-areas <- area(rasts[[1]])
-
-# extract
-thisEnv <- raster::extract(rasts, bgTest)
-thisEnv <- as.data.frame(thisEnv)
-
-thisArea <- raster::extract(areas, bgTest)
-thisArea <- as.data.frame(thisArea)
-names(thisArea) <- 'cellArea_km2'
-
-thisEnv <- cbind(thisArea, thisEnv)
-env <- thisEnv
-
-bgTest <- cbind(bgTest, env)
-bgTest <- bgTest[complete.cases(bgTest), ]
-bgTest <- bgTest[1:min(nrow(bgTest), 10000), ]
-
-bgTestSp <- SpatialPoints(bgTest[ , ll], getCRS('wgs84', TRUE))
-bgTestSpAlb <- sp::spTransform(bgTestSp, getCRS('albersNA', TRUE))
-```
-
 Ready for maxent!
-Turn off clamping to avoid extrapolating (in maxnet(), clamp = FALSE)
-Also, type = cclog (to make the output between 0 & 1)
+Turn off clamping to avoid extrapolating (in maxnet(), clamp = FALSE).
+Also, type = cloglog (to make the output between 0 & 1).
 ```{r}
-predictors <- c('pca1', 'pca2', 'pca3')
-trainData <- rbind(records[ ,predictors], randomBg[ ,predictors])
+presBg <- rep(c(1, 0), c(nrow(recordsRaw), nrow(randomBg)))
 
-presBg <- c(rep(1, nrow(records)), rep(0, nrow(randomBg)))
+env <- rbind(occsEnv, randomBgEnv)
+env <- cbind(presBg, env)
+env <- as.data.frame(env)
+env <- na.omit(env)
 
 # create output directory for model object and rasters
-dir.create(paste0('./Models/', speciesAb, '_Maxent')
+dir.create(paste0('./Models/', speciesAb_, '_Maxent'),
     recursive=TRUE, showWarnings=FALSE)
 
 # model species
-envModel <- maxnet(p = presBg, data = trainData)
-save(envModel, file=paste0('./Models/', speciesAb, '_Maxent/Model.Rdata', compress=TRUE)
-```
+envModel <- enmSdm::trainMaxNet(data = env, resp = "presBg")
+# envModel <- maxnet(p = presBg, data = trainData)
+modelFileName <- paste0('./Models/', speciesAb_, '_Maxent/Model.Rdata')
+save(envModel, file = modelFileName, compress=TRUE)
 
-```{r}
-# write current raster
+predictors <- c('pca1', 'pca2', 'pca3')
+# prediction
 envMap <- predict(
   climate[[predictors]],
   envModel,
-  filename=paste0('./Models/', speciesAb, '_Maxent/maxentPredictionBeyer0KYBP'), 
+  filename=paste0('./Models/', speciesAb_, '_Maxent/maxentPredictionBeyer0KYBP'), 
   clamp = F, 
   format='GTiff', 
   overwrite = TRUE, 
   type='cloglog')
-
-envMapSp <- rasterToPolygons(envMap)
 ```
 
+Try visualizing using sf (having trouble with this, so haven't implemented yet).
 ```{r}
-plot(rangeModel, border = 'blue', main = "Maxent Output, Frax_amer")
+envMapSp <- rasterToPolygons(envMap)
+# envMapSf <- st_as_sf(envMapSp,
+#                      coords = c(x = 'longitude', y = 'latitude'),
+#                       crs = getCRS("wgs84", TRUE))
+# rangeMapSf <- st_transform(st_as_sf(x = range), getCRS('wgs84', TRUE))
+# recordsSf <- speciesSf <- st_as_sf(x = records,
+#                       coords = c(x = 'longitude',
+#                                  y = 'latitude'),
+#                       crs = getCRS('wgs84', TRUE))
+# 
+# world <- ne_countries(scale = "medium", returnclass = "sf")
+# states <- st_as_sf(ne_states(country = 'united states of america'))
+# canada <- st_as_sf(ne_states(country = 'canada'))
+
+# sf object doesn't really work
+# ggplot(data = world) +
+#   theme_bw() +
+#   geom_sf(fill = "white") +
+#   geom_sf(data = states, fill = NA) + 
+#   geom_sf(data = canada, fill = NA) +
+#   geom_sf(data = envMapSf) +
+#   geom_sf(data = rangeMapSf, 
+#           color = 'darkgreen',
+#           fill = 'green', 
+#           alpha = 0.4, 
+#           inherit.aes = FALSE) +
+#   geom_sf(data = recordsSf,
+#           color = 'red',
+#           pch = 16,
+#           cex = 0.4) + 
+#   coord_sf(xlim = c(min(records$longitude), max(records$longitude)), 
+#            ylim = c(min(records$latitude), max(records$latitude)), expand = TRUE) +
+#   xlab("Longitude") + 
+#   ylab("Latitude") +
+#   theme(panel.grid.major = element_line(color = gray(0.5), linetype = "dashed", 
+#                                         size = 0.5), panel.background = element_rect(fill = "lavender"))
+
+```
+
+Visualize model output, focused on species.
+```{r}
+plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
+                                                        italic('111 '),
+                                                        'occurrences')))
 plot(envMap, add = TRUE)
-plot(rangeModel, border = 'blue', add = TRUE)
+plot(rangeMap, border = 'blue', add = TRUE)
 map("state", add = TRUE)
 map("world", add = TRUE)
 points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
 ```
 
+Visualize output, zoomed out to study region.
 ```{r}
-save.image(paste0('./05 - Modeling Workspace - ', speciesAb, ' Model Output'))
-load(paste0('./05 - Modeling Workspace - ', speciesAb, ' Model Output'))
+plot(envMap, main = substitute(paste('Maxent output, ', 
+                                                        italic('111 '),
+                                                        'occurrences')))
+plot(rangeMap, border = 'blue', add = TRUE)
+# map("state", add = TRUE)
+# map("world", add = TRUE)
+# points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
+```
+
+Save workspace image.
+```{r}
+save.image(paste0('./05 - Modeling Workspace - ', speciesAb_, ' Model Output'))
+# load(paste0('./05 - Modeling Workspace - ', speciesAb_, ' Model Output'))
 ```
 
 
