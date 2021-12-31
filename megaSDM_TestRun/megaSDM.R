@@ -1,6 +1,13 @@
 rm(list = ls())
+setwd('/Volumes/LJ MacBook Backup/MOBOT/PVMvsENM')
+
 library(megaSDM)
 library(sf)
+library(raster)
+library(rgdal)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
 
 ll <- c('longitude', 'latitude')
 
@@ -76,14 +83,14 @@ toCSV <- function(sp) {
   
   recordsRaw <- paste0('./cleaning_records/', species, '_finalRecords.rData')
   load(recordsRaw)
-  fileName <- paste0('./megaSDM_TestRun/', speciesAb_, '.csv')
+  fileName <- paste0('./megaSDM_TestRun/', sp, '.csv')
   st_write(speciesSf_filtered_final, 
            fileName, 
            layer_options = "GEOMETRY=AS_XY",
            append = F)
   temp <- read.csv(fileName)
   colnames(temp)[1:3] <- c('longitude', 'latitude', 'species')
-  write.csv(temp, fileName)
+  write.csv(temp, fileName, row.names = FALSE)
 }
 
 lapply(speciesList, toCSV)
@@ -98,18 +105,30 @@ OccurrenceManagement(occlist = occlist,
                      nbins = 25,
                      envdata = TSEnv$training)
 
+occlist <- list.files(occ_output, pattern = ".csv", full.names = TRUE)
 buff_output <- "megaSDM_TestRun/buffers"
-BackgroundBuffers(occlist = list(fileName),
+BackgroundBuffers(occlist = occlist,
                   envdata = TSEnv$training,
                   buff_output,
-                  ncores = 2)
+                  ncores = 1)
 
-splist <- c("Fraxinus americana", "Fraxinus pennsylvanica")
-occ_output <- "occurrences"
-extent_occ <- c(-178.2166, 83.7759, -55.90223, 83.6236)
-Occurrences <- OccurrenceCollection(spplist = splist,
-                                    output = occ_output,
-                                    trainingarea = extent_occ)
+# 10,000 background points
+nbg <- 10000
+# proportion of the background points sampled from within buffers
+spatial_weights <- 0.5
 
-splist <- Occurrences$Scientific.Name
+# random or environmentally subsampled (Varela)?
+sampleMethod <- "Varela"
+
+bufflist <- list.files(buff_output, pattern = ".shp$", full.names = TRUE)
+bg_output <- "megaSDM_TestRun/backgrounds"
+
+BackgroundPoints(spplist = speciesList,
+                 envdata = TSEnv$training,
+                 output = bg_output,
+                 nbg = nbg,
+                 spatial_weights = spatial_weights,
+                 buffers = bufflist,
+                 method = sampleMethod,
+                 ncores = 1)
 
