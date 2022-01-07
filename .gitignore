@@ -9,3 +9,19 @@ all BIEN data
 05 - Modeling Workspace - Frax_Penn Model Output
 04 - Modeling Workspace - Clipping Fraxinus pennsylvanica
 .RData
+workspaces/04 - Modeling Workspace - Clipping Fraxinus americana
+workspaces/04 - Modeling Workspace - Clipping Fraxinus caroliniana
+workspaces/04 - Modeling Workspace - Clipping Fraxinus greggii
+workspaces/04 - Modeling Workspace - Clipping Fraxinus cuspidata
+workspaces/04 - Modeling Workspace - Clipping Fraxinus nigra
+workspaces/04 - Modeling Workspace - Clipping Fraxinus profunda
+workspaces/04 - Modeling Workspace - Clipping Fraxinus quadrangulata
+workspaces/05 - Modeling Workspace - Frax_Amer Model Output
+workspaces/05 - Modeling Workspace - Frax_Caro Model Output
+workspaces/05 - Modeling Workspace - Frax_Cusp Model Output
+workspaces/05 - Modeling Workspace - Frax_Greg Model Output
+workspaces/05 - Modeling Workspace - Frax_Nigr Model Output
+workspaces/05 - Modeling Workspace - Frax_Prof Model Output
+workspaces/05 - Modeling Workspace - Frax_Quad Model Output
+.RData
+.RData
