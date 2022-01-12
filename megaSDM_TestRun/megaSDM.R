@@ -83,7 +83,7 @@ toCSV <- function(sp) {
   
   recordsRaw <- paste0('./cleaning_records/', species, '_finalRecords.rData')
   load(recordsRaw)
-  fileName <- paste0('./megaSDM_TestRun/', sp, '.csv')
+  fileName <- paste0('./megaSDM_TestRun/', species, '.csv')
   st_write(speciesSf_filtered_final, 
            fileName, 
            layer_options = "GEOMETRY=AS_XY",
@@ -132,3 +132,13 @@ BackgroundPoints(spplist = speciesList,
                  method = sampleMethod,
                  ncores = 1)
 
+occlist <- list.files(occ_output, pattern = ".csv", full.names = TRUE)
+bglist <- list.files(bg_output, pattern = ".csv", full.names = TRUE)
+model_output <- "megaSDM_TestRun/models"
+
+MaxEntModel(occlist = occlist,
+            bglist = bglist,
+            model_output = model_output,
+            ncores = 1,
+            nrep = 4,
+            alloutputs = FALSE)
