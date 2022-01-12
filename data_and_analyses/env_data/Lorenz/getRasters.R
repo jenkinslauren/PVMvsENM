@@ -3,10 +3,10 @@ library(raster)
 library(enmSdm)
 library(dplyr)
 setwd('/Volumes/LJ MacBook Backup/MOBOT/PVMvsENM')
-lorenzPath <- './data_and_analyses/env_data/Lorenz/V2'
+lorenzPath <- './Downloads/Lorenz/V2'
 
 rasts <- list()
-getClimRasts <- function(gcm, years, variables) {
+getClimRasts <- function(gcm, year, variables) {
   
   # gcm		'ccsm' or 'ecbilt'
   # year		year BP (from 0 to 21000 for ccsm or 22000 for ecbilt)
@@ -17,28 +17,58 @@ getClimRasts <- function(gcm, years, variables) {
   gcmFolder <- if (gcm == 'ccsm') {
     'ccsm_21-0k_all_tifs_LJ'
   } else if (gcm == 'ecbilt') {
-    'ecbilt_21-0k_all_tifs'
+    'ecbilt_21-0k_all_tifs_LJ'
   }
   # get current version of each variable
   
   for (variable in variables) {
-    for (year in years) {
-      rast <- raster(paste0(lorenzPath, '/', gcmFolder, '/', year, 'BP/used/', variable))
-      names(rast) <- paste0(variable, '_', year, 'BP')
-      # summary(rast)
-      rasts <- append(rasts, rast)
+    rast <- stack(paste0(lorenzPath, '/', gcmFolder, '/', year, 'BP/', variable))
+    names(rast) <- variable
+    
+    rasts <- if (exists('rasts', inherits=FALSE)) {
+      stack(rasts, rast)
+    } else {
+      rast
     }
   }
-  return(rasts)
+  
+  # rescale
+  # if (rescale) {
+  #   # not present... rescale by present-day values
+  #   if (year != 0 | file.exists ('./Volumes/GoogleDrive/.shortcut-targets-by-id/0ByjNJEf91IW5SUlEOUJFVGN0Y28/NSF_ABI_2018_2021/workshops/ibs_2019_quito/TIMBER/environmental_rasters/lorenz_et_al_2016/variable_statistics_0bp_across_north_america.csv')) {
+  #     
+  #     variableStats <- read.csv('./Volumes/GoogleDrive/.shortcut-targets-by-id/0ByjNJEf91IW5SUlEOUJFVGN0Y28/NSF_ABI_2018_2021/workshops/ibs_2019_quito/TIMBER/environmental_rasters/lorenz_et_al_2016/variable_statistics_0bp_across_north_america.csv')
+  #     
+  #     for (variable in variables) {
+  #       minVal <- variableStats$min[variableStats$gcm == gcm & variableStats$variable == variable]
+  #       maxVal <- variableStats$max[variableStats$gcm == gcm & variableStats$variable == variable]
+  #       rasts[[variable]] <- (rasts[[variable]] - minVal) / (maxVal - minVal)
+  #     }
+  #     # present-day... just rescale to [0, 1]
+  #   } else {
+  #     for (i in 1:nlayers(rasts)) rasts[[i]] <- stretch(rasts[[i]], 0, 1)
+  #   }
+  # }
+  # 
+  # # fill coasts
+  # if (fillCoasts) {
+  #   name <- names(rasts)
+  #   
+  #   # fill NA cells near coasts to account for fact that some records may not fall in a cell near a coast
+  #   for (i in 1:nlayers(rasts)) {
+  #     rasts[[i]] <- focal(rasts[[i]], w=matrix(1, nrow=3, ncol=3), fun=mean, na.rm=TRUE, NAonly=TRUE)
+  #   }
+  #   names(rasts) <- name
+  # }
+  names(rasts) <- paste0(gcm, '_', variables)
+  rasts
 }
 
-variables <- list.files(path = './data_and_analyses/env_data/Lorenz/V2/ccsm_21-0k_all_tifs_LJ/0BP/used/', 
+variables <- list.files(path = './Downloads/Lorenz/V2/ccsm_21-0k_all_tifs_LJ/0BP/', 
                         pattern='*.tif', all.files=TRUE)
-years <- c('0', '1000', '2000', '3000', '4000', '5000', '6000', '7000', '8000',
-           '9000', '10000', '11000', '12000', '13000', '14000', '15000', '16000',
-           '17000', '18000', '19000', '20000', '21000')
+years <- seq(0, 21000, by = 1000)
 
-rasts <- getClimRasts('ccsm', years, variables)
+rasts <- getClimRasts('ccsm', year = 0, variables = variables)
 rastBricks <- list(brick(rasts[1:22]), brick(rasts[23:44]), brick(rasts[45:66]), 
                    brick(rasts[67:88]), brick(rasts[89:110]), brick(rasts[111:132]), 
                    brick(rasts[133:154]), brick(rasts[155:176]), brick(rasts[177:198]))
