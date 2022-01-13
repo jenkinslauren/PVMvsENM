@@ -3,6 +3,7 @@ library(raster)
 library(enmSdm)
 library(dplyr)
 library(terra)
+library(gtools)
 setwd('/Volumes/lj_mac_22/MOBOT/PVMvsENM')
 # load('./PCA_Beyer')
 # load('./PCA_Lorenz')
@@ -10,6 +11,7 @@ setwd('/Volumes/lj_mac_22/MOBOT/PVMvsENM')
 # retrieve list of files
 dirList <- list.dirs(path = './data_and_analyses/env_data/Lorenz/V2/ccsm_21-0k_all_tifs_LJ',
                      recursive = FALSE)
+dirList <- mixedsort(dirList)
 rm(clim)
 for (dir in dirList) {
   fileList <- list.files(path = dir, pattern = '*.tif', 
@@ -18,9 +20,11 @@ for (dir in dirList) {
   # remove wdi & etr variables 
   fileList <- Filter(function(x) !any(grepl("ETR", x)), fileList)
   fileList <- Filter(function(x) !any(grepl("WDI", x)), fileList)
-  
+  # print(paste0(sub('.+LJ/(.+)', '\\1', dir), 'YBP ', length(fileList)))
   thisClim <- lapply(fileList, raster)
   thisClim <- brick(thisClim)
+  names(thisClim) <- paste0(names(thisClim), '_', 
+                            sub('.+LJ/(.+)', '\\1', dir))
   clim <- if(exists('clim')) {
     stack(clim, thisClim)
   } else {
@@ -28,25 +32,44 @@ for (dir in dirList) {
   }
 }
 
-fileList <- list.files(path = './data_and_analyses/env_data/Lorenz', 
+bricks <- list()
+for (j in 1:38) {
+  stack <- list()
+  x <- j
+  while(x < nlayers(clim)) {
+    stack <- append(stack, clim[[x]])
+    x <- x + 38
+  }
+  bricks <- append(bricks, brick(stack))
+}
+
+i <- 1
+for (var in vars) {
+  outfile <- paste0('./data_and_analyses/env_data/Lorenz/V2/ccsm_21-0k_all_tifs_LJ/', var, '.tif')
+  writeRaster(bricks[[i]], outfile, format = 'GTiff', overwrite = T)
+  i <- i + 1
+}
+
+fileList <- list.files(path = './data_and_analyses/env_data/Lorenz/V2/ccsm_21-0k_all_tifs_LJ', 
                        pattern='*.tif', all.files=TRUE, full.names=TRUE)
-clim <- lapply(fileList, brick)
-clim <- stack(clim)
-climDf <- as.data.frame(clim)
+fileList <- c(fileList[1], fileList[5])
+lorenz <- lapply(fileList, brick)
+lorenz <- stack(lorenz)
+climDf <- as.data.frame(lorenz)
 
 climList <- list()
-vars <- c('BIO1', paste0('BIO', 4:19), 'cloudiness', 'relative_humidity')
+vars <- c('an_avg_TMAX', 'an_sum_PRCP')
 yrs <- paste0(1:22)
 for(i in 1:22) {
   climTimes <- list()
   for(var in vars) {
     index <- paste0(var, ".", i)
-    climTimes <- append(climTimes, clim[[index]])
+    climTimes <- append(climTimes, lorenz[[i]])
   }
   climList <- append(climList,brick(climTimes))
 }
 
-clim <- lapply(climList, stack)
+lorenz <- lapply(climList, stack)
 
 # build climate over all time periods, not just the latest
 # using 10,000 random background points, extracted climate at these points
@@ -79,7 +102,7 @@ df <- data.frame()
 # list of dataframes containing the data for each variable
 # so, listofDf[1] = bioclim1, listofDf[2] = bioclim4
 # recall the last 2 variables (18 & 19) = cloudiness & relative_humidity
-randomBgSites <- randomPoints(clim[[1]], 10000)
+randomBgSites <- randomPoints(lorenz[[1]], 10000)
 df <- lapply(bricks, buildClim)
 
 stackDfs <- list()
@@ -119,9 +142,7 @@ climxDf <- as.data.frame(climx)
 
 # apply labels to each variable
 # recall that bioclim 2 & 3 aren't included
-names(climxDf) <- c("bio1", "bio10", "bio11", "bio12", "bio13", "bio14", "bio15", "bio16",
-                    "bio17", "bio18", "bio19", "bio4", "bio5", "bio6", "bio7",
-                    "bio8", "bio9", "cloudiness", "relative_humidity")
+names(climxDf) <- c(vars)
 names(climDf) <- c(rep("bio1",22), rep("bio10",22), rep("bio11",22), rep("bio12",22), 
                    rep("bio13",22), rep("bio14",22), rep("bio15",22), rep("bio16",22),
                    rep("bio17",22), rep("bio18",22), rep("bio19",22), rep("bio4",22), 
