@@ -3,7 +3,7 @@ library(raster)
 library(enmSdm)
 library(dplyr)
 library(terra)
-setwd('/Volumes/LJ MacBook Backup/MOBOT/PVMvsENM')
+setwd('/Volumes/lj_mac_22/MOBOT/PVMvsENM')
 
 # set constants
 pc <- 5

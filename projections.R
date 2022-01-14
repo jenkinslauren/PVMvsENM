@@ -15,19 +15,18 @@ library(rnaturalearth)
 library(rnaturalearthdata)
 library(rnaturalearthhires)
 
-setwd('/Volumes/LJ MacBook Backup/MOBOT/PVMvsENM')
+setwd('/Volumes/lj_mac_22/MOBOT/PVMvsENM')
 
 # constants
 gcm <- 'ecbilt'
 pc <- 5
 workingFolder <- if(gcm = 'Beyer') {
   './data_and_analyses/env_data/Beyer/tifs'
+  load('./PCA_Beyer')
 } else {
   paste0('./data_and_analyses/env_data/Lorenz/V2/',
                           gcm, '_21-0k_all_tifs_LJ')
 }
-
-load('./PCA_Beyer')
 
 speciesList <- c('Fraxinus americana', 'Fraxinus caroliniana', 'Fraxinus cuspidata'
                  ,'Fraxinus greggii', 'Fraxinus nigra', 'Fraxinus pennsylvanica',

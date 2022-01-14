@@ -3,7 +3,7 @@
 # # # # # # # # # # # # # # # #
 
 rm(list=ls())
-setwd("/Volumes/LJ MacBook Backup/MOBOT/PVMvsENM")
+setwd('/Volumes/lj_mac_22/MOBOT/PVMvsENM')
 library(ncdf4)
 library(raster)
 
