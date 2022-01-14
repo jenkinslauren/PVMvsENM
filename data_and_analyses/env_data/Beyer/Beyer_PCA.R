@@ -4,8 +4,11 @@ library(enmSdm)
 library(dplyr)
 library(terra)
 setwd('/Volumes/LJ MacBook Backup/MOBOT/PVMvsENM')
-load('./PCA_Beyer')
-# load('./PCA_Lorenz')
+
+# set constants
+pc <- 5
+
+# load('./PCA_Beyer')
 
 # retrieve list of files
 fileList <- list.files(path = './data_and_analyses/env_data/Beyer/tifs', 
@@ -153,14 +156,14 @@ for (i in 1:length(clim)) {
   names(clim[[i]]) <- c("bio1", "bio10", "bio11", "bio12", "bio13", "bio14", "bio15", "bio16",
                         "bio17", "bio18", "bio19", "bio4", "bio5", "bio6", "bio7",
                         "bio8", "bio9", "cloudiness", "relative_humidity")
-  pcPrediction[i] <- raster::predict(clim[[i]], pca, index = 1:3)
-  names(pcPrediction[[i]]) <- paste0("pc", 1:3, "_", (i-1)*1000, "KYBP")
+  pcPrediction[i] <- raster::predict(clim[[i]], pca, index = 1:pc)
+  names(pcPrediction[[i]]) <- paste0("pc", 1:pc, "_", (i-1)*1000, "KYBP")
 }
 
 stackPca <- stack(pcPrediction)
 plot(stackPca)
 
-outfile <- './data_and_analyses/env_data/Beyer/tifs/pca_output.tif'
+outfile <- paste0('./data_and_analyses/env_data/Beyer/tifs/pca_output_PC', pc, '.tif')
 writeRaster(stackPca, outfile, format = 'GTiff', overwrite = T)
-save.image('./PCA_Beyer')
+save.image(paste0('./PCA_Beyer_PC', pc))
 
