@@ -34,3 +34,5 @@ workspaces/06 - Projections ENM Frax_Penn
 workspaces/06 - Projections ENM Frax_Prof
 workspaces/06 - Projections ENM Frax_Quad
 RData
+PCA_Lorenz_ccsm_PC5
+PCA_Lorenz_ecbilt_PC5
