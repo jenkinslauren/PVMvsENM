@@ -32,146 +32,146 @@ createRasters <- function(varName) {
   allrasters <- stack(allrasters)
 }
 
-rasters <- c('bio11', 'bio12', 'bio13', 'bio14', 'bio15', 'bio16', 'bio17', 
-             'bio18', 'bio19')
+rasters <- c('bio1', paste0('bio', 4:19), 'cloudiness', 'relative_humidity')
 lapply(rasters, createRasters)
 
 stack <- list()
 means <- list()
 
-
-for(i in 1:12){
+varNames <- c('BIO1', paste0('BIO', 4:19), 'cloudiness', 'relative_humidity')
+for(rast in varNames) {
+  for(i in 1:12){
+    f <- list(brick(file, varname = rast, level = i)) 
+    stack <- append(stack, f)
+  }
   
-  f <- list(brick(file, varname = 'relative_humidity', level = i)) 
-  stack <- append(stack, f)
+  meansStack <- list()
+  
+  s <- stack(stack[[1]]$X.21000, stack[[2]]$X.21000, stack[[3]]$X.21000, stack[[4]]$X.21000,
+             stack[[5]]$X.21000, stack[[6]]$X.21000, stack[[7]]$X.21000, stack[[8]]$X.21000,
+             stack[[9]]$X.21000, stack[[10]]$X.21000, stack[[11]]$X.21000, stack[[12]]$X.21000)
+  meansStack <- append(meansStack, s)
+  
+  s <- stack(stack[[1]]$X.20000, stack[[2]]$X.20000, stack[[3]]$X.20000, stack[[4]]$X.20000,
+             stack[[5]]$X.20000, stack[[6]]$X.20000, stack[[7]]$X.20000, stack[[8]]$X.20000,
+             stack[[9]]$X.20000, stack[[10]]$X.20000, stack[[11]]$X.20000, stack[[12]]$X.20000)
+  meansStack <- append(meansStack, s)
+  
+  s <- stack(stack[[1]]$X.19000, stack[[2]]$X.19000, stack[[3]]$X.19000, stack[[4]]$X.19000,
+             stack[[5]]$X.19000, stack[[6]]$X.19000, stack[[7]]$X.19000, stack[[8]]$X.19000,
+             stack[[9]]$X.19000, stack[[10]]$X.19000, stack[[11]]$X.19000, stack[[12]]$X.19000)
+  meansStack <- append(meansStack, s)
+  
+  s <- stack(stack[[1]]$X.18000, stack[[2]]$X.18000, stack[[3]]$X.18000, stack[[4]]$X.18000,
+             stack[[5]]$X.18000, stack[[6]]$X.18000, stack[[7]]$X.18000, stack[[8]]$X.18000,
+             stack[[9]]$X.18000, stack[[10]]$X.18000, stack[[11]]$X.18000, stack[[12]]$X.18000)
+  meansStack <- append(meansStack, s)
+  
+  s <- stack(stack[[1]]$X.17000, stack[[2]]$X.17000, stack[[3]]$X.17000, stack[[4]]$X.17000,
+             stack[[5]]$X.17000, stack[[6]]$X.17000, stack[[7]]$X.17000, stack[[8]]$X.17000,
+             stack[[9]]$X.17000, stack[[10]]$X.17000, stack[[11]]$X.17000, stack[[12]]$X.17000)
+  meansStack <- append(meansStack, s)
+  
+  s <- stack(stack[[1]]$X.16000, stack[[2]]$X.16000, stack[[3]]$X.16000, stack[[4]]$X.16000,
+             stack[[5]]$X.16000, stack[[6]]$X.16000, stack[[7]]$X.16000, stack[[8]]$X.16000,
+             stack[[9]]$X.16000, stack[[10]]$X.16000, stack[[11]]$X.16000, stack[[12]]$X.16000)
+  meansStack <- append(meansStack, s)
+  
+  s <- stack(stack[[1]]$X.15000, stack[[2]]$X.15000, stack[[3]]$X.15000, stack[[4]]$X.15000,
+             stack[[5]]$X.15000, stack[[6]]$X.15000, stack[[7]]$X.15000, stack[[8]]$X.15000,
+             stack[[9]]$X.15000, stack[[10]]$X.15000, stack[[11]]$X.15000, stack[[12]]$X.15000)
+  meansStack <- append(meansStack, s)
+  
+  s <- stack(stack[[1]]$X.14000, stack[[2]]$X.14000, stack[[3]]$X.14000, stack[[4]]$X.14000,
+             stack[[5]]$X.14000, stack[[6]]$X.14000, stack[[7]]$X.14000, stack[[8]]$X.14000,
+             stack[[9]]$X.14000, stack[[10]]$X.14000, stack[[11]]$X.14000, stack[[12]]$X.14000)
+  meansStack <- append(meansStack, s)
+  
+  s <- stack(stack[[1]]$X.13000, stack[[2]]$X.13000, stack[[3]]$X.13000, stack[[4]]$X.13000,
+             stack[[5]]$X.13000, stack[[6]]$X.13000, stack[[7]]$X.13000, stack[[8]]$X.13000,
+             stack[[9]]$X.13000, stack[[10]]$X.13000, stack[[11]]$X.13000, stack[[12]]$X.13000)
+  meansStack <- append(meansStack, s)
+  
+  s <- stack(stack[[1]]$X.12000, stack[[2]]$X.12000, stack[[3]]$X.12000, stack[[4]]$X.12000,
+             stack[[5]]$X.12000, stack[[6]]$X.12000, stack[[7]]$X.12000, stack[[8]]$X.12000,
+             stack[[9]]$X.12000, stack[[10]]$X.12000, stack[[11]]$X.12000, stack[[12]]$X.12000)
+  meansStack <- append(meansStack, s)
+  
+  s <- stack(stack[[1]]$X.11000, stack[[2]]$X.11000, stack[[3]]$X.11000, stack[[4]]$X.11000,
+             stack[[5]]$X.11000, stack[[6]]$X.11000, stack[[7]]$X.11000, stack[[8]]$X.11000,
+             stack[[9]]$X.11000, stack[[10]]$X.11000, stack[[11]]$X.11000, stack[[12]]$X.11000)
+  meansStack <- append(meansStack, s)
+  
+  s <- stack(stack[[1]]$X.10000, stack[[2]]$X.10000, stack[[3]]$X.10000, stack[[4]]$X.10000,
+             stack[[5]]$X.10000, stack[[6]]$X.10000, stack[[7]]$X.10000, stack[[8]]$X.10000,
+             stack[[9]]$X.10000, stack[[10]]$X.10000, stack[[11]]$X.10000, stack[[12]]$X.10000)
+  meansStack <- append(meansStack, s)
+  
+  s <- stack(stack[[1]]$X.9000, stack[[2]]$X.9000, stack[[3]]$X.9000, stack[[4]]$X.9000,
+             stack[[5]]$X.9000, stack[[6]]$X.9000, stack[[7]]$X.9000, stack[[8]]$X.9000,
+             stack[[9]]$X.9000, stack[[10]]$X.9000, stack[[11]]$X.9000, stack[[12]]$X.9000)
+  meansStack <- append(meansStack, s)
+  
+  s <- stack(stack[[1]]$X.8000, stack[[2]]$X.8000, stack[[3]]$X.8000, stack[[4]]$X.8000,
+             stack[[5]]$X.8000, stack[[6]]$X.8000, stack[[7]]$X.8000, stack[[8]]$X.8000,
+             stack[[9]]$X.8000, stack[[10]]$X.8000, stack[[11]]$X.8000, stack[[12]]$X.8000)
+  meansStack <- append(meansStack, s)
+  
+  s <- stack(stack[[1]]$X.7000, stack[[2]]$X.7000, stack[[3]]$X.7000, stack[[4]]$X.7000,
+             stack[[5]]$X.7000, stack[[6]]$X.7000, stack[[7]]$X.7000, stack[[8]]$X.7000,
+             stack[[9]]$X.7000, stack[[10]]$X.7000, stack[[11]]$X.7000, stack[[12]]$X.7000)
+  meansStack <- append(meansStack, s)
+  
+  s <- stack(stack[[1]]$X.6000, stack[[2]]$X.6000, stack[[3]]$X.6000, stack[[4]]$X.6000,
+             stack[[5]]$X.6000, stack[[6]]$X.6000, stack[[7]]$X.6000, stack[[8]]$X.6000,
+             stack[[9]]$X.6000, stack[[10]]$X.6000, stack[[11]]$X.6000, stack[[12]]$X.6000)
+  meansStack <- append(meansStack, s)
+  
+  s <- stack(stack[[1]]$X.5000, stack[[2]]$X.5000, stack[[3]]$X.5000, stack[[4]]$X.5000,
+             stack[[5]]$X.5000, stack[[6]]$X.5000, stack[[7]]$X.5000, stack[[8]]$X.5000,
+             stack[[9]]$X.5000, stack[[10]]$X.5000, stack[[11]]$X.5000, stack[[12]]$X.5000)
+  meansStack <- append(meansStack, s)
+  
+  s <- stack(stack[[1]]$X.4000, stack[[2]]$X.4000, stack[[3]]$X.4000, stack[[4]]$X.4000,
+             stack[[5]]$X.4000, stack[[6]]$X.4000, stack[[7]]$X.4000, stack[[8]]$X.4000,
+             stack[[9]]$X.4000, stack[[10]]$X.4000, stack[[11]]$X.4000, stack[[12]]$X.4000)
+  meansStack <- append(meansStack, s)
+  
+  s <- stack(stack[[1]]$X.3000, stack[[2]]$X.3000, stack[[3]]$X.3000, stack[[4]]$X.3000,
+             stack[[5]]$X.3000, stack[[6]]$X.3000, stack[[7]]$X.3000, stack[[8]]$X.3000,
+             stack[[9]]$X.3000, stack[[10]]$X.3000, stack[[11]]$X.3000, stack[[12]]$X.3000)
+  meansStack <- append(meansStack, s)
+  
+  s <- stack(stack[[1]]$X.2000, stack[[2]]$X.2000, stack[[3]]$X.2000, stack[[4]]$X.2000,
+             stack[[5]]$X.2000, stack[[6]]$X.2000, stack[[7]]$X.2000, stack[[8]]$X.2000,
+             stack[[9]]$X.2000, stack[[10]]$X.2000, stack[[11]]$X.2000, stack[[12]]$X.2000)
+  meansStack <- append(meansStack, s)
+  
+  s <- stack(stack[[1]]$X.1000, stack[[2]]$X.1000, stack[[3]]$X.1000, stack[[4]]$X.1000,
+             stack[[5]]$X.1000, stack[[6]]$X.1000, stack[[7]]$X.1000, stack[[8]]$X.1000,
+             stack[[9]]$X.1000, stack[[10]]$X.1000, stack[[11]]$X.1000, stack[[12]]$X.1000)
+  meansStack <- append(meansStack, s)
+  
+  s <- stack(stack[[1]]$X0, stack[[2]]$X0, stack[[3]]$X0, stack[[4]]$X0,
+             stack[[5]]$X0, stack[[6]]$X0, stack[[7]]$X0, stack[[8]]$X0,
+             stack[[9]]$X0, stack[[10]]$X0, stack[[11]]$X0, stack[[12]]$X0)
+  meansStack <- append(meansStack, s)
+  
+  # this will fill the means list from 21,000 ybp to 0 ybp, so
+  # means[[1]] is 21,000 ybp, but means [[72]] is 0 ybp
+  for (i in 1:length(meansStack)) {
+    means[[i]] <- calc(meansStack[[i]], fun = mean, na.rm = TRUE)
+  }
+  
+  outfile <- paste0('./data_and_analyses/env_data/Beyer/tifs/relative_humidity/', 
+                    rast, '.tif')
+  var <- brick(means)
+  
+  # can check this by overlaying the US map and checking edges
+  projection(var) <- '+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0'
+  
+  writeRaster(stack(var), outfile, bylayer = TRUE, format='GTiff', overwrite = T)
 }
-
-meansStack <- list()
-
-s <- stack(stack[[1]]$X.21000, stack[[2]]$X.21000, stack[[3]]$X.21000, stack[[4]]$X.21000,
-           stack[[5]]$X.21000, stack[[6]]$X.21000, stack[[7]]$X.21000, stack[[8]]$X.21000,
-           stack[[9]]$X.21000, stack[[10]]$X.21000, stack[[11]]$X.21000, stack[[12]]$X.21000)
-meansStack <- append(meansStack, s)
-
-s <- stack(stack[[1]]$X.20000, stack[[2]]$X.20000, stack[[3]]$X.20000, stack[[4]]$X.20000,
-           stack[[5]]$X.20000, stack[[6]]$X.20000, stack[[7]]$X.20000, stack[[8]]$X.20000,
-           stack[[9]]$X.20000, stack[[10]]$X.20000, stack[[11]]$X.20000, stack[[12]]$X.20000)
-meansStack <- append(meansStack, s)
-
-s <- stack(stack[[1]]$X.19000, stack[[2]]$X.19000, stack[[3]]$X.19000, stack[[4]]$X.19000,
-           stack[[5]]$X.19000, stack[[6]]$X.19000, stack[[7]]$X.19000, stack[[8]]$X.19000,
-           stack[[9]]$X.19000, stack[[10]]$X.19000, stack[[11]]$X.19000, stack[[12]]$X.19000)
-meansStack <- append(meansStack, s)
-
-s <- stack(stack[[1]]$X.18000, stack[[2]]$X.18000, stack[[3]]$X.18000, stack[[4]]$X.18000,
-           stack[[5]]$X.18000, stack[[6]]$X.18000, stack[[7]]$X.18000, stack[[8]]$X.18000,
-           stack[[9]]$X.18000, stack[[10]]$X.18000, stack[[11]]$X.18000, stack[[12]]$X.18000)
-meansStack <- append(meansStack, s)
-
-s <- stack(stack[[1]]$X.17000, stack[[2]]$X.17000, stack[[3]]$X.17000, stack[[4]]$X.17000,
-           stack[[5]]$X.17000, stack[[6]]$X.17000, stack[[7]]$X.17000, stack[[8]]$X.17000,
-           stack[[9]]$X.17000, stack[[10]]$X.17000, stack[[11]]$X.17000, stack[[12]]$X.17000)
-meansStack <- append(meansStack, s)
-
-s <- stack(stack[[1]]$X.16000, stack[[2]]$X.16000, stack[[3]]$X.16000, stack[[4]]$X.16000,
-           stack[[5]]$X.16000, stack[[6]]$X.16000, stack[[7]]$X.16000, stack[[8]]$X.16000,
-           stack[[9]]$X.16000, stack[[10]]$X.16000, stack[[11]]$X.16000, stack[[12]]$X.16000)
-meansStack <- append(meansStack, s)
-
-s <- stack(stack[[1]]$X.15000, stack[[2]]$X.15000, stack[[3]]$X.15000, stack[[4]]$X.15000,
-           stack[[5]]$X.15000, stack[[6]]$X.15000, stack[[7]]$X.15000, stack[[8]]$X.15000,
-           stack[[9]]$X.15000, stack[[10]]$X.15000, stack[[11]]$X.15000, stack[[12]]$X.15000)
-meansStack <- append(meansStack, s)
-
-s <- stack(stack[[1]]$X.14000, stack[[2]]$X.14000, stack[[3]]$X.14000, stack[[4]]$X.14000,
-           stack[[5]]$X.14000, stack[[6]]$X.14000, stack[[7]]$X.14000, stack[[8]]$X.14000,
-           stack[[9]]$X.14000, stack[[10]]$X.14000, stack[[11]]$X.14000, stack[[12]]$X.14000)
-meansStack <- append(meansStack, s)
-
-s <- stack(stack[[1]]$X.13000, stack[[2]]$X.13000, stack[[3]]$X.13000, stack[[4]]$X.13000,
-           stack[[5]]$X.13000, stack[[6]]$X.13000, stack[[7]]$X.13000, stack[[8]]$X.13000,
-           stack[[9]]$X.13000, stack[[10]]$X.13000, stack[[11]]$X.13000, stack[[12]]$X.13000)
-meansStack <- append(meansStack, s)
-
-s <- stack(stack[[1]]$X.12000, stack[[2]]$X.12000, stack[[3]]$X.12000, stack[[4]]$X.12000,
-           stack[[5]]$X.12000, stack[[6]]$X.12000, stack[[7]]$X.12000, stack[[8]]$X.12000,
-           stack[[9]]$X.12000, stack[[10]]$X.12000, stack[[11]]$X.12000, stack[[12]]$X.12000)
-meansStack <- append(meansStack, s)
-
-s <- stack(stack[[1]]$X.11000, stack[[2]]$X.11000, stack[[3]]$X.11000, stack[[4]]$X.11000,
-           stack[[5]]$X.11000, stack[[6]]$X.11000, stack[[7]]$X.11000, stack[[8]]$X.11000,
-           stack[[9]]$X.11000, stack[[10]]$X.11000, stack[[11]]$X.11000, stack[[12]]$X.11000)
-meansStack <- append(meansStack, s)
-
-s <- stack(stack[[1]]$X.10000, stack[[2]]$X.10000, stack[[3]]$X.10000, stack[[4]]$X.10000,
-           stack[[5]]$X.10000, stack[[6]]$X.10000, stack[[7]]$X.10000, stack[[8]]$X.10000,
-           stack[[9]]$X.10000, stack[[10]]$X.10000, stack[[11]]$X.10000, stack[[12]]$X.10000)
-meansStack <- append(meansStack, s)
-
-s <- stack(stack[[1]]$X.9000, stack[[2]]$X.9000, stack[[3]]$X.9000, stack[[4]]$X.9000,
-           stack[[5]]$X.9000, stack[[6]]$X.9000, stack[[7]]$X.9000, stack[[8]]$X.9000,
-           stack[[9]]$X.9000, stack[[10]]$X.9000, stack[[11]]$X.9000, stack[[12]]$X.9000)
-meansStack <- append(meansStack, s)
-
-s <- stack(stack[[1]]$X.8000, stack[[2]]$X.8000, stack[[3]]$X.8000, stack[[4]]$X.8000,
-           stack[[5]]$X.8000, stack[[6]]$X.8000, stack[[7]]$X.8000, stack[[8]]$X.8000,
-           stack[[9]]$X.8000, stack[[10]]$X.8000, stack[[11]]$X.8000, stack[[12]]$X.8000)
-meansStack <- append(meansStack, s)
-
-s <- stack(stack[[1]]$X.7000, stack[[2]]$X.7000, stack[[3]]$X.7000, stack[[4]]$X.7000,
-           stack[[5]]$X.7000, stack[[6]]$X.7000, stack[[7]]$X.7000, stack[[8]]$X.7000,
-           stack[[9]]$X.7000, stack[[10]]$X.7000, stack[[11]]$X.7000, stack[[12]]$X.7000)
-meansStack <- append(meansStack, s)
-
-s <- stack(stack[[1]]$X.6000, stack[[2]]$X.6000, stack[[3]]$X.6000, stack[[4]]$X.6000,
-           stack[[5]]$X.6000, stack[[6]]$X.6000, stack[[7]]$X.6000, stack[[8]]$X.6000,
-           stack[[9]]$X.6000, stack[[10]]$X.6000, stack[[11]]$X.6000, stack[[12]]$X.6000)
-meansStack <- append(meansStack, s)
-
-s <- stack(stack[[1]]$X.5000, stack[[2]]$X.5000, stack[[3]]$X.5000, stack[[4]]$X.5000,
-           stack[[5]]$X.5000, stack[[6]]$X.5000, stack[[7]]$X.5000, stack[[8]]$X.5000,
-           stack[[9]]$X.5000, stack[[10]]$X.5000, stack[[11]]$X.5000, stack[[12]]$X.5000)
-meansStack <- append(meansStack, s)
-
-s <- stack(stack[[1]]$X.4000, stack[[2]]$X.4000, stack[[3]]$X.4000, stack[[4]]$X.4000,
-           stack[[5]]$X.4000, stack[[6]]$X.4000, stack[[7]]$X.4000, stack[[8]]$X.4000,
-           stack[[9]]$X.4000, stack[[10]]$X.4000, stack[[11]]$X.4000, stack[[12]]$X.4000)
-meansStack <- append(meansStack, s)
-
-s <- stack(stack[[1]]$X.3000, stack[[2]]$X.3000, stack[[3]]$X.3000, stack[[4]]$X.3000,
-           stack[[5]]$X.3000, stack[[6]]$X.3000, stack[[7]]$X.3000, stack[[8]]$X.3000,
-           stack[[9]]$X.3000, stack[[10]]$X.3000, stack[[11]]$X.3000, stack[[12]]$X.3000)
-meansStack <- append(meansStack, s)
-
-s <- stack(stack[[1]]$X.2000, stack[[2]]$X.2000, stack[[3]]$X.2000, stack[[4]]$X.2000,
-           stack[[5]]$X.2000, stack[[6]]$X.2000, stack[[7]]$X.2000, stack[[8]]$X.2000,
-           stack[[9]]$X.2000, stack[[10]]$X.2000, stack[[11]]$X.2000, stack[[12]]$X.2000)
-meansStack <- append(meansStack, s)
-
-s <- stack(stack[[1]]$X.1000, stack[[2]]$X.1000, stack[[3]]$X.1000, stack[[4]]$X.1000,
-           stack[[5]]$X.1000, stack[[6]]$X.1000, stack[[7]]$X.1000, stack[[8]]$X.1000,
-           stack[[9]]$X.1000, stack[[10]]$X.1000, stack[[11]]$X.1000, stack[[12]]$X.1000)
-meansStack <- append(meansStack, s)
-
-s <- stack(stack[[1]]$X0, stack[[2]]$X0, stack[[3]]$X0, stack[[4]]$X0,
-           stack[[5]]$X0, stack[[6]]$X0, stack[[7]]$X0, stack[[8]]$X0,
-           stack[[9]]$X0, stack[[10]]$X0, stack[[11]]$X0, stack[[12]]$X0)
-meansStack <- append(meansStack, s)
-
-# this will fill the means list from 21,000 ybp to 0 ybp, so
-# means[[1]] is 21,000 ybp, but means [[72]] is 0 ybp
-for (i in 1:length(meansStack)) {
-  means[[i]] <- calc(meansStack[[i]], fun = mean, na.rm = TRUE)
-}
-
-outfile <- './data_and_analyses/env_data/Beyer/tifs/relative_humidity/relative_humidity.tif'
-var <- brick(means)
-
-# can check this by overlaying the US map and checking edges
-projection(var) <- '+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0'
-
-writeRaster(stack(var), outfile, bylayer = TRUE, format='GTiff', overwrite = T)
-run('relative_humidity', 21000)
 
 changeFileName <- function(i, year, var) {
   oldFile <- paste0('./data_and_analyses/env_data/Beyer/tifs/', var, '/', var, '_' , i, '.tif')
@@ -182,9 +182,9 @@ changeFileName <- function(i, year, var) {
 }
 
 run <- function(var, yr) {
-  i <- 1
+  i <- 72
   v <- var
-  while(i <= 72) {
+  while(i >= 0) {
     changeFileName(i, yr, v)
     if (yr > 22000) {
       # decrease year by 2000 increments
@@ -193,15 +193,11 @@ run <- function(var, yr) {
       # decrease year by 1000 increments
       yr <- yr - 1000
     }
-    i <- i + 1
+    i <- i - 1
   }
 }
 
-
-variables <- c('BIO1', 'BIO4', 'BIO5', 'BIO6', 'BIO7', 'BIO8', 'BIO9',
-               'BIO10', 'BIO11', 'BIO12', 'BIO13', 'BIO14', 'BIO15', 'BIO16', 
-               'BIO17', 'BIO18', 'BIO19')
-lapply(variables, run, yr = 120000)
+lapply(varNames, run, yr = 120000)
 
 # check multiple timesteps
 rasterList <- list.files(path = './data_and_analyses/env_data/Beyer/tifs/BIO6', 
@@ -222,14 +218,15 @@ writeStacks <- function(var) {
   
   rasterList <- list.files(path = paste0('./data_and_analyses/env_data/Beyer/tifs/', var), 
                            pattern='*.tif', all.files=TRUE, full.names=TRUE)
+  rasterList <- mixedsort(rasterList)
   allrasters <- lapply(rasterList, raster)
   allrasters <- stack(allrasters)
+  for (i in 1:22) {
+    plot(allrasters[[i]], main = names(allrasters[[i]]))
+  }
   
   writeRaster(allrasters, outfile, format = 'GTiff', overwrite = T)
 }
 
-variables <- c('BIO1', 'BIO4', 'BIO5', 'BIO6', 'BIO7', 'BIO8', 'BIO9',
-               'BIO10', 'BIO11', 'BIO12', 'BIO13', 'BIO14', 'BIO15', 'BIO16', 
-               'BIO17', 'BIO18', 'BIO19', 'cloudiness', 'relative_humidity')
-lapply(variables, writeStacks)
+lapply(varNames, writeStacks)
 
