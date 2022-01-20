@@ -36,3 +36,10 @@ workspaces/06 - Projections ENM Frax_Quad
 RData
 PCA_Lorenz_ccsm_PC5
 PCA_Lorenz_ecbilt_PC5
+PCA_Beyer_PC5
+04 - Modeling Workspace - Clipping Fraxinus americana
+data_and_analyses/env_data/Beyer/Beyer_PCA.R
+data_and_analyses/env_data/Beyer/Beyer_PCA.R
+data_and_analyses/env_data/Beyer/LateQuaternary_Environment.nc
+workspaces/04 - Modeling Workspace - Clipping Fraxinus americanaTmp
+data_and_analyses/env_data/Beyer/Beyer_PCA.R
