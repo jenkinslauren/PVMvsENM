@@ -3,6 +3,7 @@ library(raster)
 library(enmSdm)
 library(dplyr)
 library(terra)
+library(gtools)
 setwd('/Volumes/lj_mac_22/MOBOT/PVMvsENM')
 
 # set constants
@@ -13,6 +14,7 @@ pc <- 5
 # retrieve list of files
 fileList <- list.files(path = './data_and_analyses/env_data/Beyer/tifs', 
                    pattern='*.tif', all.files=TRUE, full.names=TRUE)
+fileList <- mixedsort(fileList)
 clim <- lapply(fileList, brick)
 clim <- stack(clim)
 climDf <- as.data.frame(clim)
@@ -102,14 +104,14 @@ climxDf <- as.data.frame(climx)
 
 # apply labels to each variable
 # recall that bioclim 2 & 3 aren't included
-names(climxDf) <- c("bio1", "bio10", "bio11", "bio12", "bio13", "bio14", "bio15", "bio16",
-                    "bio17", "bio18", "bio19", "bio4", "bio5", "bio6", "bio7",
-                    "bio8", "bio9", "cloudiness", "relative_humidity")
-names(climDf) <- c(rep("bio1",22), rep("bio10",22), rep("bio11",22), rep("bio12",22), 
-                 rep("bio13",22), rep("bio14",22), rep("bio15",22), rep("bio16",22),
-                 rep("bio17",22), rep("bio18",22), rep("bio19",22), rep("bio4",22), 
-                 rep("bio5",22), rep("bio6",22), rep("bio7",22),rep("bio8",22), 
-                 rep("bio9",22), rep("cloudiness",22), rep("relative_humidity",22))
+# names(climxDf) <- c("bio1", "bio10", "bio11", "bio12", "bio13", "bio14", "bio15", "bio16",
+#                     "bio17", "bio18", "bio19", "bio4", "bio5", "bio6", "bio7",
+#                     "bio8", "bio9", "cloudiness", "relative_humidity")
+names(climDf) <- c(rep("bio1",22), rep("bio4",22), rep("bio5",22), rep("bio6",22), 
+                   rep("bio7",22),rep("bio8",22), rep("bio9",22), rep("bio10",22), 
+                   rep("bio11",22), rep("bio12",22), rep("bio13",22), rep("bio14",22), 
+                   rep("bio15",22), rep("bio16",22), rep("bio17",22), rep("bio18",22), 
+                   rep("bio19",22), rep("cloudiness",22), rep("relative_humidity",22))
 
 # crops to NA, don't need to
 # 		clim <- crop(clim, nam0Sp)
@@ -153,9 +155,7 @@ pca <- prcomp(climxDf, center = TRUE, scale = TRUE)
 
 pcPrediction <- list()
 for (i in 1:length(clim)) {
-  names(clim[[i]]) <- c("bio1", "bio10", "bio11", "bio12", "bio13", "bio14", "bio15", "bio16",
-                        "bio17", "bio18", "bio19", "bio4", "bio5", "bio6", "bio7",
-                        "bio8", "bio9", "cloudiness", "relative_humidity")
+  names(clim[[i]]) <- c("BIO1", paste0('BIO', 4:19), "cloudiness", "relative_humidity")
   pcPrediction[i] <- raster::predict(clim[[i]], pca, index = 1:pc)
   names(pcPrediction[[i]]) <- paste0("pc", 1:pc, "_", (i-1)*1000, "KYBP")
 }

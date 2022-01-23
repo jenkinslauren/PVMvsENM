@@ -163,7 +163,8 @@ generateModel <- function(sp) {
   }
   map("state", add = TRUE)
   map("world", add = TRUE)
-  save.image(paste0('./workspaces/04 - Modeling Workspace - Clipping ', sp))
+  
+  save.image(paste0('./workspaces/04 - Modeling Workspace - Clipping ', sp, ' PC', pc))
   
   load(paste0('./workspaces/03 - Modeling Workspace - ', speciesAb_, ' Cleaning'))
   rangeMap <- get(rangeName)

@@ -1,19 +1,3 @@
----
-title: "Fraxinus americana model"
-author: "Lauren Jenkins"
-date: "16 December 2021"
-output: html_document
----
-
-Last updated: 20 January 2022
-
-111 = full species name with first letter capital (Fraxinus pennsylvanica)
-222 = full species name, all lowercase, _ inbetween (fraxinus_pennsylvanica)
-333 = abreviated species name (ex. FraxPenn)
-444 = abreviated with _ inbetween 
-
-Setup environment:
-```{r, include = FALSE}
 rm(list = ls())
 library(dplyr)
 library(ggplot2)
@@ -31,29 +15,23 @@ library(rnaturalearth)
 library(rnaturalearthdata)
 library(rnaturalearthhires)
 
-knitr::opts_knit$set(root.dir = '/Volumes/lj_mac_22/MOBOT/PVMvsENM')
 setwd('/Volumes/lj_mac_22/MOBOT/PVMvsENM')
-```
 
-Load PCA environment and set constants:
-```{r}
 # set constants
 pc <- 5
+gcm <- 'Beyer'
 climYear <- 0
 
 # load PCA environment
 load(paste0('./PCA_Beyer_PC', pc))
-
 # set constants
 ll <- c('longitude', 'latitude')
-sp <- 'Fraxinus americana'
-species <- 'fraxinus_americana'
-speciesAb <- 'FraxAmer'
-speciesAb_ <- 'Frax_Amer'
-```
+sp <- 'Fraxinus quadrangulata'
+species <- gsub(tolower(sp), pattern=' ', replacement='_')
+speciesAb <- paste0(substr(sp,1,4), toupper(substr(sp,10,10)), substr(sp,11,13))
+speciesAb_ <- sub("(.{4})(.*)", "\\1_\\2", speciesAb)
+rangeName <- paste0('littleRange_', speciesAb)
 
-Load environmental PCA rasters. If already clipped, load that. Otherwise, clip the data to present.
-```{r, include = FALSE}
 # Load environmental PCA rasters. 
 # If already clipped, load that. 
 # Otherwise, clip the data to present.
@@ -119,38 +97,29 @@ if (file.exists(fileName)) {
     writeRaster(envData, fileName, format = 'GTiff', overwrite = T)
   }
 } 
-```
 
-Load records for given species.
-```{r}
 recordsRaw <- paste0('./cleaning_records/', species, '_finalRecords.rData')
 load(recordsRaw)
-recordsRaw <- data.frame(speciesSf_filtered_final) # 542 observations
+recordsRaw <- data.frame(speciesSf_filtered_final)
 recordsRaw$geometry <- gsub("[c()]", "", recordsRaw$geometry)
 recordsRaw <- separate(data = recordsRaw, 
-                    col = 'geometry', 
-                    into = ll, 
-                    sep = "\\,")
+                       col = 'geometry', 
+                       into = ll, 
+                       sep = "\\,")
 recordsRaw$longitude <- as.double(recordsRaw$longitude)
 recordsRaw$latitude <- as.double(recordsRaw$latitude)
-```
 
-Match environmental data to records.
-```{r}
 occsEnv <- raster::extract(envData, 
-                              cbind(recordsRaw$longitude, 
-                                    recordsRaw$latitude))
+                           cbind(recordsRaw$longitude, 
+                                 recordsRaw$latitude))
 occsEnvDf <- as.data.frame(occsEnv)
 records <- cbind(recordsRaw, occsEnvDf)
-```
 
-Remove records that fall in the water & visualize.
-```{r}
 # records in the water:
 if (any(is.na(rowSums(occsEnvDf)))) {
   water <- records[which(is.na(rowSums(occsEnvDf))), ] 
   water <- SpatialPointsDataFrame(water[,ll], data = water,
-                                proj4 = getCRS('wgs84', TRUE))
+                                  proj4 = getCRS('wgs84', TRUE))
 }
 
 # remove records in water from dataset:
@@ -160,52 +129,41 @@ if (any(is.na(rowSums(occsEnvDf)))) records <-
 # visualize the points that fall in the water
 # convert to sp object
 recordsSp <- SpatialPointsDataFrame(records[, ll], data = records,
-                                       proj4 = getCRS('wgs84', TRUE))
+                                    proj4 = getCRS('wgs84', TRUE))
 
 # visualize
 plot(recordsSp, pch = 16, cex = 0.5, col = "red", 
-     main = substitute(paste(italic('Fraxinus americana '), 'occurrences (BIEN) thinned')))
+     main = paste0(sp, ' occurrences (BIEN) thinned'))
 if (exists("water")) {
   plot(water, col = 'blue', add = TRUE)
 }
 map("state", add = TRUE)
 map("world", add = TRUE)
-```
 
-Save workspace.
-```{r}
-save.image(paste0('./workspaces/04 - Modeling Workspace - Clipping ', sp))
+save.image(paste0('./workspaces/04 - Modeling Workspace - Clipping ', sp, '_PC_', pc, '_GCM_', gcm))
 # load(paste0('./04 - Modeling Workspace - Clipping ', sp))
-```
 
-Load cleaned records data.
-```{r}
 load(paste0('./workspaces/03 - Modeling Workspace - ', speciesAb_, ' Cleaning'))
-rangeMap <- littleRange_FraxAmer
-```
+rangeMap <- get(rangeName)
 
-```{r, warning = FALSE}
 # use the buffer/calibration region for extracting background sites
 calibRegionSpAlb <- as(range_buffer_final, 'Spatial')
 calibRegionSpAlb <- sp::spTransform(calibRegionSpAlb, getCRS('albersNA', TRUE))
 calibRegionSpWgs <- sp::spTransform(calibRegionSpAlb, getCRS('wgs84', TRUE))
 
 # get 10,000 random background sites from calibration region
-bgTestSpAlb <- spsample(calibRegionSpAlb, n=10000, type='random')
+bgTestSpAlb <- spsample(calibRegionSpAlb, n=20000, type='random')
 bgTestSp <- sp::spTransform(bgTestSpAlb, getCRS('wgs84', TRUE))
 randomBgSites <- as.data.frame(coordinates(bgTestSp))
 names(randomBgSites) <- ll
 
-
 # sanity check: plot the background sites
 plot(bgTestSp, pch = 16, cex = 0.5, col = "red", 
-     main = substitute(paste(italic('Fraxinus americana '), 'background sites')))
+     main = substitute(paste(italic(speciesList[i]), ' background sites')))
 plot(calibRegionSpWgs, add = TRUE, border = 'blue')
 map("state", add = TRUE)
 map("world", add = TRUE)
-```
 
-```{r}
 # extract environment at background sites
 climate <- envData
 randomBgEnv <- raster::extract(climate, randomBgSites)
@@ -214,9 +172,13 @@ randomBgEnv <- as.data.frame(randomBgEnv)
 # remove any sites with NA for at least one variable
 isNa <- is.na(rowSums(randomBgEnv))
 if (any(isNa)) {
-    randomBgSites <- randomBgSites[-which(isNa), ]
-    randomBgEnv <- randomBgEnv[-which(isNa), ]
+  randomBgSites <- randomBgSites[-which(isNa), ]
+  randomBgEnv <- randomBgEnv[-which(isNa), ]
 }
+
+# only keep 10,000 random background sites
+randomBgSites <- randomBgSites[1:10000,]
+randomBgEnv <- randomBgEnv[1:10000,]
 
 # combine with coordinates and rename coordinate fields
 randomBg <- cbind(randomBgSites, randomBgEnv)
@@ -226,28 +188,25 @@ dir.create('./Background Sites', recursive=TRUE, showWarnings=FALSE)
 save(randomBg, 
      file = paste0('./Background Sites/Random Background Sites across Study Region - ', 
                    speciesAb, '.Rdata'),
-    compress=TRUE)
-```
+     compress=TRUE)
 
-Ready for maxent!
-Turn off clamping to avoid extrapolating (in maxnet(), clamp = FALSE).
-Also, type = cloglog (to make the output between 0 & 1).
-```{r}
 presBg <- rep(c(1, 0), c(nrow(recordsRaw), nrow(randomBg)))
 
 env <- rbind(occsEnv, randomBgEnv)
 env <- cbind(presBg, env)
 env <- as.data.frame(env)
+
 env <- env[complete.cases(env), ]
+# View(env)
 
 # create output directory for model object and rasters
-dir.create(paste0('./Models/', speciesAb_, '_Maxent'),
-    recursive=TRUE, showWarnings=FALSE)
+dir.create(paste0('./Models/', speciesAb_, '_Maxent_PC', pc, '_GCM_', gcm),
+           recursive=TRUE, showWarnings=FALSE)
 
 # model species
 envModel <- enmSdm::trainMaxNet(data = env, resp = "presBg")
 # envModel <- maxnet(p = presBg, data = trainData)
-modelFileName <- paste0('./Models/', speciesAb_, '_Maxent/Model.Rdata')
+modelFileName <- paste0('./Models/', speciesAb_, '_Maxent/Model_PC', pc, '_GCM_', gcm, '.Rdata')
 save(envModel, file = modelFileName, compress=TRUE)
 
 predictors <- c(paste0('pca', 1:pc))
@@ -255,83 +214,28 @@ predictors <- c(paste0('pca', 1:pc))
 envMap <- predict(
   climate[[predictors]],
   envModel,
-  filename=paste0('./Models/', speciesAb_, '_Maxent/maxentPredictionBeyer0KYBP_PC', pc), 
+  filename=paste0('./Models/', speciesAb_, '_Maxent/maxentPredictionBeyer0KYBP_PC', 
+                  pc, '_GCM', gcm), 
   clamp = F, 
   format='GTiff', 
   overwrite = TRUE, 
   type='cloglog')
-```
 
-Try visualizing using sf (having trouble with this, so haven't implemented yet).
-```{r}
 envMapSp <- rasterToPolygons(envMap)
-# envMapSf <- st_as_sf(envMapSp,
-#                      coords = c(x = 'longitude', y = 'latitude'),
-#                       crs = getCRS("wgs84", TRUE))
-# rangeMapSf <- st_transform(st_as_sf(x = range), getCRS('wgs84', TRUE))
-# recordsSf <- speciesSf <- st_as_sf(x = records,
-#                       coords = c(x = 'longitude',
-#                                  y = 'latitude'),
-#                       crs = getCRS('wgs84', TRUE))
-# 
-# world <- ne_countries(scale = "medium", returnclass = "sf")
-# states <- st_as_sf(ne_states(country = 'united states of america'))
-# canada <- st_as_sf(ne_states(country = 'canada'))
 
-# sf object doesn't really work
-# ggplot(data = world) +
-#   theme_bw() +
-#   geom_sf(fill = "white") +
-#   geom_sf(data = states, fill = NA) + 
-#   geom_sf(data = canada, fill = NA) +
-#   geom_sf(data = envMapSf) +
-#   geom_sf(data = rangeMapSf, 
-#           color = 'darkgreen',
-#           fill = 'green', 
-#           alpha = 0.4, 
-#           inherit.aes = FALSE) +
-#   geom_sf(data = recordsSf,
-#           color = 'red',
-#           pch = 16,
-#           cex = 0.4) + 
-#   coord_sf(xlim = c(min(records$longitude), max(records$longitude)), 
-#            ylim = c(min(records$latitude), max(records$latitude)), expand = TRUE) +
-#   xlab("Longitude") + 
-#   ylab("Latitude") +
-#   theme(panel.grid.major = element_line(color = gray(0.5), linetype = "dashed", 
-#                                         size = 0.5), panel.background = element_rect(fill = "lavender"))
-
-```
-
-Visualize model output, focused on species.
-```{r}
 plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
-                                                        italic('Fraxinus americana '),
+                                                        italic('Fraxinus quadrangulata '),
                                                         'occurrences')))
 plot(envMap, add = TRUE)
 plot(rangeMap, border = 'blue', add = TRUE)
 map("state", add = TRUE)
 map("world", add = TRUE)
 points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
-```
 
-Visualize output, zoomed out to study region.
-```{r}
 plot(envMap, main = substitute(paste('Maxent output, ', 
-                                                        italic('Fraxinus americana '),
-                                                        'occurrences')))
+                                     italic('Fraxinus quadrangulata '),
+                                     'occurrences')))
 plot(rangeMap, border = 'blue', add = TRUE)
-# map("state", add = TRUE)
-# map("world", add = TRUE)
-# points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
-```
 
-Save workspace image.
-```{r}
-save.image(paste0('./workspaces/05 - Modeling Workspace - ', speciesAb_, ' Model Output - PC', pc))
-# load(paste0('./workspaces/05 - Modeling Workspace - ', speciesAb_, ' Model Output'))
-```
-
-
-<!-- May want to make a MESS map (Elith et al 2010) to show places projected to the past -->
-<!-- In the dismo package -->
+save.image(paste0('./workspaces/05 - Modeling Workspace - ', speciesAb_, 
+                  ' Model Output - PC', pc, '_GCM_', gcm))
