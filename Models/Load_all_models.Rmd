@@ -8,7 +8,7 @@ output: html_document
 Set up environment.
 ```{r, include = FALSE}
 rm(list = ls())
-setwd('/Volumes/lj_mac_22/MOBOT/PVMvsENM')
+knitr::opts_knit$set(root.dir = '/Volumes/lj_mac_22/MOBOT/PVMvsENM')
 library(dplyr)
 library(ggplot2)
 library(tidyr)
@@ -24,11 +24,17 @@ library(maps)
 library(rnaturalearth)
 library(rnaturalearthdata)
 library(rnaturalearthhires)
+
+# set constants
+pc <- 5
+gcm <- 'Beyer'
 ```
 
 Fraxinus americana
 ```{r}
-load(paste0('./workspaces/05 - Modeling Workspace - ', 'Frax_Amer', ' Model Output'))
+speciesAb_ <- 'Frax_Amer'
+load(paste0('./workspaces/05 - Modeling Workspace - ', speciesAb_, 
+                  ' Model Output - PC', pc, '_GCM_', gcm))
 plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus americana '),
                                                         'occurrences')))
@@ -41,7 +47,9 @@ points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
 
 Fraxinus anomala
 ```{r}
-load(paste0('./workspaces/05 - Modeling Workspace - ', 'Frax_Anom', ' Model Output'))
+speciesAb_ <- 'Frax_Anom'
+load(paste0('./workspaces/05 - Modeling Workspace - ', speciesAb_, 
+                  ' Model Output - PC', pc, '_GCM_', gcm))
 plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus anomala '),
                                                         'occurrences')))
@@ -54,7 +62,9 @@ points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
 
 Fraxinus caroliniana
 ```{r}
-load(paste0('./workspaces/05 - Modeling Workspace - ', 'Frax_Caro', ' Model Output'))
+speciesAb_ <- 'Frax_Caro'
+load(paste0('./workspaces/05 - Modeling Workspace - ', speciesAb_, 
+                  ' Model Output - PC', pc, '_GCM_', gcm))
 plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus caroliniana '),
                                                         'occurrences')))
@@ -71,7 +81,9 @@ Fraxinus cuspidata
 plot(raster)
 extract(raster, click(n=1))
 ```{r}
-load(paste0('./workspaces/05 - Modeling Workspace - ', 'Frax_Cusp', ' Model Output'))
+speciesAb_ <- 'Frax_Cusp'
+load(paste0('./workspaces/05 - Modeling Workspace - ', speciesAb_, 
+                  ' Model Output - PC', pc, '_GCM_', gcm))
 plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus cuspidata '),
                                                         'occurrences')))
@@ -84,7 +96,9 @@ points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
 
 Fraxinus greggii
 ```{r}
-load(paste0('./workspaces/05 - Modeling Workspace - ', 'Frax_Greg', ' Model Output'))
+speciesAb_ <- 'Frax_Greg'
+load(paste0('./workspaces/05 - Modeling Workspace - ', speciesAb_, 
+                  ' Model Output - PC', pc, '_GCM_', gcm))
 plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus greggii '),
                                                         'occurrences')))
@@ -97,7 +111,9 @@ points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
 
 Fraxinus latifolia
 ```{r}
-load(paste0('./workspaces/05 - Modeling Workspace - ', 'Frax_Lati', ' Model Output'))
+speciesAb_ <- 'Frax_Lati'
+load(paste0('./workspaces/05 - Modeling Workspace - ', speciesAb_, 
+                  ' Model Output - PC', pc, '_GCM_', gcm))
 plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus latifolia '),
                                                         'occurrences')))
@@ -110,7 +126,9 @@ points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
 
 Fraxinus nigra
 ```{r}
-load(paste0('./workspaces/05 - Modeling Workspace - ', 'Frax_Nigr', ' Model Output'))
+speciesAb_ <- 'Frax_Nigr'
+load(paste0('./workspaces/05 - Modeling Workspace - ', speciesAb_, 
+                  ' Model Output - PC', pc, '_GCM_', gcm))
 plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus nigra '),
                                                         'occurrences')))
@@ -123,7 +141,9 @@ points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
 
 Fraxinus pennsylvanica
 ```{r}
-load(paste0('./workspaces/05 - Modeling Workspace - ', 'Frax_Penn', ' Model Output'))
+speciesAb_ <- 'Frax_Penn'
+load(paste0('./workspaces/05 - Modeling Workspace - ', speciesAb_, 
+                  ' Model Output - PC', pc, '_GCM_', gcm))
 plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus pennsylvanica '),
                                                         'occurrences')))
@@ -136,7 +156,9 @@ points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
 
 Fraxinus profunda
 ```{r}
-load(paste0('./workspaces/05 - Modeling Workspace - ', 'Frax_Prof', ' Model Output'))
+speciesAb_ <- 'Frax_Prof'
+load(paste0('./workspaces/05 - Modeling Workspace - ', speciesAb_, 
+                  ' Model Output - PC', pc, '_GCM_', gcm))
 plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus profunda '),
                                                         'occurrences')))
@@ -149,7 +171,9 @@ points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
 
 Fraxinus quadrangulata
 ```{r}
-load(paste0('./workspaces/05 - Modeling Workspace - ', 'Frax_Quad', ' Model Output'))
+speciesAb_ <- 'Frax_Quad'
+load(paste0('./workspaces/05 - Modeling Workspace - ', speciesAb_, 
+                  ' Model Output - PC', pc, '_GCM_', gcm))
 plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus quadrangulata '),
                                                         'occurrences')))

@@ -20,9 +20,15 @@ library(rnaturalearth)
 library(rnaturalearthdata)
 library(rnaturalearthhires)
 
-setwd('/Volumes/LJ MacBook Backup/MOBOT/PVMvsENM')
+setwd('/Volumes/lj_mac_22/MOBOT/PVMvsENM')
 
-load('./PCA_Beyer')
+# set constants
+pc <- 5
+gcm <- 'Lorenz_ccsm'
+climYear <- 0
+
+# load PCA environment
+load(paste0('./PCA_', gcm, '_PC', pc))
 
 # set constants
 ll <- c('longitude', 'latitude')
@@ -32,7 +38,17 @@ speciesList <- c('Fraxinus americana', 'Fraxinus caroliniana', 'Fraxinus cuspida
                  'Fraxinus profunda', 'Fraxinus quadrangulata')
 
 # load PCA rasters
-fileName <- paste0('./data_and_analyses/env_data/Beyer/envDataClipped_0kybp_pca5.tif')
+if (gcm == 'Beyer') {
+  fileName <- paste0('./data_and_analyses/env_data/Beyer/envDataClipped_',
+                     climYear, 'KYBP_pc', pc, '.tif')
+} else if (gcm == 'Lorenz_ccsm') {
+  fileName <- paste0('./data_and_analyses/env_data/Lorenz/V2/ccsm_21-0k_all_tifs_LJ/envDataClipped_',
+                     climYear, 'KYBP_pc', pc, '.tif')
+} else {
+  fileName <- paste0('./data_and_analyses/env_data/Lorenz/V2/ecbilt_21-0k_all_tifs_LJ/envDataClipped_',
+                     climYear, 'KYBP_pc', pc, '.tif')
+}
+
 envData <- brick(fileName)
 # rename raster layers to pc's
 names(envData) <- paste0('pca', 1:5)
@@ -137,8 +153,8 @@ calcBuffers <- function(sp) {
   # model species
   envModel_1 <- enmSdm::trainMaxNet(data = env, resp = "presBg")
   # envModel <- maxnet(p = presBg, data = trainData)
-  modelFileName <- paste0('./Models/', speciesAb_, '_Maxent/Model_0KYBP_pc5_buffer1_',
-                          buffer_distance_1, 'km.Rdata')
+  modelFileName <- paste0('./Models/', speciesAb_, '_Maxent/Model_PC', pc, 
+                          '_GCM_', gcm, '.Rdata')
   save(envModel_1, file = modelFileName, compress=TRUE)
   
   predictors <- c('pca1', 'pca2', 'pca3', 'pca4', 'pca5')
@@ -146,8 +162,8 @@ calcBuffers <- function(sp) {
   envMap_1 <- predict(
     climate[[predictors]],
     envModel_1,
-    filename = paste0('./Models/', speciesAb_, '_Maxent/maxentPredictionBeyer_0KYBP_pc5_buffer1_',
-                      buffer_distance_1, 'km'), 
+    filename = paste0('./Models/', speciesAb_, '_Maxent/maxentPredictionBeyer0KYBP_PC', 
+                      pc, '_GCM', gcm),
     clamp = F, 
     format='GTiff', 
     overwrite = TRUE, 
@@ -211,7 +227,8 @@ calcBuffers <- function(sp) {
   envMap_2 <- predict(
     climate[[predictors]],
     envModel_2,
-    filename = paste0('./Models/', speciesAb_, '_Maxent/maxentPredictionBeyer_0KYBP_pc5_buffer2_',
+    filename = paste0('./Models/', speciesAb_, '_Maxent/maxentPredictionBeyer0KYBP_PC', 
+                      pc, '_GCM', gcm, '_buffer2_',
                       buffer_distance_2, 'km'), 
     clamp = F, 
     format='GTiff', 
@@ -275,7 +292,8 @@ calcBuffers <- function(sp) {
   envMap_3 <- predict(
     climate[[predictors]],
     envModel_3,
-    filename = paste0('./Models/', speciesAb_, '_Maxent/maxentPredictionBeyer_0KYBP_pc5_buffer3_',
+    filename = paste0('./Models/', speciesAb_, '_Maxent/maxentPrediction_0KYBP_PC', 
+                      pc, '_GCM', gcm, '_buffer3_',
                       buffer_distance_3, 'km'), 
     clamp = F, 
     format='GTiff', 
@@ -298,7 +316,8 @@ calcBuffers <- function(sp) {
        sub = paste0('Buffer = ', buffer_distance_3, ' km'))
   
   brick <- brick(envMap_1, envMap_2, envMap_3)
-  fileName <- paste0('./data_and_analyses/buffer_output/', speciesAb_, '.tif')
+  fileName <- paste0('./data_and_analyses/buffer_output/', speciesAb_, '_PC', 
+                      pc, '_GCM', gcm, '.tif')
   writeRaster(brick, fileName, format = 'GTiff', bylayer = T, 
               suffix = names(brick),overwrite = T)
 }

@@ -159,7 +159,7 @@ names(randomBgSites) <- ll
 
 # sanity check: plot the background sites
 plot(bgTestSp, pch = 16, cex = 0.5, col = "red", 
-     main = substitute(paste(italic(speciesList[i]), ' background sites')))
+     main = substitute(paste(italic('Fraxinus quadrangulata'), ' background sites')))
 plot(calibRegionSpWgs, add = TRUE, border = 'blue')
 map("state", add = TRUE)
 map("world", add = TRUE)
@@ -204,6 +204,7 @@ dir.create(paste0('./Models/', speciesAb_, '_Maxent_PC', pc, '_GCM_', gcm),
            recursive=TRUE, showWarnings=FALSE)
 
 # model species
+# try: trainMaxNet(data, resp='presBg', regMult=c(0.5, 1, 2, 3, 4, 5, 7.5, 10))
 envModel <- enmSdm::trainMaxNet(data = env, resp = "presBg")
 # envModel <- maxnet(p = presBg, data = trainData)
 modelFileName <- paste0('./Models/', speciesAb_, '_Maxent/Model_PC', pc, '_GCM_', gcm, '.Rdata')
@@ -216,7 +217,7 @@ envMap <- predict(
   envModel,
   filename=paste0('./Models/', speciesAb_, '_Maxent/maxentPredictionBeyer0KYBP_PC', 
                   pc, '_GCM', gcm), 
-  clamp = F, 
+  clamp = F,
   format='GTiff', 
   overwrite = TRUE, 
   type='cloglog')

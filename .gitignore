@@ -69,3 +69,32 @@ workspaces/04 - Modeling Workspace - Clipping Fraxinus anomala_PC_5_GCM_Beyer
 workspaces/04 - Modeling Workspace - Clipping Fraxinus americanaTmp1
 workspaces/04 - Modeling Workspace - Clipping Fraxinus americana_PC_5_GCM_Lorenz_ccsm
 workspaces/04 - Modeling Workspace - Clipping Fraxinus americana_PC_5_GCM_Beyer
+workspaces/03 - Modeling Workspace - FraxAmer Cleaning
+workspaces/03 - Modeling Workspace - FraxCaro Cleaning
+workspaces/03 - Modeling Workspace - FraxCusp Cleaning
+workspaces/03 - Modeling Workspace - FraxGreg Cleaning
+workspaces/03 - Modeling Workspace - FraxNigr Cleaning
+workspaces/03 - Modeling Workspace - FraxPenn Cleaning
+workspaces/03 - Modeling Workspace - FraxProf Cleaning
+workspaces/03 - Modeling Workspace - FraxQuad Cleaning
+workspaces/04 - Modeling Workspace - Clipping Fraxinus anomala_PC_5_GCM_Lorenz_ccsm
+workspaces/04 - Modeling Workspace - Clipping Fraxinus caroliniana_PC_5_GCM_Lorenz_ccsmTmp
+workspaces/04 - Modeling Workspace - Clipping Fraxinus cuspidata_PC_5_GCM_Lorenz_ccsmTmp
+workspaces/04 - Modeling Workspace - Clipping Fraxinus greggii_PC_5_GCM_Lorenz_ccsm
+workspaces/04 - Modeling Workspace - Clipping Fraxinus latifolia_PC_5_GCM_Lorenz_ccsmTmp
+workspaces/04 - Modeling Workspace - Clipping Fraxinus nigra_PC_5_GCM_Lorenz_ccsm
+workspaces/04 - Modeling Workspace - Clipping Fraxinus pennsylvanica_PC_5_GCM_Lorenz_ccsm
+workspaces/04 - Modeling Workspace - Clipping Fraxinus profunda_PC_5_GCM_Lorenz_ccsm
+workspaces/04 - Modeling Workspace - Clipping Fraxinus quadrangulata_PC_5_GCM_Lorenz_ccsm
+workspaces/05 - Modeling Workspace - Frax_Anom Model Output - PC5_GCM_Lorenz_ccsm
+workspaces/05 - Modeling Workspace - Frax_Caro Model Output - PC5_GCM_Lorenz_ccsm
+workspaces/05 - Modeling Workspace - Frax_Cusp Model Output - PC5_GCM_Lorenz_ccsm
+workspaces/05 - Modeling Workspace - Frax_Greg Model Output - PC5_GCM_Lorenz_ccsm
+workspaces/05 - Modeling Workspace - Frax_Lati Model Output - PC5_GCM_Beyer
+workspaces/05 - Modeling Workspace - Frax_Lati Model Output - PC5_GCM_Lorenz_ccsm
+workspaces/05 - Modeling Workspace - Frax_Nigr Model Output - PC5_GCM_Lorenz_ccsm
+workspaces/05 - Modeling Workspace - Frax_Penn Model Output - PC5_GCM_Lorenz_ccsm
+workspaces/05 - Modeling Workspace - Frax_Prof Model Output - PC5_GCM_Lorenz_ccsm
+workspaces/05 - Modeling Workspace - Frax_Quad Model Output - PC5_GCM_BeyerTmp
+workspaces/05 - Modeling Workspace - Frax_Quad Model Output - PC5_GCM_ecbilt
+workspaces/05 - Modeling Workspace - Frax_Quad Model Output - PC5_GCM_Lorenz_ccsm
