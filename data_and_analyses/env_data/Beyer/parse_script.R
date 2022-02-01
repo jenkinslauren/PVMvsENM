@@ -163,7 +163,7 @@ for(rast in varNames) {
     means[[i]] <- calc(meansStack[[i]], fun = mean, na.rm = TRUE)
   }
   
-  outfile <- paste0('./data_and_analyses/env_data/Beyer/tifs/relative_humidity/', 
+  outfile <- paste0('./data_and_analyses/env_data/Beyer/tifs/', rast, '/', 
                     rast, '.tif')
   var <- brick(means)
   
@@ -202,6 +202,7 @@ lapply(varNames, run, yr = 120000)
 # check multiple timesteps
 rasterList <- list.files(path = './data_and_analyses/env_data/Beyer/tifs/BIO6', 
                          pattern='*.tif', all.files=TRUE, full.names=TRUE)
+rasterList <- mixedsort(rasterList)
 allrasters <- lapply(rasterList, raster)
 allrasters <- stack(allrasters)
 plot(allrasters)
