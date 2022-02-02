@@ -35,13 +35,15 @@ gcm <- 'Beyer'
 
 Fraxinus americana
 ```{r}
+species <- 'fraxinus_americana'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Amer'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus americana '),
                                                         'occurrences')), 
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(envMap, add = TRUE)
 plot(rangeMap, border = 'blue', add = TRUE)
 map("state", add = TRUE)
@@ -51,24 +53,29 @@ points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
 
 Fraxinus americana, zoomed out
 ```{r}
+species <- 'fraxinus_americana'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Amer'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(envMap, main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus americana '),
-                                                        'occurrences')))
+                                                        'occurrences')), 
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(rangeMap, border = 'blue', add = TRUE)
 ```
 
 Fraxinus caroliniana
 ```{r}
+species <- 'fraxinus_caroliniana'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Caro'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus caroliniana '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(envMap, add = TRUE)
 plot(rangeMap, border = 'blue', add = TRUE)
 map("state", add = TRUE)
@@ -78,13 +85,15 @@ points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
 
 Fraxinus caroliniana, zoomed out
 ```{r}
+species <- 'fraxinus_caroliniana'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Caro'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(envMap, main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus caroliniana '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(rangeMap, border = 'blue', add = TRUE)
 ```
 
@@ -94,13 +103,15 @@ Fraxinus cuspidata
 plot(raster)
 extract(raster, click(n=1))
 ```{r}
+species <- 'fraxinus_cuspidata'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Cusp'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus cuspidata '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(envMap, add = TRUE)
 plot(rangeMap, border = 'blue', add = TRUE)
 map("state", add = TRUE)
@@ -110,25 +121,29 @@ points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
 
 Fraxinus cuspidata, zoomed out
 ```{r}
+species <- 'fraxinus_cuspidata'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Cusp'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(envMap, main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus cuspidata '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(rangeMap, border = 'blue', add = TRUE)
 ```
 
 Fraxinus greggii
 ```{r}
+species <- 'fraxinus_greggii'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Greg'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus greggii '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(envMap, add = TRUE)
 plot(rangeMap, border = 'blue', add = TRUE)
 map("state", add = TRUE)
@@ -138,25 +153,29 @@ points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
 
 Fraxinus greggii, zoomed
 ```{r}
+species <- 'fraxinus_greggii'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Greg'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(envMap, main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus greggii '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(rangeMap, border = 'blue', add = TRUE)
 ```
 
 Fraxinus nigra
 ```{r}
+species <- 'fraxinus_nigra'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Nigr'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus nigra '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer= ', buffer_distance))
 plot(envMap, add = TRUE)
 plot(rangeMap, border = 'blue', add = TRUE)
 map("state", add = TRUE)
@@ -166,25 +185,29 @@ points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
 
 Fraxinus nigra, zoomed out
 ```{r}
+species <- 'fraxinus_nigra'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Nigr'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(envMap, main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus nigra '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer= ', buffer_distance))
 plot(rangeMap, border = 'blue', add = TRUE)
 ```
 
 Fraxinus pennsylvanica
 ```{r}
+species <- 'fraxinus_pennsylvanica'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Penn'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus pennsylvanica '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer= ', buffer_distance))
 plot(envMap, add = TRUE)
 plot(rangeMap, border = 'blue', add = TRUE)
 map("state", add = TRUE)
@@ -194,25 +217,29 @@ points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
 
 Fraxinus pennsylvanica, zoomed out
 ```{r}
+species <- 'fraxinus_pennsylvanica'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Penn'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(envMap, main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus pennsylvanica '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer= ', buffer_distance))
 plot(rangeMap, border = 'blue', add = TRUE)
 ```
 
 Fraxinus profunda
 ```{r}
+species <- 'fraxinus_profunda'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Prof'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus profunda '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer= ', buffer_distance))
 plot(envMap, add = TRUE)
 plot(rangeMap, border = 'blue', add = TRUE)
 map("state", add = TRUE)
@@ -222,25 +249,29 @@ points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
 
 Fraxinus profunda, zoomed out
 ```{r}
+species <- 'fraxinus_profunda'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Prof'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(envMap, main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus profunda '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer= ', buffer_distance))
 plot(rangeMap, border = 'blue', add = TRUE)
 ```
 
 Fraxinus quadrangulata
 ```{r}
+species <- 'fraxinus_quadrangulata'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Quad'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus quadrangulata '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer= ', buffer_distance))
 plot(envMap, add = TRUE)
 plot(rangeMap, border = 'blue', add = TRUE)
 map("state", add = TRUE)
@@ -250,13 +281,15 @@ points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
 
 Fraxinus quadrangulata, zoomed out
 ```{r}
+species <- 'fraxinus_quadrangulata'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Quad'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(envMap, main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus quadrangulata '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer= ', buffer_distance))
 plot(rangeMap, border = 'blue', add = TRUE)
 ```
 
@@ -269,13 +302,15 @@ gcm <- 'ecbilt'
 
 Fraxinus americana
 ```{r}
+species <- 'fraxinus_americana'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Amer'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus americana '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(envMap, add = TRUE)
 plot(rangeMap, border = 'blue', add = TRUE)
 map("state", add = TRUE)
@@ -285,25 +320,29 @@ points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
 
 Fraxinus americana, zoomed out
 ```{r}
+species <- 'fraxinus_americana'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Amer'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(envMap, main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus americana '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(rangeMap, border = 'blue', add = TRUE)
 ```
 
 Fraxinus caroliniana
 ```{r}
+species <- 'fraxinus_caroliniana'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Caro'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus caroliniana '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(envMap, add = TRUE)
 plot(rangeMap, border = 'blue', add = TRUE)
 map("state", add = TRUE)
@@ -313,25 +352,29 @@ points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
 
 Fraxinus caroliniana, zoomed out
 ```{r}
+species <- 'fraxinus_caroliniana'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Caro'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(envMap, main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus caroliniana '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(rangeMap, border = 'blue', add = TRUE)
 ```
 
 Fraxinus cuspidata
 ```{r}
+species <- 'fraxinus_cuspidata'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Cusp'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus cuspidata '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(envMap, add = TRUE)
 plot(rangeMap, border = 'blue', add = TRUE)
 map("state", add = TRUE)
@@ -341,25 +384,29 @@ points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
 
 Fraxinus cuspidata, zoomed out
 ```{r}
+species <- 'fraxinus_cuspidata'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Cusp'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(envMap, main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus cuspidata '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(rangeMap, border = 'blue', add = TRUE)
 ```
 
 Fraxinus greggii
 ```{r}
+species <- 'fraxinus_greggii'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Greg'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus greggii '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(envMap, add = TRUE)
 plot(rangeMap, border = 'blue', add = TRUE)
 map("state", add = TRUE)
@@ -369,25 +416,29 @@ points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
 
 Fraxinus greggii, zoomed out
 ```{r}
+species <- 'fraxinus_greggii'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Greg'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(envMap, main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus greggii '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(rangeMap, border = 'blue', add = TRUE)
 ```
 
 Fraxinus nigra
 ```{r}
+species <- 'fraxinus_nigra'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Nigr'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus nigra '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(envMap, add = TRUE)
 plot(rangeMap, border = 'blue', add = TRUE)
 map("state", add = TRUE)
@@ -397,25 +448,29 @@ points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
 
 Fraxinus nigra, zoomed out
 ```{r}
+species <- 'fraxinus_nigra'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Nigr'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(envMap, main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus nigra '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(rangeMap, border = 'blue', add = TRUE)
 ```
 
 Fraxinus pennsylvanica
 ```{r}
+species <- 'fraxinus_pennsylvanica'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Penn'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus pennsylvanica '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(envMap, add = TRUE)
 plot(rangeMap, border = 'blue', add = TRUE)
 map("state", add = TRUE)
@@ -425,25 +480,29 @@ points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
 
 Fraxinus pennsylvanica, zoomed out
 ```{r}
+species <- 'fraxinus_pennsylvanica'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Penn'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(envMap, main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus pennsylvanica '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(rangeMap, border = 'blue', add = TRUE)
 ```
 
 Fraxinus profunda
 ```{r}
+species <- 'fraxinus_profunda'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Prof'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus profunda '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(envMap, add = TRUE)
 plot(rangeMap, border = 'blue', add = TRUE)
 map("state", add = TRUE)
@@ -453,25 +512,29 @@ points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
 
 Fraxinus profunda, zoomed out
 ```{r}
+species <- 'fraxinus_profunda'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Prof'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(envMap, main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus profunda '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(rangeMap, border = 'blue', add = TRUE)
 ```
 
 Fraxinus quadrangulata
 ```{r}
+species <- 'fraxinus_quadrangulata'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Quad'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus quadrangulata '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(envMap, add = TRUE)
 plot(rangeMap, border = 'blue', add = TRUE)
 map("state", add = TRUE)
@@ -481,13 +544,15 @@ points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
 
 Fraxinus quadrangulata, zoomed out
 ```{r}
+species <- 'fraxinus_quadrangulata'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Quad'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(envMap, main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus quadrangulata '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(rangeMap, border = 'blue', add = TRUE)
 ```
 
@@ -500,13 +565,15 @@ gcm <- 'Lorenz_ccsm'
 
 Fraxinus americana
 ```{r}
+species <- 'fraxinus_americana'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Amer'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus americana '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(envMap, add = TRUE)
 plot(rangeMap, border = 'blue', add = TRUE)
 map("state", add = TRUE)
@@ -516,25 +583,29 @@ points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
 
 Fraxinus americana, zoomed out
 ```{r}
+species <- 'fraxinus_americana'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Amer'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(envMap, main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus americana '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(rangeMap, border = 'blue', add = TRUE)
 ```
 
 Fraxinus caroliniana
 ```{r}
+species <- 'fraxinus_caroliniana'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Caro'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus caroliniana '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(envMap, add = TRUE)
 plot(rangeMap, border = 'blue', add = TRUE)
 map("state", add = TRUE)
@@ -544,25 +615,29 @@ map("world", add = TRUE)
 
 Fraxinus caroliniana, zoomed out
 ```{r}
+species <- 'fraxinus_caroliniana'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Caro'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(envMap, main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus caroliniana '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(rangeMap, border = 'blue', add = TRUE)
 ```
 
 Fraxinus cuspidata
 ```{r}
+species <- 'fraxinus_cuspidata'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Cusp'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus cuspidata '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(envMap, add = TRUE)
 plot(rangeMap, border = 'blue', add = TRUE)
 map("state", add = TRUE)
@@ -572,25 +647,29 @@ points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
 
 Fraxinus cuspidata, zoomed out
 ```{r}
+species <- 'fraxinus_cuspidata'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Cusp'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(envMap, main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus cuspidata '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(rangeMap, border = 'blue', add = TRUE)
 ```
 
 Fraxinus greggii
 ```{r}
+species <- 'fraxinus_greggii'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Greg'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus greggii '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(envMap, add = TRUE)
 plot(rangeMap, border = 'blue', add = TRUE)
 map("state", add = TRUE)
@@ -600,25 +679,29 @@ map("world", add = TRUE)
 
 Fraxinus greggii, zoomed out
 ```{r}
+species <- 'fraxinus_greggii'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Greg'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(envMap, main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus greggii '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(rangeMap, border = 'blue', add = TRUE)
 ```
 
 Fraxinus nigra
 ```{r}
+species <- 'fraxinus_nigra'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Nigr'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus nigra '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(envMap, add = TRUE)
 plot(rangeMap, border = 'blue', add = TRUE)
 map("state", add = TRUE)
@@ -628,25 +711,29 @@ points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
 
 Fraxinus nigra, zoomed out
 ```{r}
+species <- 'fraxinus_nigra'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Nigr'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(envMap, main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus nigra '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(rangeMap, border = 'blue', add = TRUE)
 ```
 
 Fraxinus pennsylvanica
 ```{r}
+species <- 'fraxinus_pennsylvanica'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Penn'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus pennsylvanica '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(envMap, add = TRUE)
 plot(rangeMap, border = 'blue', add = TRUE)
 map("state", add = TRUE)
@@ -656,25 +743,29 @@ map("world", add = TRUE)
 
 Fraxinus pennsylvanica, zoomed out
 ```{r}
+species <- 'fraxinus_pennsylvanica'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Penn'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(envMap, main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus pennsylvanica '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(rangeMap, border = 'blue', add = TRUE)
 ```
 
 Fraxinus profunda
 ```{r}
+species <- 'fraxinus_profunda'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Prof'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus profunda '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(envMap, add = TRUE)
 plot(rangeMap, border = 'blue', add = TRUE)
 map("state", add = TRUE)
@@ -684,25 +775,29 @@ points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
 
 Fraxinus profunda, zoomed out
 ```{r}
+species <- 'fraxinus_profunda'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Prof'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(envMap, main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus profunda '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(rangeMap, border = 'blue', add = TRUE)
 ```
 
 Fraxinus quadrangulata
 ```{r}
+species <- 'fraxinus_quadrangulata'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Quad'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus quadrangulata '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(envMap, add = TRUE)
 plot(rangeMap, border = 'blue', add = TRUE)
 map("state", add = TRUE)
@@ -712,12 +807,14 @@ points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
 
 Fraxinus quadrangulata, zoomed out
 ```{r}
+species <- 'fraxinus_quadrangulata'
+load(paste0('./cleaning_records/', species, '_buffer.rData'))
 speciesAb_ <- 'Frax_Quad'
 load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData'))
 plot(envMap, main = substitute(paste('Maxent output, ', 
                                                         italic('Fraxinus quadrangulata '),
                                                         'occurrences')),
-     sub = paste0('GCM = ', gcm))
+     sub = paste0('GCM = ', gcm, ', Buffer = ', buffer_distance))
 plot(rangeMap, border = 'blue', add = TRUE)
 ```

@@ -18,7 +18,7 @@ library(rnaturalearthhires)
 setwd('/Volumes/lj_mac_22/MOBOT/PVMvsENM')
 
 # constants
-gcm <- 'Beyer'
+gcm <- 'Lorenz_ecbilt'
 pc <- 5
 
 load(paste0('./PCA_', gcm, '_PC', pc))
@@ -128,9 +128,8 @@ for(sp in speciesList) {
   speciesAb <- paste0(substr(sp,1,4), toupper(substr(sp,10,10)), substr(sp,11,13))
   speciesAb_ <- sub("(.{4})(.*)", "\\1_\\2", speciesAb)
   
-  fileName <- list.files(path = paste0('./Models/Maxent/', speciesAb_, '_Maxent/Model_PC', 
-                                       pc,'_GCM_', gcm),
-                         pattern = '.Rdata',
+  fileName <- list.files(path = paste0('./Models/Maxent/', speciesAb_, '_Maxent'),
+                         pattern = paste0(gcm, '.Rdata'),
                          full.names = T)
   load(fileName)
   
@@ -180,7 +179,7 @@ for (i in 1:length(climYears)) {
                        n[[7]], n[[8]], fun = mean)
   names(mn) <- paste0(climYear, ' ybp')
   meansList <- append(meansList, mn)
-
+  
   mx <- raster::mosaic(n[[1]], n[[2]], n[[3]], n[[4]], n[[5]], n[[6]],
                        n[[7]], n[[8]], fun = max)
   names(mx) <- paste0(climYear, ' ybp')
@@ -212,4 +211,5 @@ for (i in 1:length(sumList)) {
   plot(sumList[[i]], main = names(sumList[[i]]))
 }
 dev.off()
+
 
