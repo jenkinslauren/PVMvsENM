@@ -18,7 +18,7 @@ library(rnaturalearthhires)
 setwd('/Volumes/lj_mac_22/MOBOT/PVMvsENM')
 
 # constants
-gcm <- 'Lorenz_ecbilt'
+gcm <- 'ecbilt'
 pc <- 5
 
 load(paste0('./PCA_', gcm, '_PC', pc))
@@ -160,9 +160,21 @@ for(sp in speciesList) {
   # save.image(paste0('./workspaces/06 - Projections ENM ', speciesAb_))
 }
 
-fileName <- list.files(path = './predictions/',
+fileName <- list.files(path = './predictions',
                        pattern = paste0(gcm, '_PC', pc,'.tif'),
                        full.names = T)
+
+for(f in fileName) {
+  s <- gsub('\\..*', '', gsub('\\./predictions/*', '', f))
+  pdf(file = paste0('./predictions/pdf/', gcm, '/', s, '.pdf'), width = 11, height = 8.5)
+  b <- brick(f)
+  names(b) <- c(paste0(seq(21000, 0, by = -1000), ' ybp'))
+  for (i in 1:22) {
+    plot(b[[i]], main = names(b[[i]]))
+  }
+  dev.off()
+}
+
 tmp <- list(brick(fileName[[1]]), brick(fileName[[2]]), brick(fileName[[3]]), 
             brick(fileName[[4]]), brick(fileName[[5]]), brick(fileName[[6]]), 
             brick(fileName[[7]]), brick(fileName[[8]]))
@@ -192,21 +204,21 @@ for (i in 1:length(climYears)) {
   
 }
 
-pdf(file = paste0('./predictions/pdf/', gcm, '_meansList.pdf'), width = 11, height = 8.5)
+pdf(file = paste0('./predictions/pdf/', gcm, '/', gcm, '_meansList.pdf'), width = 11, height = 8.5)
 for (i in 1:length(meansList)) {
   plot(meansList[[i]], main = names(meansList[[i]]))
 }
 # plot(stack(meansList))
 dev.off()
 
-pdf(file = paste0('./predictions/pdf/', gcm, '_maxList.pdf'), width = 11, height = 8.5)
+pdf(file = paste0('./predictions/pdf/', gcm, '/', gcm, '_maxList.pdf'), width = 11, height = 8.5)
 for (i in 1:length(maxList)) {
   plot(maxList[[i]], main = names(maxList[[i]]))
 }
 # plot(stack(maxList))
 dev.off()
 
-pdf(file = paste0('./predictions/pdf/', gcm, '_sumList.pdf'), width = 11, height = 8.5)
+pdf(file = paste0('./predictions/pdf/', gcm, '/', gcm, '_sumList.pdf'), width = 11, height = 8.5)
 for (i in 1:length(sumList)) {
   plot(sumList[[i]], main = names(sumList[[i]]))
 }
