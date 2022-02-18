@@ -46,6 +46,7 @@ speciesList <- c('Fraxinus americana','Fraxinus caroliniana', 'Fraxinus cuspidat
 
 pc <- 5
 gcmList <- c('Beyer','Lorenz_ccsm', 'Lorenz_ecbilt')
+gcmList <- c('Beyer')
 climYear <- 0
 
 for(sp in speciesList) {
@@ -435,7 +436,7 @@ for(sp in speciesList) {
     gcm <- gcm
     print(paste0('GCM = ', gcm))
     # load PCA environment
-    load(paste0('./PCA_', gcm, '_PC', pc))
+    load(paste0('./workspaces/PCA_', gcm, '_PC', pc))
     
     species <<- gsub(tolower(sp), pattern=' ', replacement='_')
     speciesAb <<- paste0(substr(sp,1,4), toupper(substr(sp,10,10)), substr(sp,11,13))

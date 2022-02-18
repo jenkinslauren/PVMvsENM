@@ -35,11 +35,10 @@ createRasters <- function(varName) {
 rasters <- c('bio1', paste0('bio', 4:19), 'cloudiness', 'relative_humidity')
 lapply(rasters, createRasters)
 
-stack <- list()
-means <- list()
-
 varNames <- c('BIO1', paste0('BIO', 4:19), 'cloudiness', 'relative_humidity')
 for(rast in varNames) {
+  stack <- list()
+  means <- list()
   for(i in 1:12){
     f <- list(brick(file, varname = rast, level = i)) 
     stack <- append(stack, f)
@@ -159,8 +158,9 @@ for(rast in varNames) {
   
   # this will fill the means list from 21,000 ybp to 0 ybp, so
   # means[[1]] is 21,000 ybp, but means [[72]] is 0 ybp
-  for (i in 1:length(meansStack)) {
-    means[[i]] <- calc(meansStack[[i]], fun = mean, na.rm = TRUE)
+  for (j in 1:length(meansStack)) {
+    means[[j]] <- calc(meansStack[[j]], fun = mean, na.rm = TRUE)
+    names(means[[j]]) <- names(meansStack[[j]][[1]])
   }
   
   outfile <- paste0('./data_and_analyses/env_data/Beyer/tifs/', rast, '/', 
@@ -170,7 +170,7 @@ for(rast in varNames) {
   # can check this by overlaying the US map and checking edges
   projection(var) <- '+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0'
   
-  writeRaster(stack(var), outfile, bylayer = TRUE, format='GTiff', overwrite = T)
+  writeRaster(var, outfile, bylayer = TRUE, format='GTiff', overwrite = T)
 }
 
 changeFileName <- function(i, year, var) {
@@ -182,9 +182,9 @@ changeFileName <- function(i, year, var) {
 }
 
 run <- function(var, yr) {
-  i <- 72
+  i <- 1
   v <- var
-  while(i >= 0) {
+  while(i <= 22) {
     changeFileName(i, yr, v)
     if (yr > 22000) {
       # decrease year by 2000 increments
@@ -193,11 +193,11 @@ run <- function(var, yr) {
       # decrease year by 1000 increments
       yr <- yr - 1000
     }
-    i <- i - 1
+    i <- i + 1
   }
 }
 
-lapply(varNames, run, yr = 120000)
+lapply(varNames, run, yr = 21000)
 
 # check multiple timesteps
 rasterList <- list.files(path = './data_and_analyses/env_data/Beyer/tifs/BIO6', 
@@ -222,9 +222,9 @@ writeStacks <- function(var) {
   rasterList <- mixedsort(rasterList)
   allrasters <- lapply(rasterList, raster)
   allrasters <- stack(allrasters)
-  for (i in 1:22) {
-    plot(allrasters[[i]], main = names(allrasters[[i]]))
-  }
+  # for (i in 1:22) {
+  #   plot(allrasters[[i]], main = names(allrasters[[i]]))
+  # }
   
   writeRaster(allrasters, outfile, format = 'GTiff', overwrite = T)
 }
