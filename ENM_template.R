@@ -1,6 +1,7 @@
 # SDM Template
 # Author: Lauren Jenkins
 # 25 January 2022
+# Last updated: 18 February 2022
 
 rm(list = ls())
 # Load required packages.
@@ -563,7 +564,7 @@ for(sp in speciesList) {
     map("state", add = TRUE)
     map("world", add = TRUE)
     
-    # save.image(paste0('./workspaces/04 - Modeling Workspace - Clipping ', sp, '_PC_', pc, '_GCM_', gcm))
+    save.image(paste0('./workspaces/04 - Modeling Workspace - Clipping ', sp, '_PC_', pc, '_GCM_', gcm))
     # load(paste0('./04 - Modeling Workspace - Clipping ', sp))
     
     # load(paste0('./workspaces/03 - Modeling Workspace - ', speciesAb, ' Cleaning'))
@@ -665,8 +666,8 @@ for(sp in speciesList) {
     outputFileName <<- paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                             '_PC', pc, '.rData')
     save(rangeMap, envMap, records, file = outputFileName, overwrite = T)
-    # save.image(paste0('./workspaces/05 - Modeling Workspace - ', speciesAb_,
-    #                   ' Model Output - PC', pc, '_GCM_', gcm))
+    save.image(paste0('./workspaces/05 - Modeling Workspace - ', speciesAb_,
+                      ' Model Output - PC', pc, '_GCM_', gcm))
     
   }
 }
