@@ -46,8 +46,7 @@ speciesList <- c('Fraxinus americana','Fraxinus caroliniana', 'Fraxinus cuspidat
                  'Fraxinus profunda', 'Fraxinus quadrangulata')
 
 pc <- 5
-gcmList <- c('Beyer','Lorenz_ccsm', 'Lorenz_ecbilt')
-gcmList <- c('Beyer')
+gcmList <- c('Beyer','Lorenz_ccsm', 'ecbilt')
 climYear <- 0
 
 for(sp in speciesList) {
