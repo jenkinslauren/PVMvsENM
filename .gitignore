@@ -137,3 +137,10 @@ workspaces/03 - Modeling Workspace - FraxLati Cleaning
 workspaces/03 - Modeling Workspace - FraxGood Cleaning
 workspaces/03 - Modeling Workspace - FraxDipe Cleaning
 workspaces/03 - Modeling Workspace - FraxAnom Cleaning
+workspaces/03 - Modeling Workspace - FraxDipe Cleaning
+data_and_analyses/env_data/Lorenz/V2/ecbilt_21-0k_all_tifs_LJ/pca_pc5.Rdata
+data_and_analyses/env_data/Lorenz/V2/ccsm_21-0k_all_tifs_LJ/pca_pc5.Rdata
+data_and_analyses/env_data/Lorenz/PCA_ecbilt_clim.Rdata
+data_and_analyses/env_data/Lorenz/Lorenz_PCA.R
+data_and_analyses/env_data/Beyer/pca_pc5.Rdata
+data_and_analyses/env_data/Beyer/PCA_clim.Rdata
