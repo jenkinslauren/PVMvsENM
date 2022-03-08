@@ -444,13 +444,9 @@ for(sp in speciesList) {
   for (gcm in gcmList) {
     gcm <- gcm
     print(paste0('GCM = ', gcm))
+    
     # load PCA variables
     # load(paste0('./workspaces/PCA_', gcm, '_PC', pc))
-    if (gcm == 'Beyer') { 
-      load('./data_and_analyses/env_data/Beyer/PCA_clim.Rdata') 
-    } else { 
-      load(paste0('./data_and_analyses/env_data/Lorenz/PCA_', gcm, '_clim.Rdata')) 
-    }
     
     # Load environmental PCA rasters. 
     # If already clipped, load that. 
@@ -458,12 +454,14 @@ for(sp in speciesList) {
     studyRegionFileName <- './regions/study_region_daltonIceMask_lakesMasked_linearIceSheetInterpolation.tif'
     studyRegionRasts <- brick(studyRegionFileName)
     
-    if (gcm == 'Beyer') {
+    if (gcm == 'Beyer') { # Beyer
+      load('./data_and_analyses/env_data/Beyer/PCA_clim.Rdata')
       load(paste0('./data_and_analyses/env_data/Beyer/pca_pc', pc, '.Rdata'))
       fileName <- paste0('./data_and_analyses/env_data/Beyer/envDataClipped_',
                          climYear, 'KYBP_pc', pc, '.tif')
       vars <- c("BIO1", paste0('BIO', 4:19), "cloudiness", "relative_humidity")
-    } else if (gcm == 'Lorenz_ccsm') {
+    } else if (gcm == 'Lorenz_ccsm') { # CCSM
+      load(paste0('./data_and_analyses/env_data/Lorenz/PCA_', gcm, '_clim.Rdata')) 
       load(paste0('./data_and_analyses/env_data/Lorenz/V2/ccsm_21-0k_all_tifs_LJ/pca_pc', pc, '.Rdata')) 
       fileName <- paste0('./data_and_analyses/env_data/Lorenz/V2/ccsm_21-0k_all_tifs_LJ/envDataClipped_',
                          climYear, 'KYBP_pc', pc, '.tif')
@@ -472,7 +470,8 @@ for(sp in speciesList) {
       vars <- sub('\\.tif.*', '', list.files(path = workingFolder, 
                                              pattern='*.tif', all.files = TRUE, full.names = FALSE))
       vars <- vars[lapply(vars, function(x) length(grep("pca_", x, value = F))) == 0]
-    } else {
+    } else { # ECBilt
+      load(paste0('./data_and_analyses/env_data/Lorenz/PCA_', gcm, '_clim.Rdata')) 
       load(paste0('./data_and_analyses/env_data/Lorenz/V2/ecbilt_21-0k_all_tifs_LJ/pca_pc', pc, '.Rdata'))
       fileName <- paste0('./data_and_analyses/env_data/Lorenz/V2/ecbilt_21-0k_all_tifs_LJ/envDataClipped_',
                          climYear, 'KYBP_pc', pc, '.tif')

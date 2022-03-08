@@ -22,7 +22,7 @@ gcm <- 'Beyer'
 pc <- 5
 
 # load(paste0('./workspaces/06 - ', gcm, ' Projections'))
-load(paste0('./workspaces/PCA_', gcm, '_PC', pc))
+# load(paste0('./workspaces/PCA_', gcm, '_PC', pc))
 
 speciesList <- c('Fraxinus americana','Fraxinus caroliniana', 'Fraxinus cuspidata', 
                  'Fraxinus greggii', 'Fraxinus nigra', 'Fraxinus pennsylvanica', 
@@ -31,23 +31,38 @@ speciesList <- c('Fraxinus americana','Fraxinus caroliniana', 'Fraxinus cuspidat
 # set constants
 climYears <- seq(21000, 0, by=-1000)
 
-studyRegionFileName <- '/Volumes/GoogleDrive/.shortcut-targets-by-id/0ByjNJEf91IW5SUlEOUJFVGN0Y28/NSF_ABI_2018_2021/data_and_analyses/green_ash/study_region/!study_region_raster_masks/study_region_daltonIceMask_lakesMasked_linearIceSheetInterpolation.tif'
+studyRegionFileName <- './regions/study_region_daltonIceMask_lakesMasked_linearIceSheetInterpolation.tif'
 studyRegionRasts <- brick(studyRegionFileName)
 
 getClimRasts <- function(pc, climYear) {
   
-  if (gcm == 'Beyer') {
+  if (gcm == 'Beyer') { # Beyer
+    load('./data_and_analyses/env_data/Beyer/PCA_clim.Rdata')
+    load(paste0('./data_and_analyses/env_data/Beyer/pca_pc', pc, '.Rdata'))
     fileName <- paste0('./data_and_analyses/env_data/Beyer/envDataClipped_',
                        climYear, 'KYBP_pc', pc, '.tif')
     vars <- c("BIO1", paste0('BIO', 4:19), "cloudiness", "relative_humidity")
-  } else if (gcm == 'Lorenz_ccsm') {
+  } else if (gcm == 'Lorenz_ccsm') { # CCSM
+    load(paste0('./data_and_analyses/env_data/Lorenz/PCA_', gcm, '_clim.Rdata')) 
+    load(paste0('./data_and_analyses/env_data/Lorenz/V2/ccsm_21-0k_all_tifs_LJ/pca_pc', pc, '.Rdata')) 
     fileName <- paste0('./data_and_analyses/env_data/Lorenz/V2/ccsm_21-0k_all_tifs_LJ/envDataClipped_',
                        climYear, 'KYBP_pc', pc, '.tif')
     clim <- lorenz
-  } else {
+    workingFolder <- './data_and_analyses/env_data/Lorenz/V2/ccsm_21-0k_all_tifs_LJ/vars'
+    vars <- sub('\\.tif.*', '', list.files(path = workingFolder, 
+                                           pattern='*.tif', all.files = TRUE, full.names = FALSE))
+    vars <- vars[lapply(vars, function(x) length(grep("pca_", x, value = F))) == 0]
+  } else { # ECBilt
+    load(paste0('./data_and_analyses/env_data/Lorenz/PCA_', gcm, '_clim.Rdata')) 
+    load(paste0('./data_and_analyses/env_data/Lorenz/V2/ecbilt_21-0k_all_tifs_LJ/pca_pc', pc, '.Rdata'))
     fileName <- paste0('./data_and_analyses/env_data/Lorenz/V2/ecbilt_21-0k_all_tifs_LJ/envDataClipped_',
                        climYear, 'KYBP_pc', pc, '.tif')
     clim <- lorenz
+    workingFolder <- paste0('./data_and_analyses/env_data/Lorenz/V2/',
+                            gcm, '_21-0k_all_tifs_LJ/vars')
+    vars <- sub('\\.tif.*', '', list.files(path = workingFolder, 
+                                           pattern='*.tif', all.files = TRUE, full.names = FALSE))
+    vars <- vars[lapply(vars, function(x) length(grep("pca_", x, value = F))) == 0]
   }
   
   if (file.exists(fileName)) {
@@ -55,7 +70,12 @@ getClimRasts <- function(pc, climYear) {
     # rename raster layers to pc's
     names(envData) <- paste0('pca', 1:pc)
   } else {
-    
+    pcPrediction <- list()
+    for (i in 1:length(lorenz)) {
+      names(lorenz[[i]]) <- vars
+      pcPrediction[i] <- raster::predict(clim[[i]], pca, index = 1:pc)
+      names(pcPrediction[[i]]) <- paste0("pc", 1:pc, "_", (i-1)*1000, "KYBP")
+    }
     envDataPca <- stack(pcPrediction)
     
     # keep only rasters (first five rasters) for climate year
@@ -161,6 +181,7 @@ for(sp in speciesList) {
   # save.image(paste0('./workspaces/06 - Projections ENM ', speciesAb_))
 }
 
+gcm <- 'Beyer'
 library(RColorBrewer)
 colors <- c('#d73027','#f46d43','#fdae61','#fee08b','#ffffbf','#d9ef8b','#a6d96a','#66bd63','#1a9850')
 mergedRange <- readRDS('./littleMergedRangeFraxinus.rds')
@@ -188,7 +209,7 @@ for(f in fileName) {
 
 tmp <- list(brick(fileName[[1]]), brick(fileName[[2]]), brick(fileName[[3]]), 
             brick(fileName[[4]]), brick(fileName[[5]]), brick(fileName[[6]]), 
-            brick(fileName[[7]]), brick(fileName[[8]]), brick(fileName[[9]]))
+            brick(fileName[[7]]), brick(fileName[[8]]))
 
 meansList <- list()
 maxList <- list()
@@ -197,14 +218,14 @@ maxList <- list()
 for (i in 1:length(climYears)) {
   climYear <- climYears[i]
   n <- stack(tmp[[1]][[i]], tmp[[2]][[i]], tmp[[3]][[i]], tmp[[4]][[i]],
-             tmp[[5]][[i]], tmp[[6]][[i]], tmp[[7]][[i]], tmp[[8]][[i]], tmp[[9]][[i]])
+             tmp[[5]][[i]], tmp[[6]][[i]], tmp[[7]][[i]], tmp[[8]][[i]])
   mn <- raster::mosaic(n[[1]], n[[2]], n[[3]], n[[4]], n[[5]], n[[6]],
-                       n[[7]], n[[8]], n[[9]], fun = mean)
+                       n[[7]], n[[8]], fun = mean)
   names(mn) <- paste0(climYear, ' ybp')
   meansList <- append(meansList, mn)
   
   mx <- raster::mosaic(n[[1]], n[[2]], n[[3]], n[[4]], n[[5]], n[[6]],
-                       n[[7]], n[[8]], n[[9]], fun = max)
+                       n[[7]], n[[8]], fun = max)
   names(mx) <- paste0(climYear, ' ybp')
   maxList <- append(maxList, mx)
   
@@ -216,7 +237,7 @@ for (i in 1:length(climYears)) {
   # sumList <- append(sumList, sumRasterCorrected)
 }
 
-fileName <- '/Volumes/GoogleDrive/.shortcut-targets-by-id/0ByjNJEf91IW5SUlEOUJFVGN0Y28/NSF_ABI_2018_2021/data_and_analyses/pg_pollen/matern_overdispersed/predictions-FRAXINUS_meanpred.tif'
+fileName <- './predictions/pollen/predictions-FRAXINUS_meanpred.tif'
 pollenRast <- brick(fileName)
 lists <- list(meansList, maxList)
 temp <- list()
@@ -275,7 +296,7 @@ fileName <- list.files(path = paste0('./predictions/', gcm),
 
 tmp <- list(brick(fileName[[1]]), brick(fileName[[2]]), brick(fileName[[3]]), 
             brick(fileName[[4]]), brick(fileName[[5]]), brick(fileName[[6]]), 
-            brick(fileName[[7]]), brick(fileName[[8]]), brick(fileName[[9]]))
+            brick(fileName[[7]]), brick(fileName[[8]]))
 skip <- 1
 for (j in 1:length(tmp)){
   meansSkipList <- list()
@@ -296,12 +317,12 @@ for (j in 1:length(tmp)){
     climYear <- climYears[k]
     n <- stack(nList)
     mnSkip <- raster::mosaic(n[[1]], n[[2]], n[[3]], n[[4]], n[[5]], n[[6]],
-                             n[[7]], n[[8]], fun = mean)
+                             n[[7]], fun = mean)
     names(mnSkip) <- paste0(climYear, ' ybp')
     meansSkipList <- append(meansSkipList, mnSkip)
     
     mxSkip <- raster::mosaic(n[[1]], n[[2]], n[[3]], n[[4]], n[[5]], n[[6]],
-                             n[[7]], n[[8]], fun = max)
+                             n[[7]], fun = max)
     names(mxSkip) <- paste0(climYear, ' ybp')
     maxSkipList <- append(maxSkipList, mxSkip)
     
@@ -539,7 +560,7 @@ for(gcm in gcmList) {
   
   dev.off()
   
-  # save.image(file = paste0('./workspaces/06 - ', gcm, ' Projections'))
+  save.image(file = paste0('./workspaces/06 - ', gcm, ' Projections'))
 }
 
 ggplot(data = bvMeans, aes(x = time, y = centroidVelocity)) + 
