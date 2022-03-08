@@ -137,6 +137,9 @@ climDf <- climDf[nonNas, ]
 climDf <- climDf[1:10000,]
 
 pca <- prcomp(climxDf, center = TRUE, scale = TRUE)
+fileName <- paste0('./data_and_analyses/env_data/Beyer/pca_pc', pc, '.Rdata') 
+
+save(pca, file = fileName)
 # prcomp calculates the eigenvectors on correlation matrix
 # https://pages.cms.hu-berlin.de/EOL/gcg_quantitative-methods/Lab10_PCA.html#Principal_Component_Analysis 
 # in pca: the coefficients reflect the contribution of each variable to each principal component

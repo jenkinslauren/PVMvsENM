@@ -18,15 +18,15 @@ library(rnaturalearthhires)
 setwd('/Volumes/lj_mac_22/MOBOT/PVMvsENM')
 
 # constants
-gcm <- 'ecbilt'
+gcm <- 'Beyer'
 pc <- 5
 
 # load(paste0('./workspaces/06 - ', gcm, ' Projections'))
 load(paste0('./workspaces/PCA_', gcm, '_PC', pc))
 
-speciesList <- c('Fraxinus americana','Fraxinus caroliniana', 'Fraxinus cuspidata',
+speciesList <- c('Fraxinus americana','Fraxinus caroliniana', 'Fraxinus cuspidata', 
                  'Fraxinus greggii', 'Fraxinus nigra', 'Fraxinus pennsylvanica', 
-                 'Fraxinus profunda','Fraxinus quadrangulata')
+                 'Fraxinus profunda', 'Fraxinus quadrangulata')
 
 # set constants
 climYears <- seq(21000, 0, by=-1000)
@@ -162,7 +162,7 @@ for(sp in speciesList) {
 }
 
 library(RColorBrewer)
-colors <- c('#ffffe5','#f7fcb9','#d9f0a3','#addd8e','#78c679','#41ab5d','#238443','#006837','#004529')
+colors <- c('#d73027','#f46d43','#fdae61','#fee08b','#ffffbf','#d9ef8b','#a6d96a','#66bd63','#1a9850')
 mergedRange <- readRDS('./littleMergedRangeFraxinus.rds')
 
 fileName <- list.files(path = paste0('./predictions/', gcm),
@@ -188,38 +188,53 @@ for(f in fileName) {
 
 tmp <- list(brick(fileName[[1]]), brick(fileName[[2]]), brick(fileName[[3]]), 
             brick(fileName[[4]]), brick(fileName[[5]]), brick(fileName[[6]]), 
-            brick(fileName[[7]]), brick(fileName[[8]]))
+            brick(fileName[[7]]), brick(fileName[[8]]), brick(fileName[[9]]))
 
 meansList <- list()
 maxList <- list()
-sumList <- list()
+# sumList <- list()
 
 for (i in 1:length(climYears)) {
   climYear <- climYears[i]
   n <- stack(tmp[[1]][[i]], tmp[[2]][[i]], tmp[[3]][[i]], tmp[[4]][[i]],
-             tmp[[5]][[i]], tmp[[6]][[i]], tmp[[7]][[i]], tmp[[8]][[i]])
+             tmp[[5]][[i]], tmp[[6]][[i]], tmp[[7]][[i]], tmp[[8]][[i]], tmp[[9]][[i]])
   mn <- raster::mosaic(n[[1]], n[[2]], n[[3]], n[[4]], n[[5]], n[[6]],
-                       n[[7]], n[[8]], fun = mean)
+                       n[[7]], n[[8]], n[[9]], fun = mean)
   names(mn) <- paste0(climYear, ' ybp')
   meansList <- append(meansList, mn)
   
   mx <- raster::mosaic(n[[1]], n[[2]], n[[3]], n[[4]], n[[5]], n[[6]],
-                       n[[7]], n[[8]], fun = max)
+                       n[[7]], n[[8]], n[[9]], fun = max)
   names(mx) <- paste0(climYear, ' ybp')
   maxList <- append(maxList, mx)
   
-  sm <- raster::mosaic(n[[1]], n[[2]], n[[3]], n[[4]], n[[5]], n[[6]], 
-                       n[[7]], n[[8]], fun = sum)
-  mask <- n[[1]] * 0 + 1
-  sumRasterCorrected <- sm * mask
-  names(sumRasterCorrected) <- paste0(climYear, ' ybp')
-  sumList <- append(sumList, sumRasterCorrected)
-  
+  # sm <- raster::mosaic(n[[1]], n[[2]], n[[3]], n[[4]], n[[5]], n[[6]], 
+  #                      n[[7]], n[[8]], fun = sum)
+  # mask <- n[[1]] * 0 + 1
+  # sumRasterCorrected <- sm * mask
+  # names(sumRasterCorrected) <- paste0(climYear, ' ybp')
+  # sumList <- append(sumList, sumRasterCorrected)
 }
+
+fileName <- '/Volumes/GoogleDrive/.shortcut-targets-by-id/0ByjNJEf91IW5SUlEOUJFVGN0Y28/NSF_ABI_2018_2021/data_and_analyses/pg_pollen/matern_overdispersed/predictions-FRAXINUS_meanpred.tif'
+pollenRast <- brick(fileName)
+lists <- list(meansList, maxList)
+temp <- list()
+for(l in lists) {
+  resampled <- list()
+  for(i in 1:length(l)) {
+    thisRast <- raster::resample(l[[i]], pollenRast[[i]], method = 'bilinear')
+    resampled <- append(resampled, thisRast)
+  }
+  temp <- append(stack(resampled), temp)
+}
+
+meansList <- stack(temp[1])
+maxList <- stack(temp[2])
 
 title <- paste0('Fraxinus, GCM = ', gcm)
 pdf(file = paste0('./predictions/pdf/', gcm, '/', gcm, '_meansList.pdf'), width = 11, height = 8.5)
-for (i in 1:length(meansList)) {
+for (i in 1:nlayers(meansList)) {
   par(mfrow=c(1,2))
   plot(meansList[[i]], main = paste0('MEANS, ', title, ', ', names(meansList[[i]])), 
        col = colors, axes = F)
@@ -230,7 +245,7 @@ for (i in 1:length(meansList)) {
 dev.off()
 
 pdf(file = paste0('./predictions/pdf/', gcm, '/', gcm, '_maxList.pdf'), width = 11, height = 8.5)
-for (i in 1:length(maxList)) {
+for (i in 1:nlayers(maxList)) {
   par(mfrow=c(1,2))
   plot(maxList[[i]], main = paste0('MAX, ', title, ', ', names(maxList[[i]])),  
        col = colors, axes = F)
@@ -240,15 +255,15 @@ for (i in 1:length(maxList)) {
 # plot(stack(maxList))
 dev.off()
 
-pdf(file = paste0('./predictions/pdf/', gcm, '/', gcm, '_sumList.pdf'), width = 11, height = 8.5)
-for (i in 1:length(sumList)) {
-  par(mfrow=c(1,2))
-  plot(sumList[[i]], main = paste0('SUM, ', title, ', ', names(sumList[[i]])),  
-       col = colors, axes = F)
-  plot(sumList[[22]], main = paste0('SUM, ', title, ', ', names(sumList[[22]])),  
-       col = colors, axes = F)
-}
-dev.off()
+# pdf(file = paste0('./predictions/pdf/', gcm, '/', gcm, '_sumList.pdf'), width = 11, height = 8.5)
+# for (i in 1:length(sumList)) {
+#   par(mfrow=c(1,2))
+#   plot(sumList[[i]], main = paste0('SUM, ', title, ', ', names(sumList[[i]])),  
+#        col = colors, axes = F)
+#   plot(sumList[[22]], main = paste0('SUM, ', title, ', ', names(sumList[[22]])),  
+#        col = colors, axes = F)
+# }
+# dev.off()
 
 speciesList <- c('Fraxinus americana','Fraxinus caroliniana', 'Fraxinus cuspidata',
                  'Fraxinus greggii', 'Fraxinus nigra', 'Fraxinus pennsylvanica',
@@ -260,18 +275,19 @@ fileName <- list.files(path = paste0('./predictions/', gcm),
 
 tmp <- list(brick(fileName[[1]]), brick(fileName[[2]]), brick(fileName[[3]]), 
             brick(fileName[[4]]), brick(fileName[[5]]), brick(fileName[[6]]), 
-            brick(fileName[[7]]), brick(fileName[[8]]))
+            brick(fileName[[7]]), brick(fileName[[8]]), brick(fileName[[9]]))
 skip <- 1
 for (j in 1:length(tmp)){
   meansSkipList <- list()
   maxSkipList <- list()
-  sumSkipList <- list()
+  # sumSkipList <- list()
   for(k in 1:length(climYears)) {
     nList <- list()
     for(m in 1:length(tmp)) {
       if(skip != m) { # species to include
         # print(names(tmp[[m]][[k]]))
-        nList <- append(nList, brick(tmp[[m]][[k]]))
+        thisRast <- raster::resample(brick(tmp[[m]][[k]]), pollenRast[[i]], method = 'bilinear')
+        nList <- append(nList, brick(thisRast))
       } else { # species to remove
         skipped <- speciesList[m]
       }
@@ -280,21 +296,21 @@ for (j in 1:length(tmp)){
     climYear <- climYears[k]
     n <- stack(nList)
     mnSkip <- raster::mosaic(n[[1]], n[[2]], n[[3]], n[[4]], n[[5]], n[[6]],
-                             n[[7]], fun = mean)
+                             n[[7]], n[[8]], fun = mean)
     names(mnSkip) <- paste0(climYear, ' ybp')
     meansSkipList <- append(meansSkipList, mnSkip)
     
     mxSkip <- raster::mosaic(n[[1]], n[[2]], n[[3]], n[[4]], n[[5]], n[[6]],
-                             n[[7]], fun = max)
+                             n[[7]], n[[8]], fun = max)
     names(mxSkip) <- paste0(climYear, ' ybp')
     maxSkipList <- append(maxSkipList, mxSkip)
     
-    smSkip <- raster::mosaic(n[[1]], n[[2]], n[[3]], n[[4]], n[[5]], n[[6]], 
-                             n[[7]], fun = sum)
-    mask <- n[[1]] * 0 + 1
-    sumSkipRasterCorrected <- smSkip * mask
-    names(sumSkipRasterCorrected) <- paste0(climYear, ' ybp')
-    sumSkipList <- append(sumSkipList, sumSkipRasterCorrected)
+    # smSkip <- raster::mosaic(n[[1]], n[[2]], n[[3]], n[[4]], n[[5]], n[[6]], 
+    #                          n[[7]], fun = sum)
+    # mask <- n[[1]] * 0 + 1
+    # sumSkipRasterCorrected <- smSkip * mask
+    # names(sumSkipRasterCorrected) <- paste0(climYear, ' ybp')
+    # sumSkipList <- append(sumSkipList, sumSkipRasterCorrected)
   }
   
   title <- paste0('Species skipped = ', skipped, ', GCM = ', gcm)
@@ -306,7 +322,7 @@ for (j in 1:length(tmp)){
     par(mfrow=c(1,2))
     plot(meansSkipList[[i]], main = paste0('MEANS, ', names(meansSkipList[[i]])), 
          sub = title, col = colors, axes = F)
-    plot(meansList[[i]], main = paste0('MEANS, ', names(meansList[[i]])), 
+    plot(meansList[[i]], main = paste0('MEANS without sp removed, ', names(meansList[[i]])), 
          col = colors, axes = F)
   }
   # plot(stack(meansList))
@@ -317,31 +333,31 @@ for (j in 1:length(tmp)){
     par(mfrow=c(1,2))
     plot(maxSkipList[[i]], main = paste0('MAX, ', names(maxSkipList[[i]])), 
          sub = title, col = colors, axes = F)
-    plot(maxList[[i]], main = paste0('MAX, ', names(maxList[[i]])), 
+    plot(maxList[[i]], main = paste0('MAX without sp removed, ', names(maxList[[i]])), 
          col = colors, axes = F)
   }
   # plot(stack(maxList))
   dev.off()
   
-  pdf(file = paste0('./predictions/pdf/', gcm, '/No_', sp, '_sumList.pdf'), width = 11, height = 8.5)
-  for (i in 1:length(sumSkipList)) {
-    par(mfrow=c(1,2))
-    plot(sumSkipList[[i]], main = paste0('SUM, ', names(sumSkipList[[i]])), 
-         sub = title, col = colors, axes = F)
-    plot(sumList[[i]], main = paste0('SUM, ', names(sumList[[i]])), 
-        col = colors, axes = F)
-  }
-  dev.off()
+  # pdf(file = paste0('./predictions/pdf/', gcm, '/No_', sp, '_sumList.pdf'), width = 11, height = 8.5)
+  # for (i in 1:length(sumSkipList)) {
+  #   par(mfrow=c(1,2))
+  #   plot(sumSkipList[[i]], main = paste0('SUM, ', names(sumSkipList[[i]])), 
+  #        sub = title, col = colors, axes = F)
+  #   plot(sumList[[i]], main = paste0('SUM, ', names(sumList[[i]])), 
+  #       col = colors, axes = F)
+  # }
+  # dev.off()
   
   skip <- skip + 1
 }
 
-gcmList <- c('Beyer', 'Lorenz_ccsm')
+gcmList <- c('Beyer')
 library(enmSdm)
 library(gtools)
 
 for(gcm in gcmList) {
-  load(paste0('./workspaces/06 - ', gcm, ' Projections'))
+  # load(paste0('./workspaces/06 - ', gcm, ' Projections'))
   
   stackMeansList <- stack(meansList)
   projection(stackMeansList) <- getCRS('albersNA')
@@ -353,11 +369,11 @@ for(gcm in gcmList) {
   bvMax <- bioticVelocity(stackMaxList, times = seq(-21,0, by=1), onlyInSharedCells = T)
   bvMaxF <- bioticVelocity(stackMaxList, times = seq(-21,0, by=1), onlyInSharedCells = F)
   
-  stackSumList <- stack(sumList)
-  projection(stackSumList) <- getCRS('albersNA')
-  bvSum <- bioticVelocity(stackSumList, times = seq(-21,0, by=1), onlyInSharedCells = T)
-  bvSumF <- bioticVelocity(stackSumList, times = seq(-21,0, by=1), onlyInSharedCells = F)
-  
+  # stackSumList <- stack(sumList)
+  # projection(stackSumList) <- getCRS('albersNA')
+  # bvSum <- bioticVelocity(stackSumList, times = seq(-21,0, by=1), onlyInSharedCells = T)
+  # bvSumF <- bioticVelocity(stackSumList, times = seq(-21,0, by=1), onlyInSharedCells = F)
+  # 
   pdf(file = paste0('./predictions/pdf/', gcm, '_bioticVelocity.pdf'), width = 11, height = 8.5)
   # no y axes limits
   bvMeans$time <- paste0(abs(bvMeans$timeFrom), '-', abs(bvMeans$timeTo), ' kybp')
@@ -392,32 +408,30 @@ for(gcm in gcmList) {
     ggtitle("Max (shared cells = F)") + xlab("time period") + ylab("centroid velocity") + 
     theme_bw() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
   
-  bvSum$time <- paste0(abs(bvSum$timeFrom), '-', abs(bvSum$timeTo), ' kybp')
-  bvSum$time <- factor(bvSum$time, levels = rev(mixedsort(bvSum$time)))
-  
-  bvSumF$time <- paste0(abs(bvSumF$timeFrom), '-', abs(bvSumF$timeTo), ' kybp')
-  bvSumF$time <- factor(bvSumF$time, levels = rev(mixedsort(bvSumF$time)))
-  
-  ggplot(bvSum, aes(time, centroidVelocity)) + 
-    geom_bar(stat = 'identity') + 
-    ggtitle("Sums") + xlab("time period") + ylab("centroid velocity") +
-    theme_bw() +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1))
-  
-  ggplot(bvSumF, aes(time, centroidVelocity)) + 
-    geom_bar(stat = 'identity') + 
-    ggtitle("Sums (shared cells = F)") + xlab("time period") + ylab("centroid velocity") +
-    theme_bw() +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  # bvSum$time <- paste0(abs(bvSum$timeFrom), '-', abs(bvSum$timeTo), ' kybp')
+  # bvSum$time <- factor(bvSum$time, levels = rev(mixedsort(bvSum$time)))
+  # 
+  # bvSumF$time <- paste0(abs(bvSumF$timeFrom), '-', abs(bvSumF$timeTo), ' kybp')
+  # bvSumF$time <- factor(bvSumF$time, levels = rev(mixedsort(bvSumF$time)))
+  # 
+  # ggplot(bvSum, aes(time, centroidVelocity)) + 
+  #   geom_bar(stat = 'identity') + 
+  #   ggtitle("Sums") + xlab("time period") + ylab("centroid velocity") +
+  #   theme_bw() +
+  #   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  # 
+  # ggplot(bvSumF, aes(time, centroidVelocity)) + 
+  #   geom_bar(stat = 'identity') + 
+  #   ggtitle("Sums (shared cells = F)") + xlab("time period") + ylab("centroid velocity") +
+  #   theme_bw() +
+  #   theme(axis.text.x = element_text(angle = 45, hjust = 1))
   
   # all equal y axes limits
   # set limits
   minBV <- min(c(min(bvMeans$centroidVelocity), 
-                 min(bvMax$centroidVelocity),
-                 min(bvSum$centroidVelocity))) - 1000
+                 min(bvMax$centroidVelocity))) - 1000
   maxBV <- max(c(max(bvMeans$centroidVelocity), 
-                 max(bvMax$centroidVelocity),
-                 max(bvSum$centroidVelocity))) + 1000
+                 max(bvMax$centroidVelocity))) + 1000
   
   ggplot(bvMeans, aes(time, centroidVelocity)) + 
     geom_bar(stat = 'identity') + 
@@ -431,27 +445,22 @@ for(gcm in gcmList) {
     ylim(0, maxBV) + theme_bw() +
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
   
-  ggplot(bvSum, aes(time, centroidVelocity)) + 
-    geom_bar(stat = 'identity') + 
-    ggtitle("Sums") + xlab("time period") + ylab("centroid velocity") +
-    ylim(0, maxBV) + theme_bw() +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1))
-  
+  # ggplot(bvSum, aes(time, centroidVelocity)) + 
+  #   geom_bar(stat = 'identity') + 
+  #   ggtitle("Sums") + xlab("time period") + ylab("centroid velocity") +
+  #   ylim(0, maxBV) + theme_bw() +
+  #   theme(axis.text.x = element_text(angle = 45, hjust = 1))
   dev.off()
   
   # NS Quant Velocity
   min05 <- min(c(min(bvMeans$nsQuantVelocity_quant0p05), 
-               min(bvMax$nsQuantVelocity_quant0p05),
-               min(bvSum$nsQuantVelocity_quant0p05))) - 1000
+               min(bvMax$nsQuantVelocity_quant0p05))) - 1000
   min95 <- min(c(min(bvMeans$nsQuantVelocity_quant0p95), 
-                 min(bvMax$nsQuantVelocity_quant0p95),
-                 min(bvSum$nsQuantVelocity_quant0p95))) - 1000
+                 min(bvMax$nsQuantVelocity_quant0p95))) - 1000
   max05 <- max(c(max(bvMeans$nsQuantVelocity_quant0p05), 
-                max(bvMax$nsQuantVelocity_quant0p05),
-                max(bvSum$nsQuantVelocity_quant0p05))) + 1000
+                max(bvMax$nsQuantVelocity_quant0p05))) + 1000
   max95 <- max(c(max(bvMeans$nsQuantVelocity_quant0p95), 
-                max(bvMax$nsQuantVelocity_quant0p95),
-                max(bvSum$nsQuantVelocity_quant0p95))) + 1000
+                max(bvMax$nsQuantVelocity_quant0p95))) + 1000
     
   pdf(file = paste0('./predictions/pdf/', gcm, '_nsQuantVelocity.pdf'), width = 11, height = 8.5)
   # no y axes limits
@@ -479,17 +488,17 @@ for(gcm in gcmList) {
     theme_bw() +
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
   
-  ggplot(bvSum, aes(time, nsQuantVelocity_quant0p05)) + 
-    geom_bar(stat = 'identity') + 
-    ggtitle("Means") + xlab("time period") + ylab("NS_quant_05") +
-    theme_bw() +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1))
-  
-  ggplot(bvSum, aes(time, nsQuantVelocity_quant0p95)) + 
-    geom_bar(stat = 'identity') + 
-    ggtitle("Means") + xlab("time period") + ylab("NS_quant_95") +
-    theme_bw() +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  # ggplot(bvSum, aes(time, nsQuantVelocity_quant0p05)) + 
+  #   geom_bar(stat = 'identity') + 
+  #   ggtitle("Means") + xlab("time period") + ylab("NS_quant_05") +
+  #   theme_bw() +
+  #   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  # 
+  # ggplot(bvSum, aes(time, nsQuantVelocity_quant0p95)) + 
+  #   geom_bar(stat = 'identity') + 
+  #   ggtitle("Means") + xlab("time period") + ylab("NS_quant_95") +
+  #   theme_bw() +
+  #   theme(axis.text.x = element_text(angle = 45, hjust = 1))
   
   # all equal y axes limits
   ggplot(bvMeans, aes(time, nsQuantVelocity_quant0p05)) + 
@@ -516,21 +525,40 @@ for(gcm in gcmList) {
     ylim(min95, max95) + theme_bw() +
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
   
-  ggplot(bvSum, aes(time, nsQuantVelocity_quant0p05)) + 
-    geom_bar(stat = 'identity') + 
-    ggtitle("Sums") + xlab("time period") + ylab("NS_quant_05") +
-    ylim(min05, max05) + theme_bw() +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1))
-  
-  ggplot(bvSum, aes(time, nsQuantVelocity_quant0p95)) + 
-    geom_bar(stat = 'identity') + 
-    ggtitle("Sums") + xlab("time period") + ylab("NS_quant_95") +
-    ylim(min95, max95) + theme_bw() +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  # ggplot(bvSum, aes(time, nsQuantVelocity_quant0p05)) + 
+  #   geom_bar(stat = 'identity') + 
+  #   ggtitle("Sums") + xlab("time period") + ylab("NS_quant_05") +
+  #   ylim(min05, max05) + theme_bw() +
+  #   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  # 
+  # ggplot(bvSum, aes(time, nsQuantVelocity_quant0p95)) + 
+  #   geom_bar(stat = 'identity') + 
+  #   ggtitle("Sums") + xlab("time period") + ylab("NS_quant_95") +
+  #   ylim(min95, max95) + theme_bw() +
+  #   theme(axis.text.x = element_text(angle = 45, hjust = 1))
   
   dev.off()
   
   # save.image(file = paste0('./workspaces/06 - ', gcm, ' Projections'))
 }
+
+ggplot(data = bvMeans, aes(x = time, y = centroidVelocity)) + 
+  geom_rect(data = NULL, aes(xmin = 0, xmax = 15, ymin = -25, ymax = 250000),
+            fill = "antiquewhite2") +
+  geom_rect(data = NULL,aes(xmin = 15, xmax = 21, ymin = -25, ymax = 250000),
+            fill="lightblue") +
+  geom_boxplot(middle = bvMeans$centroidVelocity, 
+               lower = bvMeans$nsQuantVelocity_quant0p05, 
+               upper = bvMeans$nsQuantVelocity_quant0p95, fill = 'salmon1') + 
+  theme_classic() + ggtitle('ENM Means') + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  theme(plot.title = element_blank(), axis.title.x = element_blank(),
+        axis.title.y = element_text(size = 12),
+        plot.tag = element_text(face = "bold", size = "16")) +
+  scale_x_discrete(limits = c("21.0-20.0","20.0-19.0","19.0-18.0","18.0-17.0",
+                              "17.0-16.0","16.0-15.0","15.0-14.0","14.0-13.0",
+                              "13.0-12.0","12.0-11.0","11.0-10.0","10.0-9.0",
+                              "9.0-8.0","8.0-7.0","7.0-6.0","6.0-5.0",
+                              "5.0-4.0","4.0-3.0","3.0-2.0","2.0-1.0","1.0-0.0"))
 
 

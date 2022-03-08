@@ -1,0 +1,4 @@
+OLD Models 
+7 March 2022
+
+These models were calculated using the old background sites that were defined using the buffer for the cleaned data. Changed the buffer to be 160 km around all of the final cleaned points to ensure that the sites on the edge of the buffer have their entire env within 160 km considered in Maxent. Used 160 km as the distance because Adam suggested it...the larger the buffer, the better the prediction (it seems). In his models, he used 80-km, 160-km, and 320-km. Someone once criticized 320-km & 80-km seems small, so used 160-km.
