@@ -173,6 +173,14 @@ nonNas <- which(complete.cases(climDf))
 climDf <- climDf[nonNas, ]
 
 pca <- prcomp(climxDf, center = TRUE, scale = TRUE)
+fileName <- if(gcm == 'Lorenz_ccsm') { 
+  paste0('./data_and_analyses/env_data/Lorenz/V2/ccsm_21-0k_all_tifs_LJ/pca_pc', pc, '.Rdata') 
+  } else {
+  paste0('./data_and_analyses/env_data/Lorenz/V2/ecbilt_21-0k_all_tifs_LJ/pca_pc', pc, '.Rdata') 
+    }
+
+save(pca, file = fileName)
+
 # prcomp calculates the eigenvectors on correlation matrix
 # https://pages.cms.hu-berlin.de/EOL/gcg_quantitative-methods/Lab10_PCA.html#Principal_Component_Analysis 
 # in pca: the coefficients reflect the contribution of each variable to each principal component
@@ -203,4 +211,4 @@ plot(stackPca)
 
 outfile <- paste0(workingFolder, '/pca_output_pc', pc,'.tif')
 writeRaster(stackPca, outfile, format = 'GTiff', overwrite = T)
-save.image(paste0('./PCA_Lorenz_', gcm, '_PC', pc))
+save.image(paste0('./workspaces/PCA_', gcm, '_PC', pc))
