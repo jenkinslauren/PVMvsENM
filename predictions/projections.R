@@ -373,7 +373,7 @@ for (j in 1:length(tmp)){
   skip <- skip + 1
 }
 
-gcmList <- c('Beyer')
+gcmList <- c('Lorenz_ccsm')
 library(enmSdm)
 library(gtools)
 

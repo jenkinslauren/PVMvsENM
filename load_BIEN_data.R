@@ -6,7 +6,7 @@
 
 ### setup ###
 rm(list = ls())
-setwd('/Users/laurenjenkins/Documents/MOBOT/PVMvsENM/')
+setwd('/Volumes/lj_mac_22/MOBOT/PVMvsENM/')
 
 load('./00 - Modeling Workspace - Fraxinus Range Maps (Little)')
 

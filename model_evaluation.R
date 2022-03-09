@@ -2,6 +2,10 @@
 # Date: 18 Feb 2022
 # Author: Lauren Jenkins
 
+# 9 March 2022
+# Stopped before frax_greg for 'Lorenz_ccsm'
+# still have all of 'ecbilt' to do
+
 rm(list = ls())
 library(dismo)
 library(sp)
@@ -10,7 +14,7 @@ library(xlsx)
 setwd('/Volumes/lj_mac_22/MOBOT/PVMvsENM')
 
 # gcm <- 'Beyer'
-gcmList <- c('Lorenz_ccsm')
+gcmList <- c('Beyer','Lorenz_ccsm', 'ecbilt')
 pc <- 5
 predictors <- c(paste0('pca', 1:pc))
 speciesList <- c('Fraxinus americana','Fraxinus caroliniana', 'Fraxinus cuspidata', 
