@@ -610,7 +610,8 @@ for(sp in speciesList) {
       save(bgTestSpAlb, file = bgRawFileName)
     }
     bgTestSp <- sp::spTransform(bgTestSpAlb, getCRS('wgs84', TRUE))
-    randomBgSites <- as.data.frame(coordinates(bgTestSp))
+    randomBgSites <- randomPoints(climate, 20000)
+    # randomBgSites <- as.data.frame(coordinates(bgTestSp))
     names(randomBgSites) <- ll
     
     # sanity check: plot the background sites
