@@ -563,23 +563,3 @@ for(gcm in gcmList) {
   save.image(file = paste0('./workspaces/06 - ', gcm, ' Projections'))
 }
 
-ggplot(data = bvMeans, aes(x = time, y = centroidVelocity)) + 
-  geom_rect(data = NULL, aes(xmin = 0, xmax = 15, ymin = -25, ymax = 250000),
-            fill = "antiquewhite2") +
-  geom_rect(data = NULL,aes(xmin = 15, xmax = 21, ymin = -25, ymax = 250000),
-            fill="lightblue") +
-  geom_boxplot(middle = bvMeans$centroidVelocity, 
-               lower = bvMeans$nsQuantVelocity_quant0p05, 
-               upper = bvMeans$nsQuantVelocity_quant0p95, fill = 'salmon1') + 
-  theme_classic() + ggtitle('ENM Means') + 
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  theme(plot.title = element_blank(), axis.title.x = element_blank(),
-        axis.title.y = element_text(size = 12),
-        plot.tag = element_text(face = "bold", size = "16")) +
-  scale_x_discrete(limits = c("21.0-20.0","20.0-19.0","19.0-18.0","18.0-17.0",
-                              "17.0-16.0","16.0-15.0","15.0-14.0","14.0-13.0",
-                              "13.0-12.0","12.0-11.0","11.0-10.0","10.0-9.0",
-                              "9.0-8.0","8.0-7.0","7.0-6.0","6.0-5.0",
-                              "5.0-4.0","4.0-3.0","3.0-2.0","2.0-1.0","1.0-0.0"))
-
-
