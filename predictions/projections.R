@@ -201,6 +201,7 @@ for(f in fileName) {
   title <- gsub('.*/', '', s)
   for (i in 1:22) {
     par(mfrow=c(1,2))
+    projection(b[[i]]) <- projection(rangeMap) <- getCRS('nad27')
     plot(b[[i]], main = paste0(names(b[[i]]),' ', title),  col = colors, axes = F)
     plot(b[[22]], main = paste0(names(b[[22]]),' ', title),  col = colors, axes = F)
   }
