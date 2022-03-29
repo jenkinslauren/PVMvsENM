@@ -201,7 +201,6 @@ for(f in fileName) {
   title <- gsub('.*/', '', s)
   for (i in 1:22) {
     par(mfrow=c(1,2))
-    projection(b[[i]]) <- projection(rangeMap) <- getCRS('nad27')
     plot(b[[i]], main = paste0(names(b[[i]]),' ', title),  col = colors, axes = F)
     plot(b[[22]], main = paste0(names(b[[22]]),' ', title),  col = colors, axes = F)
   }
@@ -562,5 +561,44 @@ for(gcm in gcmList) {
   dev.off()
   
   save.image(file = paste0('./workspaces/06 - ', gcm, ' Projections'))
+}
+
+# maps for Adam
+# 28 March 2022
+gcmList <- c('Beyer', 'Lorenz_ccsm', 'ecbilt')
+
+for(gcm in gcmList) {
+  pdf(file = paste0('./PDF/', gcm, '_0_22_preds.pdf'), width = 11, height = 8.5)
+  fileName <- list.files(path = paste0('./predictions/', gcm),
+                         pattern = paste0('PC', pc,'.tif'),
+                         full.names = T)
+  if(gcm == 'ecbilt') {
+    g <- 'ECBilt'
+  } else if(gcm == 'Lorenz_ccsm') {
+    g <- 'CCSM'
+  } else {
+    g <- 'HadAM3H'
+  }
+  
+  for(f in fileName) {
+    s <- gsub('\\..*', '', gsub('\\./predictions/*', '', f))
+    speciesAb_ <-  gsub('\\_GCM.*', '', gsub(paste0('\\./predictions/', gcm, '/*'), '', f))
+    load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
+                '_PC', pc, '.rData'))
+    b <- brick(f)
+    names(b) <- c(paste0(seq(21000, 0, by = -1000), ' ybp'))
+    t <- paste0('\n', sub("_", " ", speciesAb_), '\nGCM = ', g)
+    
+    par(mfrow=c(1,2), mar=c(2,1,5,1)+0.1)
+    plot(b[[1]], main = paste0(sub("\\.", " ", sub("X", "", names(b[[1]]))),' ', t),  
+         col = colors, legend.mar = 10, axes = F, box = F)
+    plot(sp::spTransform(rangeMap, CRS(projection(b[[1]]))), border='blue', add = T)
+    plot(sp::spTransform(world, CRS(projection(b[[1]]))), border = 'black', add = T)
+    plot(b[[22]], main = paste0(sub("\\.", " ", sub("X", "", names(b[[22]]))),' ', t),  
+         col = colors, legend.mar = 10, axes = F, box = F)
+    plot(sp::spTransform(rangeMap, CRS(projection(b[[22]]))), border='blue', add = T)
+    plot(sp::spTransform(world, CRS(projection(b[[22]]))), border = 'black', add = T)
+  }
+  dev.off()
 }
 

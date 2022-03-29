@@ -18,7 +18,7 @@ library(rnaturalearthhires)
 setwd('/Volumes/lj_mac_22/MOBOT/PVMvsENM')
 
 # constants
-gcm <- 'Lorenz_ccsm'
+gcm <- 'ecbilt'
 pc <- 5
 
 load(paste0('./workspaces/06 - ', gcm, ' Projections'))
