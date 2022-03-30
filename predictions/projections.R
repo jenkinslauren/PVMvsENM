@@ -145,7 +145,7 @@ predictions <- function(speciesAb_, pc) {
 }
 
 for(sp in speciesList) {
-  species <- gsub(tolower(sp), pattern=' ', replacement='_')
+  species <- gsub(tolower(sp), pattern =' ', replacement='_')
   speciesAb <- paste0(substr(sp,1,4), toupper(substr(sp,10,10)), substr(sp,11,13))
   speciesAb_ <- sub("(.{4})(.*)", "\\1_\\2", speciesAb)
   
@@ -181,7 +181,7 @@ for(sp in speciesList) {
   # save.image(paste0('./workspaces/06 - Projections ENM ', speciesAb_))
 }
 
-gcm <- 'Beyer'
+gcm <- 'ecbilt'
 library(RColorBrewer)
 colors <- c('#d73027','#f46d43','#fdae61','#fee08b','#ffffbf','#d9ef8b','#a6d96a','#66bd63','#1a9850')
 mergedRange <- readRDS('./littleMergedRangeFraxinus.rds')
@@ -244,6 +244,7 @@ temp <- list()
 for(l in lists) {
   resampled <- list()
   for(i in 1:length(l)) {
+    l[[i]] <- raster::projectRaster(l[[i]], pollenRast[[i]])
     thisRast <- raster::resample(l[[i]], pollenRast[[i]], method = 'bilinear')
     resampled <- append(resampled, thisRast)
   }
@@ -566,6 +567,12 @@ for(gcm in gcmList) {
 # maps for Adam
 # 28 March 2022
 gcmList <- c('Beyer', 'Lorenz_ccsm', 'ecbilt')
+world <- ne_countries(scale = "medium", returnclass = "sf")
+world <- as(world, "Spatial")
+
+library(RColorBrewer)
+colors <- c('#d73027','#f46d43','#fdae61','#fee08b','#ffffbf','#d9ef8b','#a6d96a','#66bd63','#1a9850')
+mergedRange <- readRDS('./littleMergedRangeFraxinus.rds')
 
 for(gcm in gcmList) {
   pdf(file = paste0('./PDF/', gcm, '_0_22_preds.pdf'), width = 11, height = 8.5)
