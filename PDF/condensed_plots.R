@@ -2,6 +2,7 @@ rm(list = ls())
 library(dplyr)
 library(ggplot2)
 library(tidyr)
+library(stringr)
 
 library(raster)
 library(rgdal)
@@ -28,7 +29,7 @@ speciesList <- c('Fraxinus americana','Fraxinus caroliniana', 'Fraxinus cuspidat
                  'Fraxinus profunda', 'Fraxinus quadrangulata')
 
 # set constants
-climYears <- seq(21000, 0, by=-1000)
+climYears <- seq(21000, 0, by = -1000)
 
 studyRegionFileName <- './regions/study_region_daltonIceMask_lakesMasked_linearIceSheetInterpolation.tif'
 studyRegionRasts <- brick(studyRegionFileName)
@@ -36,11 +37,15 @@ studyRegionRasts <- brick(studyRegionFileName)
 title <- paste0('Fraxinus, \nGCM = ', gcm)
 pdf(file = paste0('./PDF/', gcm, '_predictions_allSp.pdf'), width = 11, height = 8.5)
 for(i in 1:22) {
-  par(mfrow=c(2,5))
-  plot(meansList[[i]], main = paste0(gsub('\\X*', '', names(meansList[[i]])), '\nMEANS, ', title), 
-       col = colors, axes = F)
-  plot(maxList[[i]], main = paste0(gsub('\\X*', '', names(maxList[[i]])), '\nMAX, ', title),  
-       col = colors, axes = F)
+  par(mfrow=c(2,5), mar=c(2,1,5,1)+0.1)
+  plot(meansList[[i]], 
+       main = paste0(sub('\\.', ' ', 
+                         gsub('\\X*', '', names(meansList[[i]])), '\nMEANS, ', title)), 
+       col = colors, axes = F, legend.mar = 10, box = F)
+  plot(maxList[[i]], 
+       main = paste0(sub('\\.', ' ', 
+                         gsub('\\X*', '', names(maxList[[i]])), '\nMAX, ', title)),  
+       col = colors, axes = F, legend.mar = 10, box = F)
   for(f in fileName) {
     s <- gsub('\\..*', '', gsub('\\./predictions/*', '', f))
     speciesAb_ <-  gsub('\\_GCM.*', '', gsub(paste0('\\./predictions/', gcm, '/*'), '', f))
@@ -50,7 +55,8 @@ for(i in 1:22) {
     names(b) <- c(paste0(seq(21000, 0, by = -1000), ' ybp'))
     title <- str_replace_all(gsub('./*GCM', '\nGCM = ', gsub('.*/', '', s)), '_', ' ')
     
-    plot(b[[i]], main = paste0(gsub('\\X*', '', names(b[[i]])),'\n ', title),  col = colors, axes = F)
+    plot(b[[i]], main = paste0(sub('\\.', ' ', gsub('\\X*', '', names(b[[i]])),'\n ', title)),  
+         col = colors, axes = F, legend.mar = 10, box = F)
     
   }
 }
@@ -126,26 +132,28 @@ for (j in 1:length(tmp)){
 title <- paste0('Fraxinus, \nGCM = ', gcm)
 pdf(file = paste0('./PDF/', gcm, '_predictions_removedSp_mean.pdf'), width = 11, height = 8.5)
 for (i in 1:22) {
-  par(mfrow=c(3,3))
-  plot(meansList[[i]], main = paste0(gsub('\\X*', '', names(meansList[[i]])), '\nMEANS, ', title), 
-       col = colors, axes = F)
+  par(mfrow=c(3,3), mar=c(2,1,5,1)+0.1)
+  plot(meansList[[i]], main = paste0(sub('\\.', ' ', 
+                                         gsub('\\X*', '', names(meansList[[i]])), '\nMEANS, ', title)), 
+       col = colors, axes = F, legend.mar = 10, box = F)
   for(j in 1:8) {
     t <- gsub('\\.', ' ', gsub('X', '', names(means[[j]][[i]])))
     plot(means[[j]][[i]], main = paste0(sub('skipped ', 'skipped =\n', sub('ybp ', 'ybp\n', t))), 
-         col = colors, axes = F)
+         col = colors, axes = F, legend.mar = 10, box = F)
   }
 }
 dev.off()
 
 pdf(file = paste0('./PDF/', gcm, '_predictions_removedSp_max.pdf'), width = 11, height = 8.5)
 for (i in 1:22) {
-  par(mfrow=c(3,3))
-  plot(maxList[[i]], main = paste0(gsub('\\X*', '', names(maxList[[i]])), '\nMAX, ', title), 
-       col = colors, axes = F)
+  par(mfrow=c(3,3), mar=c(2,1,5,1)+0.1)
+  plot(maxList[[i]], main = paste0(sub('\\.', ' ', 
+                                       gsub('\\X*', '', names(maxList[[i]])), '\nMAX, ', title)), 
+       col = colors, axes = F, legend.mar = 10, box = F)
   for(j in 1:8) {
     t <- gsub('\\.', ' ', gsub('X', '', names(maxes[[j]][[i]])))
     plot(maxes[[j]][[i]], main = paste0(sub('skipped ', 'skipped =\n', sub('ybp ', 'ybp\n', t))), 
-         col = colors, axes = F)
+         col = colors, axes = F, legend.mar = 10, box = F)
   }
 }
 dev.off()
@@ -155,7 +163,7 @@ dev.off()
 rm(list = ls())
 
 # constants
-gcmList <- c('Lorenz_ccsm', 'ecbilt', 'Beyer', 'pollen')
+gcmList_ <- c('Lorenz_ccsm', 'ecbilt', 'Beyer', 'pollen')
 pc <- 5
 
 speciesList <- c('Fraxinus americana','Fraxinus caroliniana', 'Fraxinus cuspidata', 
@@ -168,32 +176,42 @@ climYears <- seq(21000, 0, by=-1000)
 studyRegionFileName <- './regions/study_region_daltonIceMask_lakesMasked_linearIceSheetInterpolation.tif'
 studyRegionRasts <- brick(studyRegionFileName)
 
+world <- ne_countries(scale = "medium", returnclass = "sf")
+world <- as(world, "Spatial")
+
 pollenRast <- brick('/Volumes/lj_mac_22/pollen/predictions-FRAXINUS_meanpred.tif')
 
 pdf(file = './PDF/all_gcm_predictions_means.pdf', 
     width = 11, height = 8.5)
-par(mfrow=c(2,2))
+par(mfrow=c(2,2), mar=c(2,1,5,1)+0.1)
 for(a in 1:22) {
-  for(gcm in gcmList) {
-    t <- paste0('Fraxinus, \nGCM = ', gcm)
+  for(gcm in gcmList_) {
     if(gcm == 'pollen') {
+      t <- 'Fraxinus, \nGCM = Pollen'
       # scale values between 0 and 1
       mnv <- cellStats(pollenRast[[a]],'min')
       mxv <- cellStats(pollenRast[[a]],'max')
       pollenRast[[a]] <- (pollenRast[[a]] - mnv) / (mxv - mnv)
       
       plot(pollenRast[[a]], main = paste0(climYears[a], ' ybp,\n', t), 
-           col = colors, axes = F)
+           col = colors, axes = F, legend.mar = 10, box = F)
+      plot(sp::spTransform(world, CRS(projection(pollenRast[[a]]))), border = 'black', add = T)
     } else {
       load(paste0('./workspaces/06 - ', gcm, ' Projections'))
+      
+      if(gcm == 'Lorenz_ccsm') t <- 'Fraxinus, \nGCM = CCSM'
+      if(gcm == 'ecbilt') t <- 'Fraxinus, \nGCM = ECBilt'
+      if(gcm == 'Beyer') t <- 'Fraxinus, \nGCM = HadAM3H'
       
       # scale values between 0 and 1
       mnv <- cellStats(meansList[[a]],'min')
       mxv <- cellStats(meansList[[a]],'max')
       meansList[[a]] <- (meansList[[a]] - mnv) / (mxv - mnv)
       
-      plot(meansList[[a]], main = paste0(sub('\\.', ' ', gsub('\\X*', '', names(meansList[[a]]))), '\nMEANS, ', t), 
-           col = colors, axes = F)
+      plot(meansList[[a]], main = paste0(sub('\\.', ' ', 
+                                             gsub('\\X*', '', names(meansList[[a]]))), '\nMEANS, ', t), 
+           col = colors, axes = F, legend.mar = 10, box = F)
+      plot(sp::spTransform(world, CRS(projection(meansList[[a]]))), border = 'black', add = T)
     }
   }
 }
@@ -201,9 +219,9 @@ dev.off()
 
 pdf(file = './PDF/all_gcm_predictions_max.pdf', 
     width = 11, height = 8.5)
-par(mfrow=c(2,2))
+par(mfrow=c(2,2), mar=c(2,1,5,1)+0.1)
 for(a in 1:22) {
-  for(gcm in gcmList) {
+  for(gcm in gcmList_) {
     t <- paste0('Fraxinus, \nGCM = ', gcm)
     if(gcm == 'pollen') {
       # scale values between 0 and 1
@@ -212,7 +230,8 @@ for(a in 1:22) {
       pollenRast[[a]] <- (pollenRast[[a]] - mnv) / (mxv - mnv)
       
       plot(pollenRast[[a]], main = paste0(climYears[a], ' ybp,\n', t), 
-           col = colors, axes = F)
+           col = colors, axes = F, legend.mar = 10, box = F)
+      plot(sp::spTransform(world, CRS(projection(pollenRast[[a]]))), border = 'black', add = T)
     } else {
       load(paste0('./workspaces/06 - ', gcm, ' Projections'))
       
@@ -222,7 +241,8 @@ for(a in 1:22) {
       maxList[[a]] <- (maxList[[a]] - mnv) / (mxv - mnv)
       
       plot(maxList[[a]], main = paste0(sub('\\.', ' ', gsub('\\X*', '', names(maxList[[a]]))), '\nMAX, ', t), 
-           col = colors, axes = F)
+           col = colors, axes = F, legend.mar = 10, box = F)
+      plot(sp::spTransform(world, CRS(projection(maxList[[a]]))), border = 'black', add = T)
     }
   }
 }
