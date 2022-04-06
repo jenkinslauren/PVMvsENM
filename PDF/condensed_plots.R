@@ -40,11 +40,11 @@ for(i in 1:22) {
   par(mfrow=c(2,5), mar=c(2,1,5,1)+0.1)
   plot(meansList[[i]], 
        main = paste0(sub('\\.', ' ', 
-                         gsub('\\X*', '', names(meansList[[i]])), '\nMEANS, ', title)), 
+                         gsub('\\X*', '', names(meansList[[i]]))), '\nMEANS, ', title), 
        col = colors, axes = F, legend.mar = 10, box = F)
   plot(maxList[[i]], 
        main = paste0(sub('\\.', ' ', 
-                         gsub('\\X*', '', names(maxList[[i]])), '\nMAX, ', title)),  
+                         gsub('\\X*', '', names(maxList[[i]]))), '\nMAX, ', title),  
        col = colors, axes = F, legend.mar = 10, box = F)
   for(f in fileName) {
     s <- gsub('\\..*', '', gsub('\\./predictions/*', '', f))
@@ -55,7 +55,7 @@ for(i in 1:22) {
     names(b) <- c(paste0(seq(21000, 0, by = -1000), ' ybp'))
     title <- str_replace_all(gsub('./*GCM', '\nGCM = ', gsub('.*/', '', s)), '_', ' ')
     
-    plot(b[[i]], main = paste0(sub('\\.', ' ', gsub('\\X*', '', names(b[[i]])),'\n ', title)),  
+    plot(b[[i]], main = paste0(sub('\\.', ' ', gsub('\\X*', '', names(b[[i]]))),'\n ', title),  
          col = colors, axes = F, legend.mar = 10, box = F)
     
   }
@@ -65,6 +65,7 @@ dev.off()
 fileName <- list.files(path = paste0('./predictions/', gcm),
                        pattern = paste0('PC', pc,'.tif'),
                        full.names = T)
+pollenRast <- brick('/Volumes/lj_mac_22/pollen/predictions-FRAXINUS_meanpred.tif')
 
 tmp <- list(brick(fileName[[1]]), brick(fileName[[2]]), brick(fileName[[3]]), 
             brick(fileName[[4]]), brick(fileName[[5]]), brick(fileName[[6]]), 
@@ -79,7 +80,8 @@ for (j in 1:length(tmp)){
     for(m in 1:length(tmp)) {
       if(skip != m) { # species to include
         # print(names(tmp[[m]][[k]]))
-        thisRast <- raster::resample(brick(tmp[[m]][[k]]), pollenRast[[i]], method = 'bilinear')
+        # thisRast <- raster::resample(tmp[[m]][[k]], pollenRast[[k]], method = 'bilinear')
+        thisRast <- tmp[[m]][[k]]
         nList <- append(nList, brick(thisRast))
       } else { # species to remove
         skipped <- speciesList[m]
@@ -134,7 +136,7 @@ pdf(file = paste0('./PDF/', gcm, '_predictions_removedSp_mean.pdf'), width = 11,
 for (i in 1:22) {
   par(mfrow=c(3,3), mar=c(2,1,5,1)+0.1)
   plot(meansList[[i]], main = paste0(sub('\\.', ' ', 
-                                         gsub('\\X*', '', names(meansList[[i]])), '\nMEANS, ', title)), 
+                                         gsub('\\X*', '', names(meansList[[i]]))), '\nMEANS, ', title), 
        col = colors, axes = F, legend.mar = 10, box = F)
   for(j in 1:8) {
     t <- gsub('\\.', ' ', gsub('X', '', names(means[[j]][[i]])))
@@ -148,7 +150,7 @@ pdf(file = paste0('./PDF/', gcm, '_predictions_removedSp_max.pdf'), width = 11, 
 for (i in 1:22) {
   par(mfrow=c(3,3), mar=c(2,1,5,1)+0.1)
   plot(maxList[[i]], main = paste0(sub('\\.', ' ', 
-                                       gsub('\\X*', '', names(maxList[[i]])), '\nMAX, ', title)), 
+                                       gsub('\\X*', '', names(maxList[[i]]))), '\nMAX, ', title), 
        col = colors, axes = F, legend.mar = 10, box = F)
   for(j in 1:8) {
     t <- gsub('\\.', ' ', gsub('X', '', names(maxes[[j]][[i]])))

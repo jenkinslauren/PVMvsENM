@@ -134,21 +134,166 @@ eMax <- ggplot(bvECBiltMax, aes(time, centroidVelocity, group = 1)) +
 #                  bvECBiltMean$centroidVelocity)
 
 bv <- data.frame(bvPollen$time, 
+                 bvPollen$centroidVelocity,
                  bvBeyerMeans$centroidVelocity,
                  bvCCSMMean$centroidVelocity,
                  bvECBiltMean$centroidVelocity)
-colnames(bv) <- c("Time", "Beyer", "CCSM", "ECBilt")
-bv2 <- cbind(bv[1], utils::stack(bv[2:4]))
-colnames(bv2) <- c("Time", "centroidVelocity", "climateSource")
+colnames(bv) <- c("Time", "Pollen","Beyer", "CCSM", "ECBilt")
+bv <- cbind(bv[1], utils::stack(bv[2:5]))
+colnames(bv) <- c("Time", "centroidVelocity", "climateSource")
 
-pdf(file = './bv_plots.pdf', height = 8.5, width = 11)
+###############################################################################
+###############################################################################
+gcm <- 'ecbilt'
+fileName <- list.files(path = paste0('./predictions/', gcm),
+                       pattern = paste0('PC', pc,'.tif'),
+                       full.names = T)
+bv_all <- data.frame(bvECBiltMean$time, bvECBiltMean$centroidVelocity)
+colnames(bv_all) <- c('Time', 'Entire Genus')
+
+for(f in fileName) {
+  s <- gsub('\\..*', '', gsub('\\./predictions/*', '', f))
+  speciesAb_ <-  gsub('\\_GCM.*', '', gsub(paste0('\\./predictions/', gcm, '/*'), '', f))
+  load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
+              '_PC', pc, '.rData'))
+  b <- stack(f)
+  names(b) <- c(paste0(seq(21000, 0, by = -1000), ' ybp'))
+  
+  projection(b) <- getCRS('albersNA')
+  sp_bv <- bioticVelocity(b, times = seq(-21000,0, by = 1000), onlyInSharedCells = T) 
+  bv_all <- cbind(bv_all, sp_bv$centroidVelocity)
+  colnames(bv_all)[ncol(bv_all)] <- speciesAb_
+}
+
+bv_all_sp <- cbind(bv_all[1], utils::stack(bv_all[3:ncol(bv_all)]))
+colnames(bv_all_sp) <- c("Time", "centroidVelocity", "Species")
+
+# all species
+e_all_sp <- ggplot(bv_all_sp, aes(x = Time, y = centroidVelocity, group = Species, 
+                     color = Species)) +
+  geom_point() + geom_line() + theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), 
+        plot.title = element_text(vjust = -1)) +
+  labs(title = "ECBilt Biotic Velocity\n", x = "Time Period", 
+       y = "Centroid Velocity (m/yr)", color = "Species")
+
+bv_select_sp <- data.frame(bv_all[3:4], bv_all[7:9])
+bv_select_sp <- cbind(bv_all[1], utils::stack(bv_select_sp))
+colnames(bv_select_sp) <- c("Time", "centroidVelocity", "Species")
+
+# select species (best models)
+e_select_sp <- ggplot(bv_select_sp, aes(x = Time, y = centroidVelocity, group = Species, 
+                      color = Species)) +
+  geom_point() + geom_line() + theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), 
+        plot.title = element_text(vjust = -1)) +
+  labs(title = "ECBilt Biotic Velocity\n", subtitle = "Select Species Only", 
+       x = "Time Period", y = "Centroid Velocity (m/yr)", color = "Species")
+
+gcm <- 'Lorenz_ccsm'
+fileName <- list.files(path = paste0('./predictions/', gcm),
+                       pattern = paste0('PC', pc,'.tif'),
+                       full.names = T)
+bv_all <- data.frame(bvECBiltMean$time, bvECBiltMean$centroidVelocity)
+colnames(bv_all) <- c('Time', 'Entire Genus')
+
+for(f in fileName) {
+  s <- gsub('\\..*', '', gsub('\\./predictions/*', '', f))
+  speciesAb_ <-  gsub('\\_GCM.*', '', gsub(paste0('\\./predictions/', gcm, '/*'), '', f))
+  load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
+              '_PC', pc, '.rData'))
+  b <- stack(f)
+  names(b) <- c(paste0(seq(21000, 0, by = -1000), ' ybp'))
+  
+  projection(b) <- getCRS('albersNA')
+  sp_bv <- bioticVelocity(b, times = seq(-21000,0, by = 1000), onlyInSharedCells = T) 
+  bv_all <- cbind(bv_all, sp_bv$centroidVelocity)
+  colnames(bv_all)[ncol(bv_all)] <- speciesAb_
+}
+
+bv_all_sp <- cbind(bv_all[1], utils::stack(bv_all[3:ncol(bv_all)]))
+colnames(bv_all_sp) <- c("Time", "centroidVelocity", "Species")
+
+# all species
+c_all_sp <- ggplot(bv_all_sp, aes(x = Time, y = centroidVelocity, group = Species, 
+                                  color = Species)) +
+  geom_point() + geom_line() + theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), 
+        plot.title = element_text(vjust = -1)) +
+  labs(title = "CCSM Biotic Velocity\n", x = "Time Period", 
+       y = "Centroid Velocity (m/yr)", color = "Species")
+
+bv_select_sp <- data.frame(bv_all[3:4], bv_all[7:9])
+bv_select_sp <- cbind(bv_all[1], utils::stack(bv_select_sp))
+colnames(bv_select_sp) <- c("Time", "centroidVelocity", "Species")
+
+# select species (best models)
+c_select_sp <- ggplot(bv_select_sp, aes(x = Time, y = centroidVelocity, group = Species, 
+                                        color = Species)) +
+  geom_point() + geom_line() + theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), 
+        plot.title = element_text(vjust = -1)) +
+  labs(title = "CCSM Biotic Velocity\n", subtitle = "Select Species Only", 
+       x = "Time Period", y = "Centroid Velocity (m/yr)", color = "Species")
+
+gcm <- 'Beyer'
+fileName <- list.files(path = paste0('./predictions/', gcm),
+                       pattern = paste0('PC', pc,'.tif'),
+                       full.names = T)
+bv_all <- data.frame(bvECBiltMean$time, bvECBiltMean$centroidVelocity)
+colnames(bv_all) <- c('Time', 'Entire Genus')
+
+for(f in fileName) {
+  s <- gsub('\\..*', '', gsub('\\./predictions/*', '', f))
+  speciesAb_ <-  gsub('\\_GCM.*', '', gsub(paste0('\\./predictions/', gcm, '/*'), '', f))
+  load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
+              '_PC', pc, '.rData'))
+  b <- stack(f)
+  names(b) <- c(paste0(seq(21000, 0, by = -1000), ' ybp'))
+  
+  projection(b) <- getCRS('albersNA')
+  sp_bv <- bioticVelocity(b, times = seq(-21000,0, by = 1000), onlyInSharedCells = T) 
+  bv_all <- cbind(bv_all, sp_bv$centroidVelocity)
+  colnames(bv_all)[ncol(bv_all)] <- speciesAb_
+}
+
+bv_all_sp <- cbind(bv_all[1], utils::stack(bv_all[3:ncol(bv_all)]))
+colnames(bv_all_sp) <- c("Time", "centroidVelocity", "Species")
+
+# all species
+b_all_sp <- ggplot(bv_all_sp, aes(x = Time, y = centroidVelocity, group = Species, 
+                                  color = Species)) +
+  geom_point() + geom_line() + theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), 
+        plot.title = element_text(vjust = -1)) +
+  labs(title = "HadAM3H Biotic Velocity\n", x = "Time Period", 
+       y = "Centroid Velocity (m/yr)", color = "Species")
+
+bv_select_sp <- data.frame(bv_all[3:4], bv_all[7:9])
+bv_select_sp <- cbind(bv_all[1], utils::stack(bv_select_sp))
+colnames(bv_select_sp) <- c("Time", "centroidVelocity", "Species")
+
+# select species (best models)
+b_select_sp <- ggplot(bv_select_sp, aes(x = Time, y = centroidVelocity, group = Species, 
+                                        color = Species)) +
+  geom_point() + geom_line() + theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), 
+        plot.title = element_text(vjust = -1)) +
+  labs(title = "HadAM3H Biotic Velocity\n", subtitle = "Select Species Only", 
+       x = "Time Period", y = "Centroid Velocity (m/yr)", color = "Species")
+
+pdf(file = './PDF/bv_plots.pdf', height = 8.5, width = 11)
 
 plot_grid(p, bMean, bMax, cMean, cMax, eMean, eMax)
 
-ggplot(bv2, aes(x = Time, y = centroidVelocity, group = climateSource, color = climateSource)) +
+ggplot(bv, aes(x = Time, y = centroidVelocity, group = climateSource, 
+               color = climateSource)) +
   geom_point() + geom_line() + theme_classic() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   labs(title = "Biotic Velocity\n", x = "Time Period", 
-       y = "Centroid Velocity (m/yr)", color = "GCM")
+       y = "Centroid Velocity (m/yr)", color = "GCM") +
+  scale_color_manual(values = c('#66c2a5','#fc8d62','#8da0cb','#e78ac3'))
+
+plot_grid(e_all_sp, e_select_sp, c_all_sp, c_select_sp, b_all_sp, b_select_sp, ncol = 2)
 
 dev.off()
