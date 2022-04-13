@@ -37,6 +37,34 @@ for(a in 1:22) {
     plot(raster::crop(sp::spTransform(world, CRS(projection(cor))), extent(cor)), 
                       border = 'black', add = T)
   }
+  
+  load('./workspaces/06 - Beyer Projections')
+  beyer <- 'HadAM3H'
+  bMeans <- meansList
+  load('./workspaces/06 - ecbilt Projections')
+  ecbilt <- 'ECBilt'
+  eMeans <- meansList
+  load('./workspaces/06 - Lorenz_ccsm Projections')
+  ccsm <- 'CCSM'
+  cMeans <- meansList
+  
+  t <- paste0('Pearson Correlation,\n', beyer, '& ', ecbilt, '\n', climYears[a], ' ybp')
+  cor <- rasterCorrelation(bMeans[[a]], eMeans[[a]], type = 'pearson')
+  plot(cor, main = t, axes = F, box = F, legend.mar = 10, col = colors)
+  plot(raster::crop(sp::spTransform(world, CRS(projection(cor))), extent(cor)), 
+       border = 'black', add = T)
+  
+  t <- paste0('Pearson Correlation,\n', beyer, '& ', ccsm, '\n', climYears[a], ' ybp')
+  cor <- rasterCorrelation(bMeans[[a]], cMeans[[a]], type = 'pearson')
+  plot(cor, main = t, axes = F, box = F, legend.mar = 10, col = colors)
+  plot(raster::crop(sp::spTransform(world, CRS(projection(cor))), extent(cor)), 
+       border = 'black', add = T)
+  
+  t <- paste0('Pearson Correlation,\n', ccsm, '& ', ecbilt, '\n', climYears[a], ' ybp')
+  cor <- rasterCorrelation(cMeans[[a]], eMeans[[a]], type = 'pearson')
+  plot(cor, main = t, axes = F, box = F, legend.mar = 10, col = colors)
+  plot(raster::crop(sp::spTransform(world, CRS(projection(cor))), extent(cor)), 
+       border = 'black', add = T)
 }
 dev.off()
 

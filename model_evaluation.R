@@ -22,6 +22,7 @@ speciesList <- c('Fraxinus americana','Fraxinus caroliniana', 'Fraxinus cuspidat
                  'Fraxinus profunda', 'Fraxinus quadrangulata')
 
 for (gcm in gcmList) {
+  print(paste0("GCM = ", gcm))
   gcm <- gcm
   a <- 1
   for(i in 1:length(speciesList)) {
@@ -33,39 +34,46 @@ for (gcm in gcmList) {
     speciesAb_ <- sub("(.{4})(.*)", "\\1_\\2", speciesAb)
     rangeName <- paste0('littleRange_', speciesAb)
     
-    # load bg sites, records, and rangeMap
-    load(paste0('./Background Sites/Random Background Sites across Study Region - ', 
+    # # load bg sites, records, and rangeMap
+    # load(paste0('./Background Sites/Random Background Sites across Study Region - ', 
+    #             speciesAb, '_', gcm, '.Rdata'))
+    # load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
+    #             '_PC', pc, '.rData'))
+    # load(paste0('./regions/little_range_map/', rangeName, '.Rdata'))
+    
+    # load bg sites and records
+    load(paste0('./in/bg_sites/Random Background Sites across Study Region - ', 
                 speciesAb, '_', gcm, '.Rdata'))
-    load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
+    load(paste0('./in/models/maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
                 '_PC', pc, '.rData'))
-    load(paste0('./regions/little_range_map/', rangeName, '.Rdata'))
+    
     
     # calculate k-folds for presences and background sites
     kPres <- kfold(records, k = 5)
     kBg <- kfold(randomBg, k = 5)
     
     # visualize fold #1
-    plot(rangeMap, main = paste0(sp, ', k-fold #1'))
-    points(records$longitude, records$latitude)
-    points(records$longitude[kPres==1],
-           records$latitude[kPres==1],
-           bg='red',
-           pch=21
-    )
+    # plot(rangeMap, main = paste0(sp, ', k-fold #1'))
+    # points(records$longitude, records$latitude)
+    # points(records$longitude[kPres==1],
+    #        records$latitude[kPres==1],
+    #        bg='red',
+    #        pch=21
+    # )
+    # 
+    # legend('topright',
+    #        legend=c('Training presence', 'Test presence'),
+    #        pch=c(1, 16),
+    #        col=c('black', 'red'),
+    #        bg='white',
+    #        cex=0.8
+    # )
     
-    legend('topright',
-           legend=c('Training presence', 'Test presence'),
-           pch=c(1, 16),
-           col=c('black', 'red'),
-           bg='white',
-           cex=0.8
-    )
-    
-    folderName <- paste0('./Models/Maxent/', speciesAb_,
-                         '_Maxent/Model Evaluation - Random K-Folds - ', gcm)
-    
-    # folderName <- paste0('./in/models/maxent/', speciesAb_, 
+    # folderName <- paste0('./Models/Maxent/', speciesAb_,
     #                      '_Maxent/Model Evaluation - Random K-Folds - ', gcm)
+     
+    folderName <- paste0('./in/models/maxent/', speciesAb_,
+                         '_Maxent/Model Evaluation - Random K-Folds - ', gcm)
     # create an output directory
     dir.create(folderName, recursive = TRUE, showWarnings = FALSE)
     
@@ -84,7 +92,6 @@ for (gcm in gcmList) {
       
       # load(paste0(folderName, '/Model ', i, '.Rdata'))
       model <- enmSdm::trainMaxNet(data = trainData, resp = 'presBg')
-      save(model, file = paste0(folderName, '/Model ', i, '.Rdata'))
       
       # predict presences & background sites
       predPres <- raster::predict(model, 
@@ -95,6 +102,9 @@ for (gcm in gcmList) {
                                 newdata = randomBg[kPres == i,],
                                 clamp = F,
                                 type = 'cloglog')
+      
+      save(model, presBg, predBg, kPres, kBg,
+           file = paste0(folderName, '/Model ', i, '.Rdata'), overwrite = T)
       
       # evaluate
       thisEval <- evaluate(p = as.vector(predPres), a = as.vector(predBg))
@@ -126,8 +136,12 @@ for(gcm in gcmList) {
     speciesAb <- paste0(substr(sp,1,4), toupper(substr(sp,10,10)), substr(sp,11,13))
     speciesAb_ <- sub("(.{4})(.*)", "\\1_\\2", speciesAb)
     
-    folderName <- paste0('./Models/Maxent/', speciesAb_, 
+    # folderName <- paste0('./Models/Maxent/', speciesAb_, 
+    #                      '_Maxent/Model Evaluation - Random K-Folds - ', gcm)
+    
+    folderName <- paste0('./in/models/maxent/', speciesAb_,
                          '_Maxent/Model Evaluation - Random K-Folds - ', gcm)
+    
     load(paste0(folderName, '/auc_cbi_vals.Rdata'))
     
     a <- cbind(a, aucRandom)
@@ -136,14 +150,20 @@ for(gcm in gcmList) {
     colnames(a)[n] <- colnames(c)[n] <- sp
   }
   # save(a, c, file = paste0('./Models/Maxent/', gcm, '_evals.Rdata'))
-  save(a, c, file = paste0('./Models/Maxent/', gcm, '_evals.Rdata'))
+  save(a, c, file = paste0('./in/models/maxent/', gcm, '_evals.Rdata'))
 }
 
 for (gcm in gcmList) {
-  load(paste0('./Models/Maxent/', gcm, '_evals.Rdata'))
-  write.xlsx(a, file = './Models/Maxent/all_evals.xlsx', sheetName = paste0(gcm, '_auc'), 
+  # load(paste0('./Models/Maxent/', gcm, '_evals.Rdata'))
+  # write.xlsx(a, file = './Models/Maxent/random_evals.xlsx', sheetName = paste0(gcm, '_auc'), 
+  #            append = T, row.names = F)
+  # write.xlsx(c, file = './Models/Maxent/random_evals.xlsx', sheetName = paste0(gcm, '_cbi'),
+  #            append = T, row.names = F)
+  
+  load(paste0('./in/models/maxent/', gcm, '_evals.Rdata'))
+  write.xlsx(a, file = './in/models/maxent/random_evals.xlsx', sheetName = paste0(gcm, '_auc'), 
              append = T, row.names = F)
-  write.xlsx(c, file = './Models/Maxent/all_evals.xlsx', sheetName = paste0(gcm, '_cbi'),
+  write.xlsx(c, file = './in/models/maxent/random_evals.xlsx', sheetName = paste0(gcm, '_cbi'),
              append = T, row.names = F)
 }
 

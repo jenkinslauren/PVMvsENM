@@ -30,7 +30,7 @@ bvPollenF$time <- factor(bvPollenF$time, levels = rev(mixedsort(bvPollenF$time))
 
 pt05 <- ggplot(bvPollen, aes(time, nsQuantVelocity_quant0p05, group = 1)) + 
   geom_hline(yintercept=0, linetype="dashed", color = "red", size=0.5) +
-  geom_point() +
+  geom_point() + geom_line() +
   ggtitle("Shared Cells Only") +
   xlab("time period") + ylab("velocity (m/yr)") +
   theme_classic() +
@@ -39,7 +39,7 @@ pt05 <- ggplot(bvPollen, aes(time, nsQuantVelocity_quant0p05, group = 1)) +
 
 pf05 <- ggplot(bvPollenF, aes(time, nsQuantVelocity_quant0p05, group = 1)) +
   geom_hline(yintercept=0, linetype="dashed", color = "red", size=0.5) +
-  geom_point() +
+  geom_point() + geom_line() +
   ggtitle("All Cells") +
   xlab("time period") + ylab("velocity (m/yr)") +
   theme_classic() +
@@ -48,7 +48,7 @@ pf05 <- ggplot(bvPollenF, aes(time, nsQuantVelocity_quant0p05, group = 1)) +
 
 pt95 <- ggplot(bvPollen, aes(time, nsQuantVelocity_quant0p95, group = 1)) + 
   geom_hline(yintercept=0, linetype="dashed", color = "red", size=0.5) +
-  geom_point() +
+  geom_point() + geom_line() +
   ggtitle("Shared Cells Only") +
   xlab("time period") + ylab("velocity (m/yr)") +
   theme_classic() +
@@ -57,7 +57,7 @@ pt95 <- ggplot(bvPollen, aes(time, nsQuantVelocity_quant0p95, group = 1)) +
 
 pf95 <- ggplot(bvPollenF, aes(time, nsQuantVelocity_quant0p95, group = 1)) + 
   geom_hline(yintercept=0, linetype="dashed", color = "red", size=0.5) +  
-  geom_point() +
+  geom_point() + geom_line() +
   ggtitle("All Cells") +
   xlab("time period") + ylab("velocity (m/yr)") +
   theme_classic() +
@@ -91,7 +91,7 @@ bvBeyerMeansF$time <- factor(bvBeyerMeansF$time, levels = rev(mixedsort(bvBeyerM
 
 bt05 <- ggplot(bvBeyerMeans, aes(time, nsQuantVelocity_quant0p05, group = 1)) + 
   geom_hline(yintercept=0, linetype="dashed", color = "red", size=0.5) +
-  geom_point() +
+  geom_point() + geom_line() +
   ggtitle("Shared Cells Only") +
   xlab("time period") + ylab("velocity (m/yr)") +
   theme_classic() +
@@ -100,7 +100,7 @@ bt05 <- ggplot(bvBeyerMeans, aes(time, nsQuantVelocity_quant0p05, group = 1)) +
 
 bf05 <- ggplot(bvBeyerMeansF, aes(time, nsQuantVelocity_quant0p05, group = 1)) +
   geom_hline(yintercept=0, linetype="dashed", color = "red", size=0.5) +
-  geom_point() +
+  geom_point() + geom_line() +
   ggtitle("All Cells") +
   xlab("time period") + ylab("velocity (m/yr)") +
   theme_classic() +
@@ -109,7 +109,7 @@ bf05 <- ggplot(bvBeyerMeansF, aes(time, nsQuantVelocity_quant0p05, group = 1)) +
 
 bt95 <- ggplot(bvBeyerMeans, aes(time, nsQuantVelocity_quant0p95, group = 1)) + 
   geom_hline(yintercept=0, linetype="dashed", color = "red", size=0.5) +
-  geom_point() +
+  geom_point + geom_line() +
   ggtitle("Shared Cells Only") +
   xlab("time period") + ylab("velocity (m/yr)") +
   theme_classic() +
@@ -118,7 +118,7 @@ bt95 <- ggplot(bvBeyerMeans, aes(time, nsQuantVelocity_quant0p95, group = 1)) +
 
 bf95 <- ggplot(bvBeyerMeansF, aes(time, nsQuantVelocity_quant0p95, group = 1)) + 
   geom_hline(yintercept=0, linetype="dashed", color = "red", size=0.5) +  
-  geom_point() +
+  geom_point() + geom_line() +
   ggtitle("All Cells") +
   xlab("time period") + ylab("velocity (m/yr)") +
   theme_classic() +
@@ -156,7 +156,7 @@ bvCCSMMeanF$time <- factor(bvCCSMMeanF$time, levels = rev(mixedsort(bvCCSMMeanF$
 
 ct05 <- ggplot(bvCCSMMean, aes(time, nsQuantVelocity_quant0p05, group = 1)) + 
   geom_hline(yintercept=0, linetype="dashed", color = "red", size=0.5) +
-  geom_point() +
+  geom_point() + geom_line() +
   ggtitle("Shared Cells Only") +
   xlab("time period") + ylab("velocity (m/yr)") +
   theme_classic() +
@@ -165,7 +165,7 @@ ct05 <- ggplot(bvCCSMMean, aes(time, nsQuantVelocity_quant0p05, group = 1)) +
 
 cf05 <- ggplot(bvCCSMMeanF, aes(time, nsQuantVelocity_quant0p05, group = 1)) +
   geom_hline(yintercept=0, linetype="dashed", color = "red", size=0.5) +
-  geom_point() +
+  geom_point() + geom_line() +
   ggtitle("All Cells") +
   xlab("time period") + ylab("velocity (m/yr)") +
   theme_classic() +
@@ -174,7 +174,7 @@ cf05 <- ggplot(bvCCSMMeanF, aes(time, nsQuantVelocity_quant0p05, group = 1)) +
 
 ct95 <- ggplot(bvCCSMMean, aes(time, nsQuantVelocity_quant0p95, group = 1)) + 
   geom_hline(yintercept=0, linetype="dashed", color = "red", size=0.5) +
-  geom_point() +
+  geom_point() + geom_line() +
   ggtitle("Shared Cells Only") +
   xlab("time period") + ylab("velocity (m/yr)") +
   theme_classic() +
@@ -183,7 +183,7 @@ ct95 <- ggplot(bvCCSMMean, aes(time, nsQuantVelocity_quant0p95, group = 1)) +
 
 cf95 <- ggplot(bvCCSMMeanF, aes(time, nsQuantVelocity_quant0p95, group = 1)) + 
   geom_hline(yintercept=0, linetype="dashed", color = "red", size=0.5) +  
-  geom_point() +
+  geom_point() + geom_line() +
   ggtitle("All Cells") +
   xlab("time period") + ylab("velocity (m/yr)") +
   theme_classic() +
@@ -221,7 +221,7 @@ bvECBiltMeanF$time <- factor(bvECBiltMeanF$time, levels = rev(mixedsort(bvECBilt
 
 et05 <- ggplot(bvECBiltMean, aes(time, nsQuantVelocity_quant0p05, group = 1)) + 
   geom_hline(yintercept=0, linetype="dashed", color = "red", size=0.5) +
-  geom_point() +
+  geom_point() + geom_line() +
   ggtitle("Shared Cells Only") +
   xlab("time period") + ylab("velocity (m/yr)") +
   theme_classic() +
@@ -230,7 +230,7 @@ et05 <- ggplot(bvECBiltMean, aes(time, nsQuantVelocity_quant0p05, group = 1)) +
 
 ef05 <- ggplot(bvECBiltMeanF, aes(time, nsQuantVelocity_quant0p05, group = 1)) +
   geom_hline(yintercept=0, linetype="dashed", color = "red", size=0.5) +
-  geom_point() +
+  geom_point() + geom_line() +
   ggtitle("All Cells") +
   xlab("time period") + ylab("velocity (m/yr)") +
   theme_classic() +
@@ -239,7 +239,7 @@ ef05 <- ggplot(bvECBiltMeanF, aes(time, nsQuantVelocity_quant0p05, group = 1)) +
 
 et95 <- ggplot(bvECBiltMean, aes(time, nsQuantVelocity_quant0p95, group = 1)) + 
   geom_hline(yintercept=0, linetype="dashed", color = "red", size=0.5) +
-  geom_point() +
+  geom_point() + geom_line() +
   ggtitle("Shared Cells Only") +
   xlab("time period") + ylab("velocity (m/yr)") +
   theme_classic() +
@@ -248,7 +248,7 @@ et95 <- ggplot(bvECBiltMean, aes(time, nsQuantVelocity_quant0p95, group = 1)) +
 
 ef95 <- ggplot(bvECBiltMeanF, aes(time, nsQuantVelocity_quant0p95, group = 1)) + 
   geom_hline(yintercept=0, linetype="dashed", color = "red", size=0.5) +  
-  geom_point() +
+  geom_point() + geom_line() +
   ggtitle("All Cells") +
   xlab("time period") + ylab("velocity (m/yr)") +
   theme_classic() +

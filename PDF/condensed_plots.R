@@ -237,6 +237,10 @@ for(a in 1:22) {
     } else {
       load(paste0('./workspaces/06 - ', gcm, ' Projections'))
       
+      if(gcm == 'Lorenz_ccsm') t <- 'Fraxinus, \nGCM = CCSM'
+      if(gcm == 'ecbilt') t <- 'Fraxinus, \nGCM = ECBilt'
+      if(gcm == 'Beyer') t <- 'Fraxinus, \nGCM = HadAM3H'
+      
       # scale values between 0 and 1
       mnv <- cellStats(maxList[[a]],'min')
       mxv <- cellStats(maxList[[a]],'max')

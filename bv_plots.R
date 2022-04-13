@@ -7,6 +7,7 @@ library(tidyr)
 library(tidyverse)
 library(raster)
 library(utils)
+library(ggrepel)
 
 setwd('/Volumes/lj_mac_22/MOBOT/PVMvsENM')
 
@@ -295,5 +296,42 @@ ggplot(bv, aes(x = Time, y = centroidVelocity, group = climateSource,
   scale_color_manual(values = c('#66c2a5','#fc8d62','#8da0cb','#e78ac3'))
 
 plot_grid(e_all_sp, e_select_sp, c_all_sp, c_select_sp, b_all_sp, b_select_sp, ncol = 2)
+
+###############################################################################
+###############################################################################
+# plot Pollen on X Axis & GCM on Y
+x <- data.frame(bvPollen$time, bvPollen$centroidVelocity, 
+                bvBeyerMeans$centroidVelocity, bvECBiltMean$centroidVelocity,
+                bvCCSMMean$centroidVelocity)
+
+# Beyer vs Pollen
+ggplot(x, aes(bvPollen.centroidVelocity, bvBeyerMeans.centroidVelocity, 
+              color = bvPollen.time, label = bvPollen.time)) + 
+  geom_point() + 
+  geom_text_repel(min.segment.length = 0) + 
+  theme_classic() + 
+  theme(legend.position = "none") + 
+  labs(title = "Pollen vs Beyer Biotic Velocities", x = "Pollen Centroid Velocity (m/yr)", 
+       y = "Beyer Centroid Velocity (m/yr)")
+
+# ECBilt vs Pollen
+ggplot(x, aes(bvPollen.centroidVelocity, bvECBiltMean.centroidVelocity, 
+              color = bvPollen.time, label = bvPollen.time)) + 
+  geom_point() + 
+  geom_text_repel(min.segment.length = 0) + 
+  theme_classic() + 
+  theme(legend.position = "none") + 
+  labs(title = "Pollen vs ECBilt Biotic Velocities", x = "Pollen Centroid Velocity (m/yr)", 
+       y = "ECBilt Centroid Velocity (m/yr)")
+
+# CCSM vs Pollen
+ggplot(x, aes(bvPollen.centroidVelocity, bvCCSMMean.centroidVelocity, 
+              color = bvPollen.time, label = bvPollen.time)) + 
+  geom_point() + 
+  geom_text_repel(min.segment.length = 0) + 
+  theme_classic() + 
+  theme(legend.position = "none") + 
+  labs(title = "Pollen vs CCSM Biotic Velocities", x = "Pollen Centroid Velocity (m/yr)", 
+       y = "CCSM Centroid Velocity (m/yr)")
 
 dev.off()
