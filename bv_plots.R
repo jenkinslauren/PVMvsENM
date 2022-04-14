@@ -305,7 +305,7 @@ x <- data.frame(bvPollen$time, bvPollen$centroidVelocity,
                 bvCCSMMean$centroidVelocity)
 
 # Beyer vs Pollen
-ggplot(x, aes(bvPollen.centroidVelocity, bvBeyerMeans.centroidVelocity, 
+b <- ggplot(x, aes(bvPollen.centroidVelocity, bvBeyerMeans.centroidVelocity, 
               color = bvPollen.time, label = bvPollen.time)) + 
   geom_point() + 
   geom_text_repel(min.segment.length = 0) + 
@@ -315,7 +315,7 @@ ggplot(x, aes(bvPollen.centroidVelocity, bvBeyerMeans.centroidVelocity,
        y = "Beyer Centroid Velocity (m/yr)")
 
 # ECBilt vs Pollen
-ggplot(x, aes(bvPollen.centroidVelocity, bvECBiltMean.centroidVelocity, 
+e <- ggplot(x, aes(bvPollen.centroidVelocity, bvECBiltMean.centroidVelocity, 
               color = bvPollen.time, label = bvPollen.time)) + 
   geom_point() + 
   geom_text_repel(min.segment.length = 0) + 
@@ -325,7 +325,7 @@ ggplot(x, aes(bvPollen.centroidVelocity, bvECBiltMean.centroidVelocity,
        y = "ECBilt Centroid Velocity (m/yr)")
 
 # CCSM vs Pollen
-ggplot(x, aes(bvPollen.centroidVelocity, bvCCSMMean.centroidVelocity, 
+c <- ggplot(x, aes(bvPollen.centroidVelocity, bvCCSMMean.centroidVelocity, 
               color = bvPollen.time, label = bvPollen.time)) + 
   geom_point() + 
   geom_text_repel(min.segment.length = 0) + 
@@ -333,5 +333,9 @@ ggplot(x, aes(bvPollen.centroidVelocity, bvCCSMMean.centroidVelocity,
   theme(legend.position = "none") + 
   labs(title = "Pollen vs CCSM Biotic Velocities", x = "Pollen Centroid Velocity (m/yr)", 
        y = "CCSM Centroid Velocity (m/yr)")
+plot(b)
+plot(e)
+plot(c)
+plot_grid(b, e, c, ncol = 2)
 
 dev.off()
