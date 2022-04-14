@@ -35,7 +35,7 @@ for(a in 1:22) {
     cor <- rasterCorrelation(thisRast, pollenRast[[a]], type = 'pearson')
     plot(cor, main = t, axes = F, box = F, legend.mar = 10, col = colors)
     plot(raster::crop(sp::spTransform(world, CRS(projection(cor))), extent(cor)), 
-                      border = 'black', add = T)
+         border = 'black', add = T)
   }
   
   load('./workspaces/06 - Beyer Projections')
@@ -87,3 +87,81 @@ for(g in 1:22) {
 
 colnames(df) <- paste0(climYears, ' YBP')
 
+# do this for all GCM + yrs
+corDf <- data.frame(climYears)
+for (gcm in gcmList_) {
+  correlations <- list()
+  for(a in 1:22) {
+    load(paste0('./workspaces/06 - ', gcm, ' Projections'))
+    if(gcm == 'Lorenz_ccsm') g <- 'CCSM'
+    if(gcm == 'ecbilt') g <- 'ECBilt'
+    if(gcm == 'Beyer') g <- 'HadAM3H'
+    thisRast <- raster::resample(meansList[[a]], pollenRast[[a]], method = 'bilinear')
+    
+    # c <- cor(as.vector(as.matrix(pollenRast[[a]])), as.vector(as.matrix(thisRast)), 
+    #          method = c('pearson'), use = 'na.or.complete')
+    cNiche <- enmSdm::compareNiches(as.vector(as.matrix(pollenRast[[a]])), 
+                                    as.vector(as.matrix(thisRast)), na.rm = T)
+    correlations <- append(correlations, cNiche['cor'])
+  }
+  names(correlations) <- climYears
+  corDf <- cbind(corDf, t(data.frame(correlations)))
+  colnames(corDf)[ncol(corDf)] <- paste0('Pollen & ', g)
+}
+
+load('./workspaces/06 - Beyer Projections')
+beyer <- 'HadAM3H'
+bMeans <- meansList
+load('./workspaces/06 - ecbilt Projections')
+ecbilt <- 'ECBilt'
+eMeans <- meansList
+load('./workspaces/06 - Lorenz_ccsm Projections')
+ccsm <- 'CCSM'
+cMeans <- meansList
+
+correlations <- list()
+for(a in 1:22) {
+  # c <- cor(as.vector(as.matrix(pollenRast[[a]])), as.vector(as.matrix(thisRast)), 
+  #          method = c('pearson'), use = 'na.or.complete')
+  cNiche <- enmSdm::compareNiches(as.vector(as.matrix(bMeans[[a]])), 
+                                  as.vector(as.matrix(cMeans[[a]])), na.rm = T)
+  correlations <- append(correlations, cNiche['cor'])
+}
+
+names(correlations) <- climYears
+corDf <- cbind(corDf, t(data.frame(correlations)))
+colnames(corDf)[ncol(corDf)] <- paste0(beyer, ' & ', ccsm)
+
+correlations <- list()
+for(a in 1:22) {
+  cNiche <- enmSdm::compareNiches(as.vector(as.matrix(bMeans[[a]])), 
+                                  as.vector(as.matrix(eMeans[[a]])), na.rm = T)
+  correlations <- append(correlations, cNiche['cor'])
+}
+
+names(correlations) <- climYears
+corDf <- cbind(corDf, t(data.frame(correlations)))
+colnames(corDf)[ncol(corDf)] <- paste0(beyer, ' & ', ecbilt)
+
+correlations <- list()
+for(a in 1:22) {
+  cNiche <- enmSdm::compareNiches(as.vector(as.matrix(eMeans[[a]])), 
+                                  as.vector(as.matrix(cMeans[[a]])), na.rm = T)
+  correlations <- append(correlations, cNiche['cor'])
+}
+
+names(correlations) <- climYears
+corDf <- cbind(corDf, t(data.frame(correlations)))
+colnames(corDf)[ncol(corDf)] <- paste0(ecbilt, ' & ', ccsm)
+
+corDf$climYears <- paste0(corDf$climYears/1000, ' kybp')
+colnames(corDf)[1] <- 'Time'
+
+corDf_plot <- cbind(corDf[1], utils::stack(corDf[2:ncol(corDf)]))
+colnames(corDf_plot) <- c("Time", "cor", "Models")
+
+ggplot(corDf_plot, aes(Time, cor, color = Models, group = Models)) + 
+  geom_point() + geom_line() + 
+  theme_classic() + 
+  labs(title = "Rank Correlation", x = "Time", 
+       y = "cor")
