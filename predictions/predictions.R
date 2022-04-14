@@ -195,7 +195,7 @@ for(f in fileName) {
   speciesAb_ <-  gsub('\\_GCM.*', '', gsub(paste0('\\./predictions/', gcm, '/*'), '', f))
   load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
               '_PC', pc, '.rData'))
-  pdf(file = paste0('./predictions/pdf/', s, '.pdf'), width = 11, height = 8.5)
+  pdf(file = paste0('./predictions/PDF_output/', s, '.pdf'), width = 11, height = 8.5)
   b <- brick(f)
   names(b) <- c(paste0(seq(21000, 0, by = -1000), ' ybp'))
   title <- gsub('.*/', '', s)
@@ -255,7 +255,7 @@ meansList <- stack(temp[1])
 maxList <- stack(temp[2])
 
 title <- paste0('Fraxinus, GCM = ', gcm)
-pdf(file = paste0('./predictions/pdf/', gcm, '/', gcm, '_meansList.pdf'), width = 11, height = 8.5)
+pdf(file = paste0('./predictions/PDF_output/', gcm, '/', gcm, '_meansList.pdf'), width = 11, height = 8.5)
 for (i in 1:nlayers(meansList)) {
   par(mfrow=c(1,2))
   plot(meansList[[i]], main = paste0('MEANS, ', title, ', ', names(meansList[[i]])), 
@@ -266,7 +266,7 @@ for (i in 1:nlayers(meansList)) {
 # plot(stack(meansList))
 dev.off()
 
-pdf(file = paste0('./predictions/pdf/', gcm, '/', gcm, '_maxList.pdf'), width = 11, height = 8.5)
+pdf(file = paste0('./predictions/PDF_output/', gcm, '/', gcm, '_maxList.pdf'), width = 11, height = 8.5)
 for (i in 1:nlayers(maxList)) {
   par(mfrow=c(1,2))
   plot(maxList[[i]], main = paste0('MAX, ', title, ', ', names(maxList[[i]])),  
@@ -277,7 +277,7 @@ for (i in 1:nlayers(maxList)) {
 # plot(stack(maxList))
 dev.off()
 
-# pdf(file = paste0('./predictions/pdf/', gcm, '/', gcm, '_sumList.pdf'), width = 11, height = 8.5)
+# pdf(file = paste0('./predictions/PDF_output/', gcm, '/', gcm, '_sumList.pdf'), width = 11, height = 8.5)
 # for (i in 1:length(sumList)) {
 #   par(mfrow=c(1,2))
 #   plot(sumList[[i]], main = paste0('SUM, ', title, ', ', names(sumList[[i]])),  
@@ -338,7 +338,7 @@ for (j in 1:length(tmp)){
   title <- paste0('Species skipped = ', skipped, ', GCM = ', gcm)
   sp <- paste0(substr(skipped,1,4), toupper(substr(skipped,10,10)), 
                substr(skipped,11,13))
-  pdf(file = paste0('./predictions/pdf/', gcm, '/No_', sp, '_meansList.pdf'), 
+  pdf(file = paste0('./predictions/PDF_output/', gcm, '/No_', sp, '_meansList.pdf'), 
       width = 11, height = 8.5)
   for (i in 1:length(meansSkipList)) {
     par(mfrow=c(1,2))
@@ -350,7 +350,7 @@ for (j in 1:length(tmp)){
   # plot(stack(meansList))
   dev.off()
   
-  pdf(file = paste0('./predictions/pdf/', gcm, '/No_', sp, '_maxList.pdf'), width = 11, height = 8.5)
+  pdf(file = paste0('./predictions/PDF_output/', gcm, '/No_', sp, '_maxList.pdf'), width = 11, height = 8.5)
   for (i in 1:length(maxSkipList)) {
     par(mfrow=c(1,2))
     plot(maxSkipList[[i]], main = paste0('MAX, ', names(maxSkipList[[i]])), 
@@ -361,7 +361,7 @@ for (j in 1:length(tmp)){
   # plot(stack(maxList))
   dev.off()
   
-  # pdf(file = paste0('./predictions/pdf/', gcm, '/No_', sp, '_sumList.pdf'), width = 11, height = 8.5)
+  # pdf(file = paste0('./predictions/PDF_output/', gcm, '/No_', sp, '_sumList.pdf'), width = 11, height = 8.5)
   # for (i in 1:length(sumSkipList)) {
   #   par(mfrow=c(1,2))
   #   plot(sumSkipList[[i]], main = paste0('SUM, ', names(sumSkipList[[i]])), 
@@ -396,7 +396,7 @@ for(gcm in gcmList) {
   # bvSum <- bioticVelocity(stackSumList, times = seq(-21,0, by=1), onlyInSharedCells = T)
   # bvSumF <- bioticVelocity(stackSumList, times = seq(-21,0, by=1), onlyInSharedCells = F)
   # 
-  pdf(file = paste0('./predictions/pdf/', gcm, '_bioticVelocity.pdf'), width = 11, height = 8.5)
+  pdf(file = paste0('./predictions/PDF_output/', gcm, '_bioticVelocity.pdf'), width = 11, height = 8.5)
   # no y axes limits
   bvMeans$time <- paste0(abs(bvMeans$timeFrom), '-', abs(bvMeans$timeTo), ' kybp')
   bvMeans$time <- factor(bvMeans$time, levels = rev(mixedsort(bvMeans$time)))
@@ -484,7 +484,7 @@ for(gcm in gcmList) {
   max95 <- max(c(max(bvMeans$nsQuantVelocity_quant0p95), 
                 max(bvMax$nsQuantVelocity_quant0p95))) + 1000
     
-  pdf(file = paste0('./predictions/pdf/', gcm, '_nsQuantVelocity.pdf'), width = 11, height = 8.5)
+  pdf(file = paste0('./predictions/PDF_output/', gcm, '_nsQuantVelocity.pdf'), width = 11, height = 8.5)
   # no y axes limits
   ggplot(bvMeans, aes(time, nsQuantVelocity_quant0p05)) + 
     geom_bar(stat = 'identity') + 
@@ -575,7 +575,7 @@ colors <- c('#d73027','#f46d43','#fdae61','#fee08b','#ffffbf','#d9ef8b','#a6d96a
 mergedRange <- readRDS('./data_and_analyses/range_maps/little/littleMergedRangeFraxinus.rds')
 
 for(gcm in gcmList) {
-  pdf(file = paste0('./PDF/', gcm, '_0_22_preds.pdf'), width = 11, height = 8.5)
+  pdf(file = paste0('./PDF_output/', gcm, '_0_22_preds.pdf'), width = 11, height = 8.5)
   fileName <- list.files(path = paste0('./predictions/', gcm),
                          pattern = paste0('PC', pc,'.tif'),
                          full.names = T)
