@@ -1,36 +1,22 @@
-# Load Little Range Maps
+# Fraxinus
 # Lauren Jenkins, Fall 2021
 
-### setup ###
+# List of working species: 
+# Fraxinus americana, Fraxinus anomala, Fraxinus berlandieriana,
+# Fraxinus caroliniana, Fraxinus cuspidata, Fraxinus dipetala, 
+# Fraxinus gooddingii, Fraxinus greggii, Fraxinus latifolia, 
+# Fraxinus nigra, Fraxinus papillosa, Fraxinus parryi, 
+# Fraxinus pennsylvanica, Fraxinus profunda, Fraxinus quadrangulata, 
+# Fraxinus velutina
+
+## setup
 rm(list = ls())
 setwd('/Users/laurenjenkins/Documents/MOBOT/PVMvsENM/')
-
-# load packages
-library(sp)
-library(raster)
-library(enmSdm)
-
-library(BIEN)
-library(dismo)
-library(brglm2)
-library(cluster)
-library(maxnet)
-library(rgbif)
-library(rgeos)
-library(geosphere)
-library(rgdal)
-library(scales)
-library(omnibus)
-library(RColorBrewer)
-library(rJava)
-library(maps)
-
-library(statisfactory)
-library(legendary)
-
 ll <- c('longitude', 'latitude')
 
-# Little range maps
+## obtaining data
+
+# Load Little ranges
 # Fraxinus americana
 littleFraxAmer <- '/Users/laurenjenkins/Documents/MOBOT/PVMvsENM/data_and_analyses/range_maps/little/fraxinus_americana/fraxamer.shp'
 littleRange_FraxAmer <- shapefile(littleFraxAmer)
@@ -144,12 +130,80 @@ map("world", add = TRUE)
 save.image('./00 - Modeling Workspace - Fraxinus Range Maps (Little)')
 saveRDS(littleRange, './littleMergedRangeFraxinus.rds')
 
-# To avoid thinking it's an attack ... Sys.sleep(1)
-# utils::download.file(thisUrl, destfile=filePath, mode='wb', quiet=TRUE)
-# could also try in dismo package shapefile function just enter the url in there
-# or try going to the original repo rather than fork
+# load BIEN ranges
+# Fraxinus americana
+bienRange_FraxAmer <- shapefile('./regions/bien_range_map/Fraxinus_americana.prj')
 
-# sp::spTransform()
-# rbind or c to merge raster polygons
-# rgeos::gUnion()
+# Fraxinus anomala
+bienRange_FraxAnom <- shapefile('./regions/bien_range_map/Fraxinus_anomala.prj')
 
+# Fraxinus berlandieriana
+bienRange_FraxBerl <- shapefile('./regions/bien_range_map/Fraxinus_berlandieriana.prj')
+
+# Fraxinus caroliniana
+bienRange_FraxCaro <- shapefile('./regions/bien_range_map/Fraxinus_caroliniana.prj')
+
+# Fraxinus cuspidata
+bienRange_FraxCusp <- shapefile('./regions/bien_range_map/Fraxinus_cuspidata.prj')
+
+# Fraxinus dipetala
+bienRange_FraxDipe <- shapefile('./regions/bien_range_map/Fraxinus_dipetala.prj')
+
+# Fraxinus gooddingii
+bienRange_FraxGood <- shapefile('./regions/bien_range_map/Fraxinus_gooddingii.prj')
+
+# Fraxinus greggii
+bienRange_FraxGreg <- shapefile('./regions/bien_range_map/Fraxinus_greggii.prj')
+
+# Fraxinus latifolia
+bienRange_FraxLati <- shapefile('./regions/bien_range_map/Fraxinus_latifolia.prj')
+
+# Fraxinus nigra
+bienRange_FraxNigr <- shapefile('./regions/bien_range_map/Fraxinus_nigra.prj')
+
+# Fraxinus papillosa
+bienRange_FraxPapi <- shapefile('./regions/bien_range_map/Fraxinus_papillosa.prj')
+
+# Fraxinus pennsylvanica
+bienRange_FraxPenn <- shapefile('./regions/bien_range_map/Fraxinus_pennsylvanica.prj')
+
+# Fraxinus profunda
+bienRange_FraxProf <- shapefile('./regions/bien_range_map/Fraxinus_profunda.prj')
+
+# Fraxinus quadrangulata
+bienRange_FraxQuad <- shapefile('./regions/bien_range_map/Fraxinus_quadrangulata.prj')
+
+# Fraxinus velutina
+bienRange_FraxVelu <- shapefile('./regions/bien_range_map/Fraxinus_velutina.prj')
+
+bienRange <- rbind(bienRange_FraxAmer, bienRange_FraxAnom)
+bienRange <- rbind(bienRange, bienRange_FraxBerl)
+bienRange <- rbind(bienRange, bienRange_FraxCaro)
+bienRange <- rbind(bienRange, bienRange_FraxCusp)
+bienRange <- rbind(bienRange, bienRange_FraxDipe)
+bienRange <- rbind(bienRange, bienRange_FraxGood)
+bienRange <- rbind(bienRange, bienRange_FraxGreg)
+bienRange <- rbind(bienRange, bienRange_FraxLati)
+bienRange <- rbind(bienRange, bienRange_FraxNigr)
+bienRange <- rbind(bienRange, bienRange_FraxPapi)
+bienRange <- rbind(bienRange, bienRange_FraxPenn)
+bienRange <- rbind(bienRange, bienRange_FraxProf)
+bienRange <- rbind(bienRange, bienRange_FraxQuad)
+bienRange <- rbind(bienRange, bienRange_FraxVelu)
+
+plot(bienRange, col = alpha('green', 0.4), border = 'green', main = 'BIEN range map')
+map("state", add = TRUE)
+map("world", add = TRUE)
+
+# plot side by side
+par(mfrow=c(1,2))
+plot(bienRange, col = alpha('blue', 0.4), border = 'blue', main = 'BIEN range map')
+map("state", add = TRUE)
+map("world", add = TRUE)
+
+plot(littleRange, col = alpha('green', 0.4), border = 'green', main = 'Little range map')
+map("state", add = TRUE)
+map("world", add = TRUE)
+
+# save workspace
+save.image('./01 - Modeling Workspace - Fraxinus Range Maps (BIEN + Little)')
