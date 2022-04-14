@@ -184,7 +184,7 @@ for(sp in speciesList) {
 gcm <- 'ecbilt'
 library(RColorBrewer)
 colors <- c('#d73027','#f46d43','#fdae61','#fee08b','#ffffbf','#d9ef8b','#a6d96a','#66bd63','#1a9850')
-mergedRange <- readRDS('./littleMergedRangeFraxinus.rds')
+mergedRange <- readRDS('./data_and_analyses/range_maps/little/littleMergedRangeFraxinus.rds')
 
 fileName <- list.files(path = paste0('./predictions/', gcm),
                        pattern = paste0('PC', pc,'.tif'),
@@ -572,7 +572,7 @@ world <- as(world, "Spatial")
 
 library(RColorBrewer)
 colors <- c('#d73027','#f46d43','#fdae61','#fee08b','#ffffbf','#d9ef8b','#a6d96a','#66bd63','#1a9850')
-mergedRange <- readRDS('./littleMergedRangeFraxinus.rds')
+mergedRange <- readRDS('./data_and_analyses/range_maps/little/littleMergedRangeFraxinus.rds')
 
 for(gcm in gcmList) {
   pdf(file = paste0('./PDF/', gcm, '_0_22_preds.pdf'), width = 11, height = 8.5)
