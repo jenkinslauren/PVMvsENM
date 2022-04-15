@@ -156,6 +156,8 @@ colnames(corDf)[ncol(corDf)] <- paste0(ecbilt, ' & ', ccsm)
 
 corDf$climYears <- paste0(corDf$climYears/1000, ' kybp')
 colnames(corDf)[1] <- 'Time'
+corDf$Time <- factor(corDf$Time, 
+                          levels = rev(mixedsort(corDf$Time)))
 
 corDf_plot <- cbind(corDf[1], utils::stack(corDf[2:ncol(corDf)]))
 corDf_plot_pollen <- cbind(corDf[1], utils::stack(corDf[2:4]))
