@@ -23,12 +23,10 @@ speciesList <- c('Fraxinus americana','Fraxinus caroliniana', 'Fraxinus cuspidat
                  'Fraxinus greggii', 'Fraxinus nigra', 'Fraxinus pennsylvanica',
                  'Fraxinus profunda', 'Fraxinus quadrangulata')
 
-
-a <- 1
-for(i in 1:length(speciesList)) {
-  rm(list= ls()[!(ls() %in% c('gcm','pc', 'predictors', 'speciesList', 'a'))])
-  sp <- speciesList[a]
+for(s in 1:length(speciesList)) {
+  sp <- speciesList[s]
   species <- gsub(tolower(sp), pattern=' ', replacement='_')
+  print(paste0("GCM = ", gcm))
   print(paste0("Species = ", species))
   speciesAb <- paste0(substr(sp,1,4), toupper(substr(sp,10,10)), substr(sp,11,13))
   speciesAb_ <- sub("(.{4})(.*)", "\\1_\\2", speciesAb)
@@ -66,33 +64,34 @@ for(i in 1:length(speciesList)) {
   
   # divide bg sites between training & test
   nearest <- apply(gDistance(sp.records, sp.randomBg, byid = T), 1, which.min)
-  for (i in 1:nrow(randomBg)) {
-    gTestBg[i] <- gPres[nearest[i]]
+  for (k in 1:nrow(randomBg)) {
+    gTestBg[k] <- gPres[nearest[k]]
   }
   
-  for (i in 1:5) {
+  for (m in 1:5) {
     # make training data frame with predictors and vector of 1/0
     # for presence/background
     envData <- rbind(
-      records[gPres!=i, predictors],
-      randomBg[gTestBg!=i, predictors]
+      records[gPres!=m, predictors],
+      randomBg[gTestBg!=m, predictors]
     )
     
-    presBg <- c(rep(1, sum(gPres!=i)), rep(0, sum(gTestBg!=i)))
+    presBg <- c(rep(1, sum(gPres!=m)), rep(0, sum(gTestBg!=m)))
     
     trainData <- cbind(presBg, envData)
     
     # Maxent model
     model <- enmSdm::trainMaxNet(data = trainData, resp = 'presBg')
-    save(model, file = paste0(folderName, '/Model ', i, '.Rdata'), compress = T)
+    save(model, presBg, predBg, kPres, kBg,
+         model, file = paste0(folderName, '/Model ', m, '.Rdata'), compress = T)
     
     # predict presences & background sites
     predPres <- raster::predict(model, 
-                                newdata = records[gPres == i,],
+                                newdata = records[gPres == m,],
                                 clamp = F,
                                 type = 'cloglog')
     predBg <- raster::predict(model, 
-                              newdata = randomBg[gTestBg == i,],
+                              newdata = randomBg[gTestBg == m,],
                               clamp = F,
                               type = 'cloglog')
     
@@ -103,11 +102,10 @@ for(i in 1:length(speciesList)) {
     
     # print(paste('AUC = ', round(thisAuc, 2), ' | CBI = ', round(thisCbi, 2)))
     
-    aucGeog[i] <- thisAuc
-    cbiGeog[i] <- thisCbi
+    aucGeog[m] <- thisAuc
+    cbiGeog[m] <- thisCbi
   }
   save(aucGeog, cbiGeog, file = paste0(folderName, '/auc_cbi_vals.Rdata'))
-  a <- a + 1
 }
 
 
