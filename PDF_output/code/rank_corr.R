@@ -158,10 +158,30 @@ corDf$climYears <- paste0(corDf$climYears/1000, ' kybp')
 colnames(corDf)[1] <- 'Time'
 
 corDf_plot <- cbind(corDf[1], utils::stack(corDf[2:ncol(corDf)]))
+corDf_plot_pollen <- cbind(corDf[1], utils::stack(corDf[2:4]))
+corDf_plot_gcm <- cbind(corDf[1], utils::stack(corDf[5:ncol(corDf)]))
+
 colnames(corDf_plot) <- c("Time", "cor", "Models")
+colnames(corDf_plot_pollen) <- c("Time", "cor", "Models")
+colnames(corDf_plot_gcm) <- c("Time", "cor", "Models")
 
 ggplot(corDf_plot, aes(Time, cor, color = Models, group = Models)) + 
   geom_point() + geom_line() + 
   theme_classic() + 
   labs(title = "Rank Correlation", x = "Time", 
-       y = "cor")
+       y = "cor") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggplot(corDf_plot_pollen, aes(Time, cor, color = Models, group = Models)) + 
+  geom_point() + geom_line() + 
+  theme_classic() + 
+  labs(title = "Rank Correlation", x = "Time", 
+       y = "cor") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggplot(corDf_plot_gcm, aes(Time, cor, color = Models, group = Models)) + 
+  geom_point() + geom_line() + 
+  theme_classic() + 
+  labs(title = "Rank Correlation", x = "Time", 
+       y = "cor") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
