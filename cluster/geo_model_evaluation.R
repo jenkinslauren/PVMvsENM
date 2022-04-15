@@ -11,12 +11,11 @@ library(geosphere)
 library(rgeos)
 
 args <- commandArgs(TRUE)
-gcm <- as.numeric(args[1])
+gcm <- args[1]
 
 # setwd('/Volumes/lj_mac_22/MOBOT/PVMvsENM')
 setwd('/mnt/research/TIMBER/PVMvsENM')
 
-gcmList <- c('Beyer','Lorenz_ccsm', 'ecbilt')
 pc <- 5
 predictors <- c(paste0('pca', 1:pc))
 speciesList <- c('Fraxinus americana','Fraxinus caroliniana', 'Fraxinus cuspidata',
@@ -82,8 +81,6 @@ for(s in 1:length(speciesList)) {
     
     # Maxent model
     model <- enmSdm::trainMaxNet(data = trainData, resp = 'presBg')
-    save(model, presBg, predBg, kPres, kBg,
-         model, file = paste0(folderName, '/Model ', m, '.Rdata'), compress = T)
     
     # predict presences & background sites
     predPres <- raster::predict(model, 
@@ -94,6 +91,9 @@ for(s in 1:length(speciesList)) {
                               newdata = randomBg[gTestBg == m,],
                               clamp = F,
                               type = 'cloglog')
+    
+    save(model, presBg, predBg, gPres, gTestBg,
+         model, file = paste0(folderName, '/Model ', m, '.Rdata'), compress = T)
     
     # evaluate
     thisEval <- evaluate(p = as.vector(predPres), a = as.vector(predBg))
