@@ -10,11 +10,11 @@ library(xlsx)
 library(geosphere)
 library(rgeos)
 
-args <- commandArgs(TRUE)
-gcm <- args[1]
+# args <- commandArgs(TRUE)
+# gcm <- args[1]
 
-# setwd('/Volumes/lj_mac_22/MOBOT/PVMvsENM')
-setwd('/mnt/research/TIMBER/PVMvsENM')
+setwd('/Volumes/lj_mac_22/MOBOT/PVMvsENM')
+# setwd('/mnt/research/TIMBER/PVMvsENM')
 
 pc <- 5
 predictors <- c(paste0('pca', 1:pc))
@@ -112,34 +112,36 @@ for(s in 1:length(speciesList)) {
 speciesList <- c('Fraxinus americana','Fraxinus caroliniana', 'Fraxinus cuspidata', 
                  'Fraxinus greggii', 'Fraxinus nigra', 'Fraxinus pennsylvanica', 
                  'Fraxinus profunda', 'Fraxinus quadrangulata')
-
+gcmList <- c('Beyer', 'ecbilt', 'Lorenz_ccsm')
 
 a <- data.frame(c(seq(1:5)))
 c <- data.frame(c(seq(1:5)))
 colnames(a)[1] <- colnames(c)[1] <- 'fold #'
-for(sp in speciesList) {
-  sp <- sp
-  species <- gsub(tolower(sp), pattern=' ', replacement='_')
-  speciesAb <- paste0(substr(sp,1,4), toupper(substr(sp,10,10)), substr(sp,11,13))
-  speciesAb_ <- sub("(.{4})(.*)", "\\1_\\2", speciesAb)
-  
-  folderName <- paste0('./Models/Maxent/', speciesAb_, 
-                       '_Maxent/Model Evaluation - Geographic K-Folds - ', gcm)
-  load(paste0(folderName, '/auc_cbi_vals.Rdata'))
-  
-  a <- cbind(a, aucGeog)
-  c <- cbind(c, cbiGeog)
-  n <- ncol(a)
-  colnames(a)[n] <- colnames(c)[n] <- sp
+for(gcm in gcmList) {
+  for(sp in speciesList) {
+    sp <- sp
+    species <- gsub(tolower(sp), pattern=' ', replacement='_')
+    speciesAb <- paste0(substr(sp,1,4), toupper(substr(sp,10,10)), substr(sp,11,13))
+    speciesAb_ <- sub("(.{4})(.*)", "\\1_\\2", speciesAb)
+    
+    folderName <- paste0('./Models/Maxent/', speciesAb_, 
+                         '_Maxent/Model Evaluation - Geographic K-Folds - ', gcm)
+    load(paste0(folderName, '/auc_cbi_vals.Rdata'))
+    
+    a <- cbind(a, aucGeog)
+    c <- cbind(c, cbiGeog)
+    n <- ncol(a)
+    colnames(a)[n] <- colnames(c)[n] <- sp
+  }
+  # save(a, c, file = paste0('./Models/Maxent/', gcm, '_evals.Rdata'))
+  save(a, c, file = paste0('./Models/Maxent/', gcm, '_geoEvals.Rdata'))
 }
-# save(a, c, file = paste0('./Models/Maxent/', gcm, '_evals.Rdata'))
-save(a, c, file = paste0('./Models/Maxent/', gcm, '_geoEvals.Rdata'))
 
 
-# for (gcm in gcmList) {
-#   load(paste0('./Models/Maxent/', gcm, '_geoEvals.Rdata'))
-#   write.xlsx(a, file = './Models/Maxent/all_geoEvals.xlsx', sheetName = paste0(gcm, '_auc'), 
-#              append = T, row.names = F)
-#   write.xlsx(c, file = './Models/Maxent/all_geoEvals.xlsx', sheetName = paste0(gcm, '_cbi'),
-#              append = T, row.names = F)
-# }
+for (gcm in gcmList) {
+  load(paste0('./Models/Maxent/', gcm, '_geoEvals.Rdata'))
+  write.xlsx(a, file = './Models/Maxent/all_geoEvals.xlsx', sheetName = paste0(gcm, '_auc'),
+             append = T, row.names = F)
+  write.xlsx(c, file = './Models/Maxent/all_geoEvals.xlsx', sheetName = paste0(gcm, '_cbi'),
+             append = T, row.names = F)
+}
