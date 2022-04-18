@@ -41,7 +41,7 @@ bvBeyerMeans$time <- factor(bvBeyerMeans$time, levels = rev(mixedsort(bvBeyerMea
 
 bMean <- ggplot(bvBeyerMeans, aes(time, centroidVelocity, group = 1)) + 
   geom_point() + geom_line() +
-  ggtitle("Beyer Means") + xlab("time period") + ylab("centroid velocity (m/yr)") +
+  ggtitle("HadAM3H Means") + xlab("time period") + ylab("centroid velocity (m/yr)") +
   theme_classic() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
@@ -55,7 +55,7 @@ bvBeyerMax$time <- factor(bvBeyerMax$time, levels = rev(mixedsort(bvBeyerMax$tim
 
 bMax <- ggplot(bvBeyerMax, aes(time, centroidVelocity, group = 1)) + 
   geom_point() + geom_line() +
-  ggtitle("Beyer Max") + xlab("time period") + ylab("centroid velocity (m/yr)") +
+  ggtitle("HadAM3H Max") + xlab("time period") + ylab("centroid velocity (m/yr)") +
   theme_classic() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
@@ -285,7 +285,9 @@ b_select_sp <- ggplot(bv_select_sp, aes(x = Time, y = centroidVelocity, group = 
 
 pdf(file = './PDF/bv_plots.pdf', height = 8.5, width = 11)
 
-plot_grid(p, bMean, bMax, cMean, cMax, eMean, eMax)
+plot_grid(p, plot_grid(bMean, bMax), plot_grid(cMean, cMax), 
+          plot_grid(eMean, eMax), ncol = 1)
+# plot_grid(p, bMean, bMax, cMean, cMax, eMean, eMax)
 
 ggplot(bv, aes(x = Time, y = centroidVelocity, group = climateSource, 
                color = climateSource)) +
