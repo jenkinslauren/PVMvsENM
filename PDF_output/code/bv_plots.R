@@ -306,6 +306,7 @@ x <- data.frame(bvPollen$time, bvPollen$centroidVelocity,
                 bvBeyerMeans$centroidVelocity, bvECBiltMean$centroidVelocity,
                 bvCCSMMean$centroidVelocity)
 
+
 # Beyer vs Pollen
 b <- ggplot(x, aes(bvPollen.centroidVelocity, bvBeyerMeans.centroidVelocity, 
               color = bvPollen.time, label = bvPollen.time)) + 
@@ -374,5 +375,59 @@ plot(bc)
 plot(eb)
 plot(ce)
 plot_grid(bc, eb, ce, ncol = 2)
+
+dev.off()
+
+shift <- function(df, n){
+  c(df[-(seq(n))], rep(NA, n))
+}
+
+x_lag <- x
+x_lag$bvPollen.centroidVelocity <- shift(x_lag$bvPollen.centroidVelocity, -1)
+
+# plotting Pollen on the X axis & GCM on the Y axis with a lag
+# BV of Pollen at time x+1 on X-axis, GCM at time x on Y-axis
+x_lag <- x_lag[-c(nrow(x_lag)),]
+
+# x_lag <- x_lag[-c(1),]
+# x_lag$bvPollen.centroidVelocity <- x_lag$bvPollen.centroidVelocity/4
+
+
+# Beyer vs Pollen
+b_lag <- ggplot(x_lag, aes(bvPollen.centroidVelocity, bvBeyerMeans.centroidVelocity, 
+                   color = bvPollen.time, label = bvPollen.time)) + 
+  geom_point() + 
+  geom_text_repel(min.segment.length = 0) + 
+  theme_classic() + 
+  theme(legend.position = "none") + 
+  labs(title = "Pollen vs HadAM3H Biotic Velocities", x = "Pollen Centroid Velocity (m/yr)", 
+       y = "HadAM3H Centroid Velocity (m/yr)")
+
+# ECBilt vs Pollen
+e_lag <- ggplot(x_lag, aes(bvPollen.centroidVelocity, bvECBiltMean.centroidVelocity, 
+                   color = bvPollen.time, label = bvPollen.time)) + 
+  geom_point() + 
+  geom_text_repel(min.segment.length = 0) + 
+  theme_classic() + 
+  theme(legend.position = "none") + 
+  labs(title = "Pollen vs ECBilt Biotic Velocities", x = "Pollen Centroid Velocity (m/yr)", 
+       y = "ECBilt Centroid Velocity (m/yr)")
+
+# CCSM vs Pollen
+c_lag <- ggplot(x_lag, aes(bvPollen.centroidVelocity, bvCCSMMean.centroidVelocity, 
+                   color = bvPollen.time, label = bvPollen.time)) + 
+  geom_point() + 
+  geom_text_repel(min.segment.length = 0) + 
+  theme_classic() + 
+  theme(legend.position = "none") + 
+  labs(title = "Pollen vs CCSM Biotic Velocities", x = "Pollen Centroid Velocity (m/yr)", 
+       y = "CCSM Centroid Velocity (m/yr)")
+
+pdf(file = './PDF_output/bv_lag.pdf', height = 8.5, width = 11)
+
+plot(b_lag)
+plot(e_lag)
+plot(c_lag)
+plot_grid(b_lag, e_lag, c_lag, ncol = 2)
 
 dev.off()

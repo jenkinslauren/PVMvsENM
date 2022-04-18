@@ -167,6 +167,7 @@ colnames(corDf_plot) <- c("Time", "cor", "Models")
 colnames(corDf_plot_pollen) <- c("Time", "cor", "Models")
 colnames(corDf_plot_gcm) <- c("Time", "cor", "Models")
 
+pdf(file = './PDF_output/rank_correlation_line.pdf', width = 11, height = 8.5)
 ggplot(corDf_plot, aes(Time, cor, color = Models, group = Models)) + 
   geom_point() + geom_line() + 
   theme_classic() + 
@@ -187,3 +188,4 @@ ggplot(corDf_plot_gcm, aes(Time, cor, color = Models, group = Models)) +
   labs(title = "Rank Correlation", x = "Time", 
        y = "cor") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+dev.off()
