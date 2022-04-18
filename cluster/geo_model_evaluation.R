@@ -113,11 +113,10 @@ speciesList <- c('Fraxinus americana','Fraxinus caroliniana', 'Fraxinus cuspidat
                  'Fraxinus greggii', 'Fraxinus nigra', 'Fraxinus pennsylvanica', 
                  'Fraxinus profunda', 'Fraxinus quadrangulata')
 gcmList <- c('Beyer', 'ecbilt', 'Lorenz_ccsm')
-
-a <- data.frame(c(seq(1:5)))
-c <- data.frame(c(seq(1:5)))
-colnames(a)[1] <- colnames(c)[1] <- 'fold #'
 for(gcm in gcmList) {
+  a <- data.frame(c(seq(1:5)))
+  c <- data.frame(c(seq(1:5)))
+  colnames(a)[1] <- colnames(c)[1] <- 'fold #'
   for(sp in speciesList) {
     sp <- sp
     species <- gsub(tolower(sp), pattern=' ', replacement='_')
