@@ -86,7 +86,7 @@ bvCCSMMax <- bioticVelocity(stackMaxList, times = seq(-21000,0, by = 1000), only
 bvCCSMMax$time <- paste0(abs(bvCCSMMax$timeFrom)/1000, '-', abs(bvCCSMMax$timeTo)/1000, ' kybp')
 bvCCSMMax$time <- factor(bvCCSMMax$time, levels = rev(mixedsort(bvCCSMMax$time)))
 
-cMax <- ggplot(bvMax, aes(time, centroidVelocity, group = 1)) + 
+cMax <- ggplot(bvCCSMMax, aes(time, centroidVelocity, group = 1)) + 
   geom_point() + geom_line() +
   ggtitle("CCSM Max") + xlab("time period") + ylab("centroid velocity (m/yr)") +
   theme_classic() +
@@ -139,7 +139,7 @@ bv <- data.frame(bvPollen$time,
                  bvBeyerMeans$centroidVelocity,
                  bvCCSMMean$centroidVelocity,
                  bvECBiltMean$centroidVelocity)
-colnames(bv) <- c("Time", "Pollen","Beyer", "CCSM", "ECBilt")
+colnames(bv) <- c("Time", "Pollen","HadAM3H", "CCSM", "ECBilt")
 bv <- cbind(bv[1], utils::stack(bv[2:5]))
 colnames(bv) <- c("Time", "centroidVelocity", "climateSource")
 
@@ -283,7 +283,7 @@ b_select_sp <- ggplot(bv_select_sp, aes(x = Time, y = centroidVelocity, group = 
   labs(title = "HadAM3H Biotic Velocity\n", subtitle = "Select Species Only", 
        x = "Time Period", y = "Centroid Velocity (m/yr)", color = "Species")
 
-pdf(file = './PDF/bv_plots.pdf', height = 8.5, width = 11)
+pdf(file = './PDF_output/bv_plots.pdf', height = 8.5, width = 11)
 
 plot_grid(p, plot_grid(bMean, bMax), plot_grid(cMean, cMax), 
           plot_grid(eMean, eMax), ncol = 1)
@@ -313,8 +313,8 @@ b <- ggplot(x, aes(bvPollen.centroidVelocity, bvBeyerMeans.centroidVelocity,
   geom_text_repel(min.segment.length = 0) + 
   theme_classic() + 
   theme(legend.position = "none") + 
-  labs(title = "Pollen vs Beyer Biotic Velocities", x = "Pollen Centroid Velocity (m/yr)", 
-       y = "Beyer Centroid Velocity (m/yr)")
+  labs(title = "Pollen vs HadAM3H Biotic Velocities", x = "Pollen Centroid Velocity (m/yr)", 
+       y = "HadAM3H Centroid Velocity (m/yr)")
 
 # ECBilt vs Pollen
 e <- ggplot(x, aes(bvPollen.centroidVelocity, bvECBiltMean.centroidVelocity, 
@@ -339,5 +339,40 @@ plot(b)
 plot(e)
 plot(c)
 plot_grid(b, e, c, ncol = 2)
+
+# HadAM3H vs CCSM
+bc <- ggplot(x, aes(bvCCSMMean.centroidVelocity, bvBeyerMeans.centroidVelocity, 
+                   color = bvPollen.time, label = bvPollen.time)) + 
+  geom_point() + 
+  geom_text_repel(min.segment.length = 0) + 
+  theme_classic() + 
+  theme(legend.position = "none") + 
+  labs(title = "HadAM3H vs CCSM Biotic Velocities", x = "CCSM Centroid Velocity (m/yr)", 
+       y = "HadAM3H Centroid Velocity (m/yr)")
+
+# ECBilt vs HadAM3H
+eb <- ggplot(x, aes(bvBeyerMeans.centroidVelocity, bvECBiltMean.centroidVelocity, 
+                   color = bvPollen.time, label = bvPollen.time)) + 
+  geom_point() + 
+  geom_text_repel(min.segment.length = 0) + 
+  theme_classic() + 
+  theme(legend.position = "none") + 
+  labs(title = "HadAM3H vs ECBilt Biotic Velocities", x = "HadAM3H Centroid Velocity (m/yr)", 
+       y = "ECBilt Centroid Velocity (m/yr)")
+
+# CCSM vs ECBilt
+ce <- ggplot(x, aes(bvECBiltMean.centroidVelocity, bvCCSMMean.centroidVelocity, 
+                   color = bvPollen.time, label = bvPollen.time)) + 
+  geom_point() + 
+  geom_text_repel(min.segment.length = 0) + 
+  theme_classic() + 
+  theme(legend.position = "none") + 
+  labs(title = "ECBilt vs CCSM Biotic Velocities", x = "ECBilt Centroid Velocity (m/yr)", 
+       y = "CCSM Centroid Velocity (m/yr)")
+
+plot(bc)
+plot(eb)
+plot(ce)
+plot_grid(bc, eb, ce, ncol = 2)
 
 dev.off()
