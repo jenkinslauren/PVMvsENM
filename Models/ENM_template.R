@@ -59,7 +59,8 @@ for(sp in speciesList) {
   speciesAb <- paste0(substr(sp,1,4), toupper(substr(sp,10,10)), substr(sp,11,13))
   speciesAb_ <- sub("(.{4})(.*)", "\\1_\\2", speciesAb)
   rangeName <- paste0('littleRange_', speciesAb)
-  load(paste0('./regions/little_range_map/', rangeName, '.Rdata'))
+  load(paste0('./data_and_analyses/study_region/regions/little_range_map/', 
+              rangeName, '.Rdata'))
   if (file.exists(paste0("./workspaces/03 - Modeling Workspace - ", speciesAb, " Cleaning"))) {
     print('Already cleaned!')
   } else {
@@ -451,7 +452,7 @@ for(sp in speciesList) {
     # Load environmental PCA rasters. 
     # If already clipped, load that. 
     # Otherwise, clip the data to present.
-    studyRegionFileName <- './regions/study_region_daltonIceMask_lakesMasked_linearIceSheetInterpolation.tif'
+    studyRegionFileName <- './data_and_analyses/study_region/regions/study_region_daltonIceMask_lakesMasked_linearIceSheetInterpolation.tif'
     studyRegionRasts <- brick(studyRegionFileName)
     
     if (gcm == 'Beyer') { # Beyer
@@ -540,7 +541,8 @@ for(sp in speciesList) {
       }
     } 
     
-    fileName <- paste0('./cleaning_records/', species, '_finalRecords.rData')
+    fileName <- paste0('./data_and_analyses/cleaned_records/', 
+                       species, '_finalRecords.rData')
     load(fileName)
     records <- data.frame(speciesSf_filtered_final)
     records$geometry <- gsub("[c()]", "", records$geometry)
@@ -587,7 +589,7 @@ for(sp in speciesList) {
     
     # load(paste0('./workspaces/03 - Modeling Workspace - ', speciesAb, ' Cleaning'))
     
-    bufferFileName <- paste0('./cleaning_records/', species, '_buffer.rData')
+    bufferFileName <- paste0('./data_and_analyses/cleaned_records/', species, '_buffer.rData')
     load(bufferFileName)
     # load(paste0("./workspaces/03 - Modeling Workspace - ", speciesAb, " Cleaning"))
     
@@ -610,7 +612,7 @@ for(sp in speciesList) {
       save(bgTestSpAlb, file = bgRawFileName)
     }
     bgTestSp <- sp::spTransform(bgTestSpAlb, getCRS('wgs84', TRUE))
-    randomBgSites <- randomPoints(climate, 20000)
+    randomBgSites <- randomPoints(envData, 20000)
     # randomBgSites <- as.data.frame(coordinates(bgTestSp))
     names(randomBgSites) <- ll
     
@@ -657,28 +659,29 @@ for(sp in speciesList) {
     
     # model species
     # try: trainMaxNet(data, resp='presBg', regMult=c(0.5, 1, 2, 3, 4, 5, 7.5, 10))
-    envModel <- enmSdm::trainMaxNet(data = env, resp = 'presBg')
+    envModel <- enmSdm::trainMaxNet(data = env, resp = 'presBg', out = c('models', 'tuning'))
     # envModel <- maxnet(p = presBg, data = trainData)
     modelFileName <- paste0('./Models/Maxent/', speciesAb_, '_Maxent/Model_PC', pc, '_GCM_', gcm, '.Rdata')
     save(envModel, file = modelFileName, compress=TRUE)
     
     predictors <- c(paste0('pca', 1:pc))
     # prediction
+    # envMap <- predict(climate[[predictors]], envModel, clamp = F, type = 'cloglog')
     envMap <- predict(
       climate[[predictors]],
       envModel,
-      filename = paste0('./Models/Maxent/', speciesAb_, '_Maxent/prediction_PC', 
-                        pc, '_GCM', gcm, '_', climYear, 'ybp'), 
+      filename = paste0('./Models/Maxent/', speciesAb_, '_Maxent/prediction_PC',
+                        pc, '_GCM', gcm, '_', climYear, 'ybp'),
       clamp = F,
-      format='GTiff', 
-      overwrite = TRUE, 
+      format='GTiff',
+      overwrite = TRUE,
       type='cloglog')
     
     envMapSp <- rasterToPolygons(envMap)
     
-    plot(rangeMap, border = 'blue', main = substitute(paste('Maxent output, ', 
+    plot(rangeMap, border = 'blue', main = paste0('Maxent output, ', 
                                                             sp,
-                                                            ' occurrences')))
+                                                            ' occurrences'))
     plot(envMap, add = TRUE)
     plot(rangeMap, border = 'blue', add = TRUE)
     map("state", add = TRUE)
@@ -690,9 +693,9 @@ for(sp in speciesList) {
                                          ' occurrences'))
     plot(rangeMap, border = 'blue', add = TRUE)
     
-    outputFileName <<- paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
-                              '_PC', pc, '.rData')
-    save(rangeMap, envMap, records, file = outputFileName, overwrite = T)
+    outputFileName <<- paste0('./Models/Maxent/', speciesAb_, 
+                              '_Maxent/Model_PC', pc, '_GCM_', gcm, '.rData')
+    save(rangeMap, envMap, envModel, records, file = outputFileName, overwrite = T)
     save.image(paste0('./workspaces/05 - Modeling Workspace - ', speciesAb_,
                       ' Model Output - PC', pc, '_GCM_', gcm))
   }
