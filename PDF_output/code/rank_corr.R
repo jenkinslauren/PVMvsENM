@@ -2,6 +2,9 @@ rm(list = ls())
 library(spatialEco)
 library(enmSdm)
 library(stats)
+library(rnaturalearth)
+library(rnaturalearthdata)
+library(rnaturalearthhires)
 
 setwd('/Volumes/lj_mac_22/MOBOT/PVMvsENM')
 
@@ -11,7 +14,7 @@ pc <- 5
 # set constants
 climYears <- seq(21000, 0, by=-1000)
 
-studyRegionFileName <- './regions/study_region_daltonIceMask_lakesMasked_linearIceSheetInterpolation.tif'
+studyRegionFileName <- './data_and_analyses/study_region/regions/study_region_daltonIceMask_lakesMasked_linearIceSheetInterpolation.tif'
 studyRegionRasts <- brick(studyRegionFileName)
 
 world <- ne_countries(scale = "medium", returnclass = "sf")
@@ -21,7 +24,7 @@ pollenRast <- brick('/Volumes/lj_mac_22/pollen/predictions-FRAXINUS_meanpred.tif
 colors <- c('#a50026','#d73027','#f46d43','#fdae61','#fee08b','#ffffbf',
             '#d9ef8b','#a6d96a','#66bd63','#1a9850','#006837')
 
-pdf(file = './PDF/rank_correlation.pdf', width = 11, height = 8.5)
+pdf(file = './PDF_output/rank_correlation.pdf', width = 11, height = 8.5)
 par(mfrow = c(1,3), mar = c(2,1,5,1)+0.1)
 for(a in 1:22) {
   for(gcm in gcmList_) {
@@ -32,7 +35,7 @@ for(a in 1:22) {
     t <- paste0('Pearson Correlation,\nPollen & ', g, '\n', climYears[a], ' ybp')
     thisRast <- raster::resample(meansList[[a]], pollenRast[[a]], method = 'bilinear')
     
-    cor <- rasterCorrelation(thisRast, pollenRast[[a]], type = 'pearson')
+    cor <- rasterCorrelation(thisRast, pollenRast[[a]], type = 'pearson', s = 5)
     plot(cor, main = t, axes = F, box = F, legend.mar = 10, col = colors)
     plot(raster::crop(sp::spTransform(world, CRS(projection(cor))), extent(cor)), 
          border = 'black', add = T)
@@ -47,23 +50,23 @@ for(a in 1:22) {
   load('./workspaces/06 - Lorenz_ccsm Projections')
   ccsm <- 'CCSM'
   cMeans <- meansList
-  
+
   t <- paste0('Pearson Correlation,\n', beyer, '& ', ecbilt, '\n', climYears[a], ' ybp')
   cor <- rasterCorrelation(bMeans[[a]], eMeans[[a]], type = 'pearson')
   plot(cor, main = t, axes = F, box = F, legend.mar = 10, col = colors)
-  plot(raster::crop(sp::spTransform(world, CRS(projection(cor))), extent(cor)), 
+  plot(raster::crop(sp::spTransform(world, CRS(projection(cor))), extent(cor)),
        border = 'black', add = T)
-  
+
   t <- paste0('Pearson Correlation,\n', beyer, '& ', ccsm, '\n', climYears[a], ' ybp')
   cor <- rasterCorrelation(bMeans[[a]], cMeans[[a]], type = 'pearson')
   plot(cor, main = t, axes = F, box = F, legend.mar = 10, col = colors)
-  plot(raster::crop(sp::spTransform(world, CRS(projection(cor))), extent(cor)), 
+  plot(raster::crop(sp::spTransform(world, CRS(projection(cor))), extent(cor)),
        border = 'black', add = T)
-  
+
   t <- paste0('Pearson Correlation,\n', ccsm, '& ', ecbilt, '\n', climYears[a], ' ybp')
   cor <- rasterCorrelation(cMeans[[a]], eMeans[[a]], type = 'pearson')
   plot(cor, main = t, axes = F, box = F, legend.mar = 10, col = colors)
-  plot(raster::crop(sp::spTransform(world, CRS(projection(cor))), extent(cor)), 
+  plot(raster::crop(sp::spTransform(world, CRS(projection(cor))), extent(cor)),
        border = 'black', add = T)
 }
 dev.off()
