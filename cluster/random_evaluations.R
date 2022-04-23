@@ -20,9 +20,10 @@ ll <- c('longitude', 'latitude')
 gcmList <- c('Beyer','Lorenz_ccsm', 'ecbilt')
 pc <- 5
 predictors <- c(paste0('pca', 1:pc))
-speciesList <- c('Fraxinus americana','Fraxinus caroliniana', 'Fraxinus cuspidata',
-                 'Fraxinus greggii', 'Fraxinus nigra', 'Fraxinus pennsylvanica',
-                 'Fraxinus profunda', 'Fraxinus quadrangulata')
+# speciesList <- c('Fraxinus americana','Fraxinus caroliniana', 'Fraxinus cuspidata',
+#                  'Fraxinus greggii', 'Fraxinus nigra', 'Fraxinus pennsylvanica',
+#                  'Fraxinus profunda', 'Fraxinus quadrangulata')
+speciesList <- c('Fraxinus cuspidata')
 
 # for (gcm in gcmList) {
 # print(paste0("GCM = ", gcm))
