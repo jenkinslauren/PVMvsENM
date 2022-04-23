@@ -31,7 +31,7 @@ speciesList <- c('Fraxinus americana','Fraxinus caroliniana', 'Fraxinus cuspidat
 # set constants
 climYears <- seq(21000, 0, by=-1000)
 
-studyRegionFileName <- './regions/study_region_daltonIceMask_lakesMasked_linearIceSheetInterpolation.tif'
+studyRegionFileName <- './data_and_analyses/study_region/regions/study_region_daltonIceMask_lakesMasked_linearIceSheetInterpolation.tif'
 studyRegionRasts <- brick(studyRegionFileName)
 
 getClimRasts <- function(pc, climYear) {
