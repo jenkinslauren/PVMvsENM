@@ -11,6 +11,7 @@ library(enmSdm)
 # for handling rasters
 library(raster)
 library(rgdal)
+library(dismo)
 # library(rgeos) # not used, but may be helpful when debugging
 
 # library(terra)
@@ -612,7 +613,7 @@ for(sp in speciesList) {
       save(bgTestSpAlb, file = bgRawFileName)
     }
     bgTestSp <- sp::spTransform(bgTestSpAlb, getCRS('wgs84', TRUE))
-    randomBgSites <- randomPoints(envData, 20000)
+    randomBgSites <- dismo::randomPoints(envData, 20000)
     # randomBgSites <- as.data.frame(coordinates(bgTestSp))
     names(randomBgSites) <- ll
     
@@ -696,6 +697,11 @@ for(sp in speciesList) {
     outputFileName <<- paste0('./Models/Maxent/', speciesAb_, 
                               '_Maxent/Model_PC', pc, '_GCM_', gcm, '.rData')
     save(rangeMap, envMap, envModel, records, file = outputFileName, overwrite = T)
+    
+    outputFileName <<- paste0('./Models/Maxent/model_outputs/', speciesAb_,
+                              '_GCM', gcm, '_PC', pc, '.Rdata')
+    save(rangeMap, envMap, envModel, records, file = outputFileName, overwrite = T)
+    
     save.image(paste0('./workspaces/05 - Modeling Workspace - ', speciesAb_,
                       ' Model Output - PC', pc, '_GCM_', gcm))
   }
