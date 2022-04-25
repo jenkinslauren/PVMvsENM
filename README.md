@@ -1,2 +1,2 @@
-# PVMvsENM_
- 
+# PVMvsENM
+PVMvsENM contains the working material for a research project comparing output of pollen models and ecological niche models in their ability to predict climate tracking of trees since 21,000 YBP. This research is conducted under the mentorship of Dr. Adam B. Smith with the Missouri Botanical Garden and funded by the NSF Research Experience for Post-Baccalaureate Students.
