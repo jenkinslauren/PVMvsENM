@@ -468,10 +468,12 @@ for(sp in speciesList) {
       fileName <- paste0('./data_and_analyses/env_data/Lorenz/V2/ccsm_21-0k_all_tifs_LJ/envDataClipped_',
                          climYear, 'KYBP_pc', pc, '.tif')
       clim <- lorenz
-      workingFolder <- './data_and_analyses/env_data/Lorenz/V2/ccsm_21-0k_all_tifs_LJ'
-      vars <- sub('\\.tif.*', '', list.files(path = workingFolder, 
-                                             pattern='*.tif', all.files = TRUE, full.names = FALSE))
-      vars <- vars[lapply(vars, function(x) length(grep("pca_", x, value = F))) == 0]
+      workingFolder <- paste0('./data_and_analyses/env_data/Lorenz/V2/ccsm_21-0k_all_tifs_LJ/', 
+                              climYear, 'BP')
+      vars <- names(clim[[1]])
+      # vars <- sub('\\.tif.*', '', list.files(path = workingFolder, 
+      #                                        pattern='*.tif', all.files = TRUE, full.names = FALSE))
+      # vars <- vars[lapply(vars, function(x) length(grep("pca_", x, value = F))) == 0]
     } else { # ECBilt
       load(paste0('./data_and_analyses/env_data/Lorenz/PCA_', gcm, '_clim.Rdata')) 
       load(paste0('./data_and_analyses/env_data/Lorenz/V2/ecbilt_21-0k_all_tifs_LJ/pca_pc', pc, '.Rdata'))
@@ -479,10 +481,11 @@ for(sp in speciesList) {
                          climYear, 'KYBP_pc', pc, '.tif')
       clim <- lorenz
       workingFolder <- paste0('./data_and_analyses/env_data/Lorenz/V2/',
-                              gcm, '_21-0k_all_tifs_LJ')
-      vars <- sub('\\.tif.*', '', list.files(path = workingFolder, 
-                                             pattern='*.tif', all.files = TRUE, full.names = FALSE))
-      vars <- vars[lapply(vars, function(x) length(grep("pca_", x, value = F))) == 0]
+                              gcm, '_21-0k_all_tifs_LJ/', climYear, 'BP')
+      vars <- names(clim[[1]])
+      # vars <- sub('\\.tif.*', '', list.files(path = workingFolder, 
+      #                                        pattern='*.tif', all.files = TRUE, full.names = FALSE))
+      # vars <- vars[lapply(vars, function(x) length(grep("pca_", x, value = F))) == 0]
     }
     
     if (file.exists(fileName)) {
@@ -530,16 +533,16 @@ for(sp in speciesList) {
       
       # clip environmental PCAs to study extent for given species, visualize, and save:
       envDataClipped <- list()
-      for (i in 1:nlayers(envYr)) {
-        x <- envYr[[i]]
+      for (n in 1:nlayers(envYr)) {
+        x <- envYr[[n]]
         x <- crop(x, studyExtent)
         # x <<- mask(x, studyRegion)
         projection(x) <- getCRS("WGS84")
-        envDataClipped[[i]] <- x
-        envData <- stack(envDataClipped)
-        # plot(envData)
-        writeRaster(envData, fileName, format = 'GTiff', overwrite = T)
+        envDataClipped[[n]] <- x
       }
+      envData <- stack(envDataClipped)
+      # plot(envData)
+      writeRaster(envData, fileName, format = 'GTiff', overwrite = T)
     } 
     
     fileName <- paste0('./data_and_analyses/cleaned_records/', 
@@ -585,10 +588,9 @@ for(sp in speciesList) {
     map("state", add = TRUE)
     map("world", add = TRUE)
     
-    save.image(paste0('./workspaces/04 - Modeling Workspace - Clipping ', sp, '_PC_', pc, '_GCM_', gcm))
+    save.image(paste0('./workspaces/04 - Modeling Workspace - Clipping ', 
+                      sp, '_PC_', pc, '_GCM_', gcm))
     # load(paste0('./workspaces/04 - Modeling Workspace - Clipping ', sp, '_PC_', pc, '_GCM_', gcm))
-    
-    # load(paste0('./workspaces/03 - Modeling Workspace - ', speciesAb, ' Cleaning'))
     
     bufferFileName <- paste0('./data_and_analyses/cleaned_records/', species, '_buffer.rData')
     load(bufferFileName)
@@ -599,23 +601,23 @@ for(sp in speciesList) {
                              dist = as_units(160, 'km'))
     calibBuffer <- st_union(calibBuffer)
     
-    calibRegionSpAlb <- as(calibBuffer, 'Spatial')
-    calibRegionSpAlb <- sp::spTransform(calibRegionSpAlb, getCRS('albersNA', TRUE))
+    calibRegionSpAlb <- sp::spTransform(as(calibBuffer, 'Spatial'), getCRS('albersNA', TRUE))
     calibRegionSpWgs <- sp::spTransform(calibRegionSpAlb, getCRS('wgs84', TRUE))
     
     bgFileName <- paste0('./Background Sites/Random Background Sites across Study Region - ', 
-                         speciesAb, '_', gcm, '.Rdata')
-    bgRawFileName <- paste0('./Background Sites/raw/Random Bg Sites - ', speciesAb_, '.Rdata')
-    # get 20,000 random background sites from calibration region
-    # will only keep 10,000 points...this accounts for points that may fall in water
-    if (file.exists(bgRawFileName)) load(bgRawFileName) else {
-      bgTestSpAlb <- suppressWarnings(sp::spsample(calibRegionSpAlb, n=20000, type='random'))
-      save(bgTestSpAlb, file = bgRawFileName)
+                         speciesAb, '.Rdata')
+    
+    # load bg sites in calibration region for a species if they have already been defined
+    # otherwise, get 20,000 random background sites from calibration region
+    # we will only keep 10,000 points...this accounts for points that may fall in water
+    if (file.exists(bgFileName)) load(bgFileName) else {
+      bgTestSpAlb <- suppressWarnings(sp::spsample(calibRegionSpAlb, n=20000, 
+                                                   type='random', iter = 10))
     }
+    
     bgTestSp <- sp::spTransform(bgTestSpAlb, getCRS('wgs84', TRUE))
-    randomBgSites <- dismo::randomPoints(envData, 20000)
-    # randomBgSites <- as.data.frame(coordinates(bgTestSp))
-    names(randomBgSites) <- ll
+    bgCalib <- as.data.frame(coordinates(bgTestSp))
+    names(bgCalib) <- ll
     
     # sanity check: plot the background sites
     plot(bgTestSp, pch = 16, cex = 0.5, col = "red", 
@@ -624,45 +626,75 @@ for(sp in speciesList) {
     map("state", add = TRUE)
     map("world", add = TRUE)
     
-    # extract environment at background sites
+    # extract environment at random background sites
     climate <- envData
+    # randomBgSites <- dismo::randomPoints(climate, 20000)
+    # randomBgSites <- as.data.frame(coordinates(bgTestSp))
+    # names(randomBgSites) <- ll
     randomBgEnv <- raster::extract(climate, randomBgSites)
     randomBgEnv <- as.data.frame(randomBgEnv)
     
+    bgEnv <- raster::extract(climate, bgCalib)
+    bgEnv <- as.data.frame(bgEnv)
+    
+    # # remove any sites with NA for at least one variable
+    # isNa <- is.na(rowSums(randomBgEnv))
+    # if (any(isNa)) {
+    #   randomBgSites <- randomBgSites[-which(isNa), ]
+    #   randomBgEnv <- randomBgEnv[-which(isNa), ]
+    # }
+    
     # remove any sites with NA for at least one variable
-    isNa <- is.na(rowSums(randomBgEnv))
+    isNa <- is.na(rowSums(bgEnv))
     if (any(isNa)) {
-      randomBgSites <- randomBgSites[-which(isNa), ]
-      randomBgEnv <- randomBgEnv[-which(isNa), ]
+      bgCalib <- bgCalib[-which(isNa), ]
+      bgEnv <- bgEnv[-which(isNa), ]
     }
     
-    # only keep 10,000 random background sites
-    randomBgSites <- randomBgSites[1:10000,]
-    randomBgEnv <- randomBgEnv[1:10000,]
+    # # only keep 10,000 random background sites
+    # randomBgSites <- randomBgSites[1:10000,]
+    # randomBgEnv <- randomBgEnv[1:10000,]
     
+    # only keep 10,000 random background sites
+    bgCalib <- bgCalib[1:10000,]
+    bgEnv <- bgEnv[1:10000,]
+    
+    # # combine with coordinates and rename coordinate fields
+    # randomBg <- cbind(randomBgSites, randomBgEnv)
+    # names(randomBg)[1:2] <- ll
+
     # combine with coordinates and rename coordinate fields
-    randomBg <- cbind(randomBgSites, randomBgEnv)
-    names(randomBg)[1:2] <- ll
+    bg <- cbind(bgCalib, bgEnv)
+    names(bg)[1:2] <- ll
     
     # dir.create('./Background Sites', recursive=TRUE, showWarnings=FALSE)
-    save(randomBg, randomBgEnv,
+    save(bgCalib, bgEnv, bg,
          file = bgFileName, compress=TRUE)
     
-    presBg <- c(rep(1, nrow(records)), rep(0, nrow(randomBgEnv)))
+    # presBg <- c(rep(1, nrow(records)), rep(0, nrow(randomBgEnv)))
+    # occsEnv <- occsEnv[complete.cases(occsEnv), ]
+    # 
+    # env <- rbind(occsEnv, randomBgEnv)
+    # env <- cbind(presBg, env)
+    # env <- as.data.frame(env)
+    # 
+    # env <- env[complete.cases(env), ]
+    # # View(env)
+    
+    presBg <- c(rep(1, nrow(records)), rep(0, nrow(bg)))
     occsEnv <- occsEnv[complete.cases(occsEnv), ]
     
-    env <- rbind(occsEnv, randomBgEnv)
+    env <- rbind(occsEnv, bgEnv)
     env <- cbind(presBg, env)
     env <- as.data.frame(env)
     
     env <- env[complete.cases(env), ]
-    # View(env)
     
     # model species
-    # try: trainMaxNet(data, resp='presBg', regMult=c(0.5, 1, 2, 3, 4, 5, 7.5, 10))
-    envModel <- enmSdm::trainMaxNet(data = env, resp = 'presBg', out = c('models', 'tuning'))
-    # envModel <- maxnet(p = presBg, data = trainData)
-    modelFileName <- paste0('./Models/Maxent/', speciesAb_, '_Maxent/Model_PC', pc, '_GCM_', gcm, '.Rdata')
+    envModel <- enmSdm::trainMaxNet(data = env, resp = 'presBg', 
+                                    out = c('models', 'tuning'))
+    modelFileName <- paste0('./Models/Maxent/', speciesAb_, '_Maxent/Model_PC', 
+                            pc, '_GCM_', gcm, '.Rdata')
     save(envModel, file = modelFileName, compress=TRUE)
     
     predictors <- c(paste0('pca', 1:pc))
@@ -675,7 +707,7 @@ for(sp in speciesList) {
                         pc, '_GCM', gcm, '_', climYear, 'ybp'),
       clamp = F,
       format='GTiff',
-      overwrite = TRUE,
+      overwrite = T,
       type='cloglog')
     
     envMapSp <- rasterToPolygons(envMap)
