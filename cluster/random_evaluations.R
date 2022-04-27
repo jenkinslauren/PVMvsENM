@@ -23,9 +23,9 @@ predictors <- c(paste0('pca', 1:pc))
 # speciesList <- c('Fraxinus americana','Fraxinus caroliniana', 'Fraxinus cuspidata',
 #                  'Fraxinus greggii', 'Fraxinus nigra', 'Fraxinus pennsylvanica',
 #                  'Fraxinus profunda', 'Fraxinus quadrangulata')
-speciesList <- c('Fraxinus quadrangulata')
+speciesList <- c('Fraxinus americana','Fraxinus quadrangulata')
 
-for (gcm in gcmList) {
+# for (gcm in gcmList) {
   print(paste0("GCM = ", gcm))
   gcm <- gcm
   a <- 1
@@ -125,50 +125,50 @@ for (gcm in gcmList) {
     a <- a + 1
     
   }
-}
+# }
 
-gcmList <- c('Beyer', 'Lorenz_ccsm', 'ecbilt')
-speciesList <- c('Fraxinus americana','Fraxinus caroliniana', 'Fraxinus cuspidata',
-                 'Fraxinus greggii', 'Fraxinus nigra', 'Fraxinus pennsylvanica',
-                 'Fraxinus profunda', 'Fraxinus quadrangulata')
-
-for(gcm in gcmList) {
-  a <- data.frame(c(seq(1:5)))
-  c <- data.frame(c(seq(1:5)))
-  colnames(a)[1] <- colnames(c)[1] <- 'fold #'
-  for(sp in speciesList) {
-    sp <- sp
-    species <- gsub(tolower(sp), pattern=' ', replacement='_')
-    speciesAb <- paste0(substr(sp,1,4), toupper(substr(sp,10,10)), substr(sp,11,13))
-    speciesAb_ <- sub("(.{4})(.*)", "\\1_\\2", speciesAb)
-
-    folderName <- paste0('./Models/Maxent/', speciesAb_,
-                         '_Maxent/Model Evaluation - Random K-Folds - ', gcm)
-
-    # folderName <- paste0('./in/models/maxent/', speciesAb_,
-    #                      '_Maxent/Model Evaluation - Random K-Folds - ', gcm)
-
-    load(paste0(folderName, '/auc_cbi_vals.Rdata'))
-
-    a <- cbind(a, aucRandom)
-    c <- cbind(c, cbiRandom)
-    n <- ncol(a)
-    colnames(a)[n] <- colnames(c)[n] <- sp
-  }
-  save(a, c, file = paste0('./Models/Maxent/', gcm, '_evals.Rdata'))
-  # save(a, c, file = paste0('./in/models/maxent/', gcm, '_evals.Rdata'))
-}
-
-for (gcm in gcmList) {
-  load(paste0('./Models/Maxent/', gcm, '_evals.Rdata'))
-  write.xlsx(a, file = './Models/Maxent/random_evals.xlsx', sheetName = paste0(gcm, '_auc'),
-             append = T, row.names = F)
-  write.xlsx(c, file = './Models/Maxent/random_evals.xlsx', sheetName = paste0(gcm, '_cbi'),
-             append = T, row.names = F)
-
-  # load(paste0('./in/models/maxent/', gcm, '_evals.Rdata'))
-  # write.xlsx(a, file = './in/models/maxent/random_evals.xlsx', sheetName = paste0(gcm, '_auc'),
-  #            append = T, row.names = F)
-  # write.xlsx(c, file = './in/models/maxent/random_evals.xlsx', sheetName = paste0(gcm, '_cbi'),
-  #            append = T, row.names = F)
-}
+# gcmList <- c('Beyer', 'Lorenz_ccsm', 'ecbilt')
+# speciesList <- c('Fraxinus americana','Fraxinus caroliniana', 'Fraxinus cuspidata',
+#                  'Fraxinus greggii', 'Fraxinus nigra', 'Fraxinus pennsylvanica',
+#                  'Fraxinus profunda', 'Fraxinus quadrangulata')
+# 
+# for(gcm in gcmList) {
+#   a <- data.frame(c(seq(1:5)))
+#   c <- data.frame(c(seq(1:5)))
+#   colnames(a)[1] <- colnames(c)[1] <- 'fold #'
+#   for(sp in speciesList) {
+#     sp <- sp
+#     species <- gsub(tolower(sp), pattern=' ', replacement='_')
+#     speciesAb <- paste0(substr(sp,1,4), toupper(substr(sp,10,10)), substr(sp,11,13))
+#     speciesAb_ <- sub("(.{4})(.*)", "\\1_\\2", speciesAb)
+# 
+#     folderName <- paste0('./Models/Maxent/', speciesAb_,
+#                          '_Maxent/Model Evaluation - Random K-Folds - ', gcm)
+# 
+#     # folderName <- paste0('./in/models/maxent/', speciesAb_,
+#     #                      '_Maxent/Model Evaluation - Random K-Folds - ', gcm)
+# 
+#     load(paste0(folderName, '/auc_cbi_vals.Rdata'))
+# 
+#     a <- cbind(a, aucRandom)
+#     c <- cbind(c, cbiRandom)
+#     n <- ncol(a)
+#     colnames(a)[n] <- colnames(c)[n] <- sp
+#   }
+#   save(a, c, file = paste0('./Models/Maxent/', gcm, '_evals.Rdata'))
+#   # save(a, c, file = paste0('./in/models/maxent/', gcm, '_evals.Rdata'))
+# }
+# 
+# for (gcm in gcmList) {
+#   load(paste0('./Models/Maxent/', gcm, '_evals.Rdata'))
+#   write.xlsx(a, file = './Models/Maxent/random_evals.xlsx', sheetName = paste0(gcm, '_auc'),
+#              append = T, row.names = F)
+#   write.xlsx(c, file = './Models/Maxent/random_evals.xlsx', sheetName = paste0(gcm, '_cbi'),
+#              append = T, row.names = F)
+# 
+#   # load(paste0('./in/models/maxent/', gcm, '_evals.Rdata'))
+#   # write.xlsx(a, file = './in/models/maxent/random_evals.xlsx', sheetName = paste0(gcm, '_auc'),
+#   #            append = T, row.names = F)
+#   # write.xlsx(c, file = './in/models/maxent/random_evals.xlsx', sheetName = paste0(gcm, '_cbi'),
+#   #            append = T, row.names = F)
+# }
