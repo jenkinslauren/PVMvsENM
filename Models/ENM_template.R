@@ -608,16 +608,18 @@ for(sp in speciesList) {
                          speciesAb, '.Rdata')
     
     # load bg sites in calibration region for a species if they have already been defined
+    # loaded in: bgTestSp, bgCalib, bgEnv, bg
     # otherwise, get 20,000 random background sites from calibration region
     # we will only keep 10,000 points...this accounts for points that may fall in water
     if (file.exists(bgFileName)) load(bgFileName) else {
       bgTestSpAlb <- suppressWarnings(sp::spsample(calibRegionSpAlb, n=20000, 
                                                    type='random', iter = 10))
+      bgTestSp <- sp::spTransform(bgTestSpAlb, getCRS('wgs84', TRUE))
+      bgCalib <- as.data.frame(coordinates(bgTestSp))
+      names(bgCalib) <- ll
+      
+      save(bgTestSp, bgCalib, file = bgFileName, compress = T, overwrite = T)
     }
-    
-    bgTestSp <- sp::spTransform(bgTestSpAlb, getCRS('wgs84', TRUE))
-    bgCalib <- as.data.frame(coordinates(bgTestSp))
-    names(bgCalib) <- ll
     
     # sanity check: plot the background sites
     plot(bgTestSp, pch = 16, cex = 0.5, col = "red", 
@@ -628,21 +630,8 @@ for(sp in speciesList) {
     
     # extract environment at random background sites
     climate <- envData
-    # randomBgSites <- dismo::randomPoints(climate, 20000)
-    # randomBgSites <- as.data.frame(coordinates(bgTestSp))
-    # names(randomBgSites) <- ll
-    randomBgEnv <- raster::extract(climate, randomBgSites)
-    randomBgEnv <- as.data.frame(randomBgEnv)
-    
     bgEnv <- raster::extract(climate, bgCalib)
     bgEnv <- as.data.frame(bgEnv)
-    
-    # # remove any sites with NA for at least one variable
-    # isNa <- is.na(rowSums(randomBgEnv))
-    # if (any(isNa)) {
-    #   randomBgSites <- randomBgSites[-which(isNa), ]
-    #   randomBgEnv <- randomBgEnv[-which(isNa), ]
-    # }
     
     # remove any sites with NA for at least one variable
     isNa <- is.na(rowSums(bgEnv))
@@ -651,35 +640,13 @@ for(sp in speciesList) {
       bgEnv <- bgEnv[-which(isNa), ]
     }
     
-    # # only keep 10,000 random background sites
-    # randomBgSites <- randomBgSites[1:10000,]
-    # randomBgEnv <- randomBgEnv[1:10000,]
-    
-    # only keep 10,000 random background sites
+    # only keep 10,000 background sites
     bgCalib <- bgCalib[1:10000,]
     bgEnv <- bgEnv[1:10000,]
     
-    # # combine with coordinates and rename coordinate fields
-    # randomBg <- cbind(randomBgSites, randomBgEnv)
-    # names(randomBg)[1:2] <- ll
-
     # combine with coordinates and rename coordinate fields
     bg <- cbind(bgCalib, bgEnv)
     names(bg)[1:2] <- ll
-    
-    # dir.create('./Background Sites', recursive=TRUE, showWarnings=FALSE)
-    save(bgCalib, bgEnv, bg,
-         file = bgFileName, compress=TRUE)
-    
-    # presBg <- c(rep(1, nrow(records)), rep(0, nrow(randomBgEnv)))
-    # occsEnv <- occsEnv[complete.cases(occsEnv), ]
-    # 
-    # env <- rbind(occsEnv, randomBgEnv)
-    # env <- cbind(presBg, env)
-    # env <- as.data.frame(env)
-    # 
-    # env <- env[complete.cases(env), ]
-    # # View(env)
     
     presBg <- c(rep(1, nrow(records)), rep(0, nrow(bg)))
     occsEnv <- occsEnv[complete.cases(occsEnv), ]
@@ -691,11 +658,12 @@ for(sp in speciesList) {
     env <- env[complete.cases(env), ]
     
     # model species
-    envModel <- enmSdm::trainMaxNet(data = env, resp = 'presBg', 
-                                    out = c('models', 'tuning'))
+    envModel <- enmSdm::trainMaxNet(data = env, resp = 'presBg')
+    # envModel <- enmSdm::trainMaxNet(data = env, resp = 'presBg', 
+    #                                 out = c('models', 'tuning'))
     modelFileName <- paste0('./Models/Maxent/', speciesAb_, '_Maxent/Model_PC', 
                             pc, '_GCM_', gcm, '.Rdata')
-    save(envModel, file = modelFileName, compress=TRUE)
+    save(envModel, file = modelFileName, compress = T, overwrite = T)
     
     predictors <- c(paste0('pca', 1:pc))
     # prediction
@@ -712,9 +680,8 @@ for(sp in speciesList) {
     
     envMapSp <- rasterToPolygons(envMap)
     
-    plot(rangeMap, border = 'blue', main = paste0('Maxent output, ', 
-                                                            sp,
-                                                            ' occurrences'))
+    plot(rangeMap, border = 'blue', main = paste0('Maxent output, ', sp,
+                                                  ' occurrences'))
     plot(envMap, add = TRUE)
     plot(rangeMap, border = 'blue', add = TRUE)
     map("state", add = TRUE)
@@ -722,15 +689,15 @@ for(sp in speciesList) {
     points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
     
     plot(envMap, main = paste0('Maxent output, ', 
-                                         sp,
-                                         ' occurrences'))
+                               sp,
+                               ' occurrences'))
     plot(rangeMap, border = 'blue', add = TRUE)
     
     outputFileName <<- paste0('./Models/Maxent/', speciesAb_, 
                               '_Maxent/Model_PC', pc, '_GCM_', gcm, '.rData')
     save(rangeMap, envMap, envModel, records, file = outputFileName, overwrite = T)
     
-    outputFileName <<- paste0('./Models/Maxent/model_outputs/', speciesAb_,
+    outputFileName <<- paste0('./cluster/all_model_outputs/', speciesAb_,
                               '_GCM', gcm, '_PC', pc, '.Rdata')
     save(rangeMap, envMap, envModel, records, file = outputFileName, overwrite = T)
     
