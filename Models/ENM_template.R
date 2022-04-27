@@ -605,7 +605,7 @@ for(sp in speciesList) {
     calibRegionSpWgs <- sp::spTransform(calibRegionSpAlb, getCRS('wgs84', TRUE))
     
     bgFileName <- paste0('./Background Sites/Random Background Sites across Study Region - ', 
-                         speciesAb, '.Rdata')
+                         speciesAb_, '.Rdata')
     
     # load bg sites in calibration region for a species if they have already been defined
     # loaded in: bgTestSp, bgCalib, bgEnv, bg
