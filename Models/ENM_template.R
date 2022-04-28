@@ -763,16 +763,21 @@ for(sp in speciesList) {
   species <- gsub(tolower(sp), pattern=' ', replacement='_')
   speciesAb <- paste0(substr(sp,1,4), toupper(substr(sp,10,10)), substr(sp,11,13))
   speciesAb_ <- sub("(.{4})(.*)", "\\1_\\2", speciesAb)
+  par(mfrow=c(1,3))
   for(gcm in gcmList) {
-    load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
-                '_PC', pc, '.rData'))
+    load(paste0('./Models/Maxent/', speciesAb_, '_Maxent/Model_PC', pc, 
+                '_GCM_', gcm, '.rData'))
+    envMap <- raster(paste0('./Models/Maxent/', speciesAb_, 
+                            '_Maxent/prediction_PC', pc, '_GCM', gcm, '_', 
+                            climYear, 'ybp.tif'))
     plot(rangeMap, border = 'blue', 
-         main = paste0('Maxent output, ', sp, ' occurrences,', '\nGCM = ', gcm))
+         main = paste0('Maxent\n', sp, ' occurrences,', '\nGCM = ', gcm))
     plot(envMap, add = TRUE)
     plot(rangeMap, border = 'blue', add = TRUE)
     map("state", add = TRUE)
     map("world", add = TRUE)
-    points(records$longitude, records$latitude, pch = 16, cex = 0.6, col = 'red')
+    points(records$longitude, records$latitude, pch = 16, cex = 0.6, 
+           col = alpha('red', 0.6))
   }
 }
 dev.off()
