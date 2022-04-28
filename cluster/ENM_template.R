@@ -209,7 +209,6 @@ for(sp in speciesList) {
     bgTestSp <- sp::spTransform(bgTestSpAlb, getCRS('wgs84', TRUE))
     bgCalib <- as.data.frame(coordinates(bgTestSp))
     names(bgCalib) <- ll
-    print("right before saving background!")
     save(bgTestSp, bgCalib, file = bgFileName, compress = T)
   }
   
