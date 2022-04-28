@@ -203,14 +203,15 @@ for(sp in speciesList) {
   # loaded in: bgTestSp, bgCalib, bgEnv, bg
   # otherwise, get 20,000 random background sites from calibration region
   # we will only keep 10,000 points...this accounts for points that may fall in water
-  
-  bgTestSpAlb <- suppressWarnings(sp::spsample(calibRegionSpAlb, n=20000, 
-                                               type='random', iter = 10))
-  bgTestSp <- sp::spTransform(bgTestSpAlb, getCRS('wgs84', TRUE))
-  bgCalib <- as.data.frame(coordinates(bgTestSp))
-  names(bgCalib) <- ll
-  print("right before saving background!")
-  save(bgTestSp, bgCalib, file = bgFileName, compress = T)
+  if (file.exists(bgFileName)) load(bgFileName) else {
+    bgTestSpAlb <- suppressWarnings(sp::spsample(calibRegionSpAlb, n=20000, 
+                                                 type='random', iter = 10))
+    bgTestSp <- sp::spTransform(bgTestSpAlb, getCRS('wgs84', TRUE))
+    bgCalib <- as.data.frame(coordinates(bgTestSp))
+    names(bgCalib) <- ll
+    print("right before saving background!")
+    save(bgTestSp, bgCalib, file = bgFileName, compress = T)
+  }
   
   # extract environment at random background sites
   climate <- envData
@@ -245,9 +246,6 @@ for(sp in speciesList) {
   envModel <- enmSdm::trainMaxNet(data = env, resp = 'presBg')
   # envModel <- enmSdm::trainMaxNet(data = env, resp = 'presBg', 
   #                                 out = c('models', 'tuning'))
-  modelFileName <- paste0('./models/maxent/', speciesAb_, '_Maxent/Model_PC', 
-                          pc, '_GCM_', gcm, '.Rdata')
-  save(envModel, file = modelFileName, compress = T, overwrite = T)
   
   predictors <- c(paste0('pca', 1:pc))
   # prediction
@@ -255,7 +253,7 @@ for(sp in speciesList) {
   envMap <- predict(
     climate[[predictors]],
     envModel,
-    filename = paste0('./models/maxent/', speciesAb_, '_Maxent/prediction_PC',
+    filename = paste0('./in/models/maxent/', speciesAb_, '_Maxent/prediction_PC',
                       pc, '_GCM', gcm, '_', climYear, 'ybp'),
     clamp = F,
     format='GTiff',
@@ -277,15 +275,15 @@ for(sp in speciesList) {
                              ' occurrences'))
   plot(rangeMap, border = 'blue', add = TRUE)
   
-  outputFileName <<- paste0('./models/maxent/', speciesAb_, 
+  outputFileName <<- paste0('./in/models/maxent/', speciesAb_, 
                             '_Maxent/Model_PC', pc, '_GCM_', gcm, '.rData')
   save(rangeMap, envMap, envModel, records, file = outputFileName, overwrite = T)
   
-  outputFileName <<- paste0('./models/maxent/all_model_outputs/', speciesAb_,
+  outputFileName <<- paste0('./in/models/maxent/all_model_outputs/', speciesAb_,
                             '_GCM', gcm, '_PC', pc, '.Rdata')
   save(rangeMap, envMap, envModel, records, file = outputFileName, overwrite = T)
   
-  save.image(paste0('./workspaces/05 - Modeling Workspace - ', speciesAb_,
+  save.image(paste0('./in/workspaces/05 - Modeling Workspace - ', speciesAb_,
                     ' Model Output - PC', pc, '_GCM_', gcm))
   
 }
