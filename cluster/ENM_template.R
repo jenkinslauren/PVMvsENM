@@ -71,25 +71,22 @@ for(sp in speciesList) {
     load('./in/env_data/Beyer/PCA_clim.Rdata')
     load(paste0('./in/env_data/Beyer/pca_pc', pc, '.Rdata'))
     fileName <- paste0('./in/env_data/Beyer/envDataClipped_',
-                       climYear, 'KYBP_pc', pc, '.tif')
+                       climYear, 'YBP_pc', pc, '.tif')
     vars <- c("BIO1", paste0('BIO', 4:19), "cloudiness", "relative_humidity")
   } else if (gcm == 'Lorenz_ccsm') { # CCSM
     load(paste0('./in/env_data/Lorenz/ccsm/PCA_', gcm, '_clim.Rdata')) 
     load(paste0('./in/env_data/Lorenz/ccsm/pca_pc', pc, '.Rdata')) 
     fileName <- paste0('./in/env_data/Lorenz/ccsm/envDataClipped_',
-                       climYear, 'KYBP_pc', pc, '.tif')
+                       climYear, 'YBP_pc', pc, '.tif')
     clim <- lorenz
     workingFolder <- paste0('./in/env_data/Lorenz/ccsm/', 
                             climYear, 'BP')
     vars <- names(clim[[1]])
-    # vars <- sub('\\.tif.*', '', list.files(path = workingFolder, 
-    #                                        pattern='*.tif', all.files = TRUE, full.names = FALSE))
-    # vars <- vars[lapply(vars, function(x) length(grep("pca_", x, value = F))) == 0]
   } else { # ECBilt
     load(paste0('./in/env_data/Lorenz/ecbilt/PCA_', gcm, '_clim.Rdata')) 
     load(paste0('./in/env_data/Lorenz/ecbilt/pca_pc', pc, '.Rdata'))
     fileName <- paste0('./in/env_data/Lorenz/ecbilt/envDataClipped_',
-                       climYear, 'KYBP_pc', pc, '.tif')
+                       climYear, 'YBP_pc', pc, '.tif')
     clim <- lorenz
     workingFolder <- paste0('./in/env_data/Lorenz/ecbilt/', climYear, 'BP')
     vars <- names(clim[[1]])
@@ -118,22 +115,17 @@ for(sp in speciesList) {
     # check projections = wgs84
     print("Ensure that the projection of these rasters is WGS84:")
     print(paste0("Projection of envYr = ", projection(envYr)))
-    
-    # load study region & extent
-    load('./in/study_region/Study Region.Rdata')
-    load('./in/study_region/Study Region Extent.Rdata')
-    
+
     # clip environmental PCAs to study extent for given species, visualize, and save:
     envDataClipped <- list()
     for (n in 1:nlayers(envYr)) {
       x <- envYr[[n]]
-      x <- crop(x, studyExtent)
+      x <- crop(x, extent(studyRegionRasts[[yrs[(climYear/1000) + 1]]]))
       # x <<- mask(x, studyRegion)
       projection(x) <- getCRS("WGS84")
       envDataClipped[[n]] <- x
     }
     envData <- stack(envDataClipped)
-    # plot(envData)
     writeRaster(envData, fileName, format = 'GTiff', overwrite = T)
   } 
   
@@ -186,7 +178,6 @@ for(sp in speciesList) {
   
   bufferFileName <- paste0('./in/cleaned_records/', species, '_buffer.rData')
   load(bufferFileName)
-  # load(paste0("./workspaces/03 - Modeling Workspace - ", speciesAb, " Cleaning"))
   
   # calculate calibration region buffer at 160-km to extract bg sites
   calibBuffer <- st_buffer(st_transform(st_as_sf(x = recordsSp), getCRS('albersNA')), 
@@ -242,18 +233,19 @@ for(sp in speciesList) {
   env <- env[complete.cases(env), ]
   
   # model species
-  envModel <- enmSdm::trainMaxNet(data = env, resp = 'presBg')
-  # envModel <- enmSdm::trainMaxNet(data = env, resp = 'presBg', 
-  #                                 out = c('models', 'tuning'))
-  
+  # envModel <- enmSdm::trainMaxNet(data = env, resp = 'presBg')
+  envModel_tune <- enmSdm::trainMaxNet(data = env, resp = 'presBg',
+                                  out = c('models', 'tuning'))
+  envModel <- envModel_tune$models[[95]]
+
   predictors <- c(paste0('pca', 1:pc))
   # prediction
   # envMap <- predict(climate[[predictors]], envModel, clamp = F, type = 'cloglog')
   envMap <- predict(
     climate[[predictors]],
     envModel,
-    filename = paste0('./in/models/maxent/', speciesAb_, '_Maxent/prediction_PC',
-                      pc, '_GCM', gcm, '_', climYear, 'ybp'),
+    filename = paste0('./in/models/maxent/', speciesAb_, '_Maxent/GCM_', gcm,
+                      '_PC', pc, '_', climYear, 'ybp'),
     clamp = F,
     format='GTiff',
     overwrite = T,
@@ -276,11 +268,11 @@ for(sp in speciesList) {
   
   outputFileName <<- paste0('./in/models/maxent/', speciesAb_, 
                             '_Maxent/Model_PC', pc, '_GCM_', gcm, '.rData')
-  save(rangeMap, envMap, envModel, records, file = outputFileName, overwrite = T)
+  save(rangeMap, envModel_tune, envModel, records, file = outputFileName, overwrite = T)
   
   outputFileName <<- paste0('./in/models/maxent/all_model_outputs/', speciesAb_,
                             '_GCM', gcm, '_PC', pc, '.Rdata')
-  save(rangeMap, envMap, envModel, records, file = outputFileName, overwrite = T)
+  save(rangeMap, envModel_tune, envModel, records, file = outputFileName, overwrite = T)
   
   save.image(paste0('./in/workspaces/05 - Modeling Workspace - ', speciesAb_,
                     ' Model Output - PC', pc, '_GCM_', gcm))
