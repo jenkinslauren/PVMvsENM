@@ -445,9 +445,9 @@ for(sp in speciesList) {
   }
   
   for (gcm in gcmList) {
+    
     gcm <- gcm
     print(paste0('GCM = ', gcm))
-    
     # load PCA variables
     # load(paste0('./workspaces/PCA_', gcm, '_PC', pc))
     
@@ -461,13 +461,13 @@ for(sp in speciesList) {
       load('./data_and_analyses/env_data/Beyer/PCA_clim.Rdata')
       load(paste0('./data_and_analyses/env_data/Beyer/pca_pc', pc, '.Rdata'))
       fileName <- paste0('./data_and_analyses/env_data/Beyer/envDataClipped_',
-                         climYear, 'KYBP_pc', pc, '.tif')
+                         climYear, 'YBP_pc', pc, '.tif')
       vars <- c("BIO1", paste0('BIO', 4:19), "cloudiness", "relative_humidity")
     } else if (gcm == 'Lorenz_ccsm') { # CCSM
       load(paste0('./data_and_analyses/env_data/Lorenz/PCA_', gcm, '_clim.Rdata')) 
       load(paste0('./data_and_analyses/env_data/Lorenz/V2/ccsm_21-0k_all_tifs_LJ/pca_pc', pc, '.Rdata')) 
       fileName <- paste0('./data_and_analyses/env_data/Lorenz/V2/ccsm_21-0k_all_tifs_LJ/envDataClipped_',
-                         climYear, 'KYBP_pc', pc, '.tif')
+                         climYear, 'YBP_pc', pc, '.tif')
       clim <- lorenz
       workingFolder <- paste0('./data_and_analyses/env_data/Lorenz/V2/ccsm_21-0k_all_tifs_LJ/', 
                               climYear, 'BP')
@@ -479,7 +479,7 @@ for(sp in speciesList) {
       load(paste0('./data_and_analyses/env_data/Lorenz/PCA_', gcm, '_clim.Rdata')) 
       load(paste0('./data_and_analyses/env_data/Lorenz/V2/ecbilt_21-0k_all_tifs_LJ/pca_pc', pc, '.Rdata'))
       fileName <- paste0('./data_and_analyses/env_data/Lorenz/V2/ecbilt_21-0k_all_tifs_LJ/envDataClipped_',
-                         climYear, 'KYBP_pc', pc, '.tif')
+                         climYear, 'YBP_pc', pc, '.tif')
       clim <- lorenz
       workingFolder <- paste0('./data_and_analyses/env_data/Lorenz/V2/',
                               gcm, '_21-0k_all_tifs_LJ/', climYear, 'BP')
@@ -514,34 +514,34 @@ for(sp in speciesList) {
       print(paste0("Projection of envYr = ", projection(envYr)))
       
       # define study region & extent, load if already defined
-      if (file.exists('./data_and_analyses/study_region/Study Region.Rdata') & 
-          file.exists('./data_and_analyses/study_region/Study Region Extent.Rdata')) {
-        load('./data_and_analyses/study_region/Study Region.Rdata')
-        load('./data_and_analyses/study_region/Study Region Extent.Rdata')
-      } else {
-        studyRegion <- rgdal::readOGR('/Volumes/lj_mac_22/MOBOT/PVMvsENM/data_and_analyses/study_region',
-                                      'study_region')
-        studyRegion <- crop(studyRegion, extent(-178.2166, 83.7759, -55.90223, 83.6236))
-        projection(studyRegion) <- getCRS("WGS84")
-        studyExtent <- extent(studyRegion)
-        save(studyRegion, 
-             file='/Volumes/lj_mac_22/MOBOT/PVMvsENM/data_and_analyses/study_region/Study Region.Rdata',
-             compress=TRUE)
-        save(studyExtent, 
-             file='/Volumes/lj_mac_22/MOBOT/PVMvsENM/data_and_analyses/study_region/Study Region Extent.Rdata', compress=TRUE)
-      }
+      # if (file.exists('./data_and_analyses/study_region/Study Region.Rdata') & 
+      #     file.exists('./data_and_analyses/study_region/Study Region Extent.Rdata')) {
+      #   load('./data_and_analyses/study_region/Study Region.Rdata')
+      #   load('./data_and_analyses/study_region/Study Region Extent.Rdata')
+      # } else {
+      #   studyRegion <- rgdal::readOGR('/Volumes/lj_mac_22/MOBOT/PVMvsENM/data_and_analyses/study_region',
+      #                                 'study_region')
+      #   studyRegion <- crop(studyRegion, extent(-178.2166, 83.7759, -55.90223, 83.6236))
+      #   projection(studyRegion) <- getCRS("WGS84")
+      #   studyExtent <- extent(studyRegion)
+      #   save(studyRegion, 
+      #        file='/Volumes/lj_mac_22/MOBOT/PVMvsENM/data_and_analyses/study_region/Study Region.Rdata',
+      #        compress=TRUE)
+      #   save(studyExtent, 
+      #        file='/Volumes/lj_mac_22/MOBOT/PVMvsENM/data_and_analyses/study_region/Study Region Extent.Rdata', compress=TRUE)
+      # }
       
       # clip environmental PCAs to study extent for given species, visualize, and save:
       envDataClipped <- list()
       for (n in 1:nlayers(envYr)) {
         x <- envYr[[n]]
-        x <- crop(x, extent(studyRegionRasts[[yrs[climYear + 1]]]))
+        x <- crop(x, extent(studyRegionRasts[[yrs[(climYear/1000) + 1]]]))
         # x <<- mask(x, studyRegion)
         projection(x) <- getCRS("WGS84")
         envDataClipped[[n]] <- x
       }
       envData <- stack(envDataClipped)
-      # plot(envData)
+      plot(envData)
       writeRaster(envData, fileName, format = 'GTiff', overwrite = T)
     } 
     
