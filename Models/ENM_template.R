@@ -42,6 +42,7 @@ default_crs = sf::st_crs(4267)
 
 # set constants
 ll <- c('longitude', 'latitude')
+yrs <- seq(22,1,by=-1)
 speciesList <- c('Fraxinus americana','Fraxinus caroliniana', 'Fraxinus cuspidata', 
                  'Fraxinus greggii', 'Fraxinus nigra', 'Fraxinus pennsylvanica', 
                  'Fraxinus profunda', 'Fraxinus quadrangulata')
@@ -504,7 +505,6 @@ for(sp in speciesList) {
       envDataPca <- stack(pcPrediction)
       
       # keep only rasters (first five rasters) for climate year
-      
       envYr <- pcPrediction[[(climYear/1000) + 1]]
       # plot(envYr) 
       names(envYr) <- paste0('pca', 1:pc)
@@ -535,7 +535,7 @@ for(sp in speciesList) {
       envDataClipped <- list()
       for (n in 1:nlayers(envYr)) {
         x <- envYr[[n]]
-        x <- crop(x, studyExtent)
+        x <- crop(x, extent(studyRegionRasts[[yrs[climYear + 1]]]))
         # x <<- mask(x, studyRegion)
         projection(x) <- getCRS("WGS84")
         envDataClipped[[n]] <- x
@@ -770,6 +770,11 @@ for(sp in speciesList) {
     envMap <- raster(paste0('./Models/Maxent/', speciesAb_, 
                             '_Maxent/prediction_PC', pc, '_GCM', gcm, '_', 
                             climYear, 'ybp.tif'))
+    
+    # scale values between 0 and 1 so that maps are comparable between models
+    envMap <- raster::calc(envMap, fun = function(x) ifelse(x < 0, 0, x))
+    envMap <- raster::calc(envMap, fun = function(x) ifelse(x > 1, 1, x))
+    
     plot(rangeMap, border = 'blue', 
          main = paste0('Maxent\n', sp, ' occurrences,', '\nGCM = ', gcm))
     plot(envMap, add = TRUE)
@@ -790,13 +795,22 @@ for(sp in speciesList) {
   species <- gsub(tolower(sp), pattern=' ', replacement='_')
   speciesAb <- paste0(substr(sp,1,4), toupper(substr(sp,10,10)), substr(sp,11,13))
   speciesAb_ <- sub("(.{4})(.*)", "\\1_\\2", speciesAb)
+  par(mfrow=c(1,3))
   for(gcm in gcmList) {
-    load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
-                '_PC', pc, '.rData'))
+    load(paste0('./Models/Maxent/', speciesAb_, '_Maxent/Model_PC', pc, 
+                '_GCM_', gcm, '.rData'))
+    envMap <- raster(paste0('./Models/Maxent/', speciesAb_, 
+                            '_Maxent/prediction_PC', pc, '_GCM', gcm, '_', 
+                            climYear, 'ybp.tif'))
+    
+    # scale values between 0 and 1 so that maps are comparable between models
+    envMap <- raster::calc(envMap, fun = function(x) ifelse(x < 0, 0, x))
+    envMap <- raster::calc(envMap, fun = function(x) ifelse(x > 1, 1, x))
+    
     plot(envMap, main = paste0('Maxent output, ', sp, ' occurrences,', '\nGCM = ', gcm))
     plot(rangeMap, border = 'blue', add = TRUE)
-    points(records$longitude, records$latitude, pch = 16, cex = 0.3, col = 'red')
-    
+    points(records$longitude, records$latitude, pch = 16, cex = 0.3, 
+           col = alpha('red', 0.6))
   }
 }
 dev.off()
