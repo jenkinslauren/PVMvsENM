@@ -768,8 +768,8 @@ for(sp in speciesList) {
     load(paste0('./Models/Maxent/', speciesAb_, '_Maxent/Model_PC', pc, 
                 '_GCM_', gcm, '.rData'))
     envMap <- raster(paste0('./Models/Maxent/', speciesAb_, 
-                            '_Maxent/prediction_PC', pc, '_GCM', gcm, '_', 
-                            climYear, 'ybp.tif'))
+                            '_Maxent/GCM_', gcm,
+                            '_PC', pc, '_', climYear, 'ybp.tif'))
     
     # scale values between 0 and 1 so that maps are comparable between models
     envMap <- raster::calc(envMap, fun = function(x) ifelse(x < 0, 0, x))
@@ -800,8 +800,8 @@ for(sp in speciesList) {
     load(paste0('./Models/Maxent/', speciesAb_, '_Maxent/Model_PC', pc, 
                 '_GCM_', gcm, '.rData'))
     envMap <- raster(paste0('./Models/Maxent/', speciesAb_, 
-                            '_Maxent/prediction_PC', pc, '_GCM', gcm, '_', 
-                            climYear, 'ybp.tif'))
+                            '_Maxent/GCM_', gcm,
+                            '_PC', pc, '_', climYear, 'ybp.tif'))
     
     # scale values between 0 and 1 so that maps are comparable between models
     envMap <- raster::calc(envMap, fun = function(x) ifelse(x < 0, 0, x))

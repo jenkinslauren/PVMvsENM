@@ -144,3 +144,18 @@ data_and_analyses/env_data/Lorenz/PCA_ecbilt_clim.Rdata
 data_and_analyses/env_data/Lorenz/Lorenz_PCA.R
 data_and_analyses/env_data/Beyer/pca_pc5.Rdata
 data_and_analyses/env_data/Beyer/PCA_clim.Rdata
+cluster/workspaces/04 - Modeling Workspace - Clipping Fraxinus americana_PC_5_GCM_Beyer
+cluster/workspaces/04 - Modeling Workspace - Clipping Fraxinus caroliniana_PC_5_GCM_Beyer
+cluster/workspaces/04 - Modeling Workspace - Clipping Fraxinus cuspidata_PC_5_GCM_Beyer
+cluster/workspaces/04 - Modeling Workspace - Clipping Fraxinus cuspidata_PC_5_GCM_ecbilt
+cluster/workspaces/04 - Modeling Workspace - Clipping Fraxinus greggii_PC_5_GCM_Lorenz_ccsm
+cluster/workspaces/04 - Modeling Workspace - Clipping Fraxinus nigra_PC_5_GCM_ecbilt
+cluster/workspaces/04 - Modeling Workspace - Clipping Fraxinus nigra_PC_5_GCM_Lorenz_ccsm
+cluster/workspaces/04 - Modeling Workspace - Clipping Fraxinus pennsylvanica_PC_5_GCM_ecbilt
+cluster/workspaces/04 - Modeling Workspace - Clipping Fraxinus quadrangulata_PC_5_GCM_ecbilt
+cluster/workspaces/05 - Modeling Workspace - Frax_Amer Model Output - PC5_GCM_Beyer
+cluster/workspaces/05 - Modeling Workspace - Frax_Caro Model Output - PC5_GCM_Beyer
+cluster/workspaces/05 - Modeling Workspace - Frax_Cusp Model Output - PC5_GCM_Beyer
+cluster/workspaces/05 - Modeling Workspace - Frax_Nigr Model Output - PC5_GCM_ecbilt
+cluster/workspaces/05 - Modeling Workspace - Frax_Prof Model Output - PC5_GCM_ecbilt
+cluster/workspaces/05 - Modeling Workspace - Frax_Quad Model Output - PC5_GCM_Lorenz_ccsm
