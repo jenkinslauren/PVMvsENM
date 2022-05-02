@@ -20,12 +20,11 @@ ll <- c('longitude', 'latitude')
 gcmList <- c('Beyer','Lorenz_ccsm', 'ecbilt')
 pc <- 5
 predictors <- c(paste0('pca', 1:pc))
-# speciesList <- c('Fraxinus americana','Fraxinus caroliniana', 'Fraxinus cuspidata',
-#                  'Fraxinus greggii', 'Fraxinus nigra', 'Fraxinus pennsylvanica',
-#                  'Fraxinus profunda', 'Fraxinus quadrangulata')
-speciesList <- c('Fraxinus americana','Fraxinus quadrangulata')
+speciesList <- c('Fraxinus americana','Fraxinus caroliniana', 'Fraxinus cuspidata',
+                 'Fraxinus greggii', 'Fraxinus nigra', 'Fraxinus pennsylvanica',
+                 'Fraxinus profunda', 'Fraxinus quadrangulata')
 
-# for (gcm in gcmList) {
+for (gcm in gcmList) {
   print(paste0("GCM = ", gcm))
   gcm <- gcm
   a <- 1
@@ -39,18 +38,26 @@ speciesList <- c('Fraxinus americana','Fraxinus quadrangulata')
     rangeName <- paste0('littleRange_', speciesAb)
     
     # # load bg sites, records, and rangeMap
-    # load(paste0('./Background Sites/Random Background Sites across Study Region - ', 
-    #             speciesAb, '_', gcm, '.Rdata'))
-    # load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
+    # load(paste0('./Background Sites/Random Background Sites across Study Region - ',
+    #             speciesAb, '.Rdata'))
+    # load(paste0('./Models/Maxent/all_model_outputs/', speciesAb_, '_GCM', gcm,
     #             '_PC', pc, '.rData'))
-    # load(paste0('./regions/little_range_map/', rangeName, '.Rdata'))
-    
+    # load(paste0('./data_and_analyses/study_region/regions/little_range_map/', rangeName, '.Rdata'))
+    # 
     # load bg sites and records
-    load(paste0('./in/bg_sites/Random Background Sites across Study Region - ', 
-                speciesAb, '_', gcm, '.Rdata'))
-    load(paste0('./in/models/maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
-                '_PC', pc, '.rData'))
+    load(paste0('./in/bg_sites/Background Sites/Random Background Sites across Study Region - ', 
+                speciesAb, '.Rdata'))
+    load(paste0('./in/models/maxent/all_model_outputs/', speciesAb_, '_GCM', gcm, 
+                '_PC', pc, '.Rdata'))
     
+    isNa <- is.na(rowSums(bgCalib))
+    if (any(isNa)) {
+      bgCalib <- bgCalib[-which(isNa), ]
+    }
+    
+    # only keep 10,000 background sites
+    bgCalib <- bgCalib[1:10000,]
+    randomBg <- bgCalib
     
     # calculate k-folds for presences and background sites
     kPres <- kfold(records, k = 5)
@@ -125,7 +132,7 @@ speciesList <- c('Fraxinus americana','Fraxinus quadrangulata')
     a <- a + 1
     
   }
-# }
+}
 
 # gcmList <- c('Beyer', 'Lorenz_ccsm', 'ecbilt')
 # speciesList <- c('Fraxinus americana','Fraxinus caroliniana', 'Fraxinus cuspidata',
