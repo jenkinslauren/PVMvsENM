@@ -18,7 +18,7 @@ library(rnaturalearthhires)
 setwd('/Volumes/lj_mac_22/MOBOT/PVMvsENM')
 
 # constants
-gcm <- 'Beyer'
+gcm <- 'ecbilt'
 pc <- 5
 
 # load(paste0('./workspaces/06 - ', gcm, ' Projections'))
@@ -168,7 +168,7 @@ fileName <- list.files(path = paste0('./predictions/', gcm),
 for(f in fileName) {
   s <- gsub('\\..*', '', gsub('\\./predictions/*', '', f))
   speciesAb_ <-  gsub('\\_GCM.*', '', gsub(paste0('\\./predictions/', gcm, '/*'), '', f))
-  load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
+  load(paste0('./Models/Maxent/all_model_outputs/', speciesAb_, '_GCM', gcm, 
               '_PC', pc, '.rData'))
   pdf(file = paste0('./predictions/PDF_output/', s, '.pdf'), width = 11, height = 8.5)
   b <- brick(f)
@@ -212,8 +212,8 @@ for (i in 1:length(climYears)) {
   # sumList <- append(sumList, sumRasterCorrected)
 }
 
-fileName <- './predictions/pollen/predictions-FRAXINUS_meanpred.tif'
-pollenRast <- brick(fileName)
+pollenFile <- './predictions/pollen/predictions-FRAXINUS_meanpred.tif'
+pollenRast <- brick(pollenFile)
 lists <- list(meansList, maxList)
 temp <- list()
 for(l in lists) {
@@ -349,7 +349,7 @@ for (j in 1:length(tmp)){
   skip <- skip + 1
 }
 
-gcmList <- c('Lorenz_ccsm')
+gcmList <- c('Lorenz_ccsm', 'ecbilt', 'Beyer')
 library(enmSdm)
 library(gtools)
 
@@ -565,7 +565,7 @@ for(gcm in gcmList) {
   for(f in fileName) {
     s <- gsub('\\..*', '', gsub('\\./predictions/*', '', f))
     speciesAb_ <-  gsub('\\_GCM.*', '', gsub(paste0('\\./predictions/', gcm, '/*'), '', f))
-    load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
+    load(paste0('./Models/Maxent/all_model_outputs/', speciesAb_, '_GCM', gcm, 
                 '_PC', pc, '.rData'))
     b <- brick(f)
     names(b) <- c(paste0(seq(21000, 0, by = -1000), ' ybp'))
