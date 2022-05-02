@@ -155,7 +155,7 @@ colnames(bv_all) <- c('Time', 'Entire Genus')
 for(f in fileName) {
   s <- gsub('\\..*', '', gsub('\\./predictions/*', '', f))
   speciesAb_ <-  gsub('\\_GCM.*', '', gsub(paste0('\\./predictions/', gcm, '/*'), '', f))
-  load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
+  load(paste0('./Models/Maxent/all_model_outputs/', speciesAb_, '_GCM', gcm, 
               '_PC', pc, '.rData'))
   b <- stack(f)
   names(b) <- c(paste0(seq(21000, 0, by = -1000), ' ybp'))
@@ -201,7 +201,7 @@ colnames(bv_all) <- c('Time', 'Entire Genus')
 for(f in fileName) {
   s <- gsub('\\..*', '', gsub('\\./predictions/*', '', f))
   speciesAb_ <-  gsub('\\_GCM.*', '', gsub(paste0('\\./predictions/', gcm, '/*'), '', f))
-  load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
+  load(paste0('./Models/Maxent/all_model_outputs/', speciesAb_, '_GCM', gcm, 
               '_PC', pc, '.rData'))
   b <- stack(f)
   names(b) <- c(paste0(seq(21000, 0, by = -1000), ' ybp'))
@@ -247,7 +247,7 @@ colnames(bv_all) <- c('Time', 'Entire Genus')
 for(f in fileName) {
   s <- gsub('\\..*', '', gsub('\\./predictions/*', '', f))
   speciesAb_ <-  gsub('\\_GCM.*', '', gsub(paste0('\\./predictions/', gcm, '/*'), '', f))
-  load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
+  load(paste0('./Models/Maxent/all_model_outputs/', speciesAb_, '_GCM', gcm, 
               '_PC', pc, '.rData'))
   b <- stack(f)
   names(b) <- c(paste0(seq(21000, 0, by = -1000), ' ybp'))

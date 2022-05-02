@@ -18,7 +18,7 @@ library(rnaturalearthhires)
 setwd('/Volumes/lj_mac_22/MOBOT/PVMvsENM')
 
 # constants
-gcm <- 'ecbilt'
+gcm <- 'Lorenz_ccsm'
 pc <- 5
 
 # load(paste0('./workspaces/06 - ', gcm, ' Projections'))
@@ -156,7 +156,7 @@ for(sp in speciesList) {
 
 }
 
-gcm <- 'Lorenz_ccsm'
+# gcm <- 'Lorenz_ccsm'
 library(RColorBrewer)
 colors <- c('#d73027','#f46d43','#fdae61','#fee08b','#ffffbf','#d9ef8b','#a6d96a','#66bd63','#1a9850')
 mergedRange <- readRDS('./data_and_analyses/range_maps/little/littleMergedRangeFraxinus.rds')
@@ -313,28 +313,28 @@ for (j in 1:length(tmp)){
   title <- paste0('Species skipped = ', skipped, ', GCM = ', gcm)
   sp <- paste0(substr(skipped,1,4), toupper(substr(skipped,10,10)), 
                substr(skipped,11,13))
-  pdf(file = paste0('./predictions/PDF_output/', gcm, '/No_', sp, '_meansList.pdf'), 
-      width = 11, height = 8.5)
-  for (i in 1:length(meansSkipList)) {
-    par(mfrow=c(1,2))
-    plot(meansSkipList[[i]], main = paste0('MEANS, ', names(meansSkipList[[i]])), 
-         sub = title, col = colors, axes = F)
-    plot(meansList[[i]], main = paste0('MEANS without sp removed, ', names(meansList[[i]])), 
-         col = colors, axes = F)
-  }
-  # plot(stack(meansList))
-  dev.off()
-  
-  pdf(file = paste0('./predictions/PDF_output/', gcm, '/No_', sp, '_maxList.pdf'), width = 11, height = 8.5)
-  for (i in 1:length(maxSkipList)) {
-    par(mfrow=c(1,2))
-    plot(maxSkipList[[i]], main = paste0('MAX, ', names(maxSkipList[[i]])), 
-         sub = title, col = colors, axes = F)
-    plot(maxList[[i]], main = paste0('MAX without sp removed, ', names(maxList[[i]])), 
-         col = colors, axes = F)
-  }
-  # plot(stack(maxList))
-  dev.off()
+  # pdf(file = paste0('./predictions/PDF_output/', gcm, '/No_', sp, '_meansList.pdf'), 
+  #     width = 11, height = 8.5)
+  # for (i in 1:length(meansSkipList)) {
+  #   par(mfrow=c(1,2))
+  #   plot(meansSkipList[[i]], main = paste0('MEANS, ', names(meansSkipList[[i]])), 
+  #        sub = title, col = colors, axes = F)
+  #   plot(meansList[[i]], main = paste0('MEANS without sp removed, ', names(meansList[[i]])), 
+  #        col = colors, axes = F)
+  # }
+  # # plot(stack(meansList))
+  # dev.off()
+  # 
+  # pdf(file = paste0('./predictions/PDF_output/', gcm, '/No_', sp, '_maxList.pdf'), width = 11, height = 8.5)
+  # for (i in 1:length(maxSkipList)) {
+  #   par(mfrow=c(1,2))
+  #   plot(maxSkipList[[i]], main = paste0('MAX, ', names(maxSkipList[[i]])), 
+  #        sub = title, col = colors, axes = F)
+  #   plot(maxList[[i]], main = paste0('MAX without sp removed, ', names(maxList[[i]])), 
+  #        col = colors, axes = F)
+  # }
+  # # plot(stack(maxList))
+  # dev.off()
   
   # pdf(file = paste0('./predictions/PDF_output/', gcm, '/No_', sp, '_sumList.pdf'), width = 11, height = 8.5)
   # for (i in 1:length(sumSkipList)) {
