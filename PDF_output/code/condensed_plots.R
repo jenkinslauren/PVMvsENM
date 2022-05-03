@@ -182,6 +182,7 @@ world <- ne_countries(scale = "medium", returnclass = "sf")
 world <- as(world, "Spatial")
 
 pollenRast <- brick('/Volumes/lj_mac_22/pollen/predictions-FRAXINUS_meanpred.tif')
+projection(pollenRast) <- getCRS('wgs84')
 
 pdf(file = './PDF_output/all_gcm_predictions_means.pdf', 
     width = 11, height = 8.5)

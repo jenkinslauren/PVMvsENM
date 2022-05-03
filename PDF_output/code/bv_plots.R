@@ -8,6 +8,7 @@ library(tidyverse)
 library(raster)
 library(utils)
 library(ggrepel)
+library(dplyr)
 
 setwd('/Volumes/lj_mac_22/MOBOT/PVMvsENM')
 
@@ -378,20 +379,16 @@ plot_grid(bc, eb, ce, ncol = 2)
 
 dev.off()
 
-shift <- function(df, n){
-  c(df[-(seq(n))], rep(NA, n))
-}
-
-x_lag <- x
-x_lag$bvPollen.centroidVelocity <- shift(x_lag$bvPollen.centroidVelocity, -1)
-
 # plotting Pollen on the X axis & GCM on the Y axis with a lag
 # BV of Pollen at time x+1 on X-axis, GCM at time x on Y-axis
+x_lag <- x
+x_lag <- transform(x_lag, bvPollen.centroidVelocity = dplyr::lead(bvPollen.centroidVelocity))
+
+# remove the last row because there is no pollen data point due to lag 
+# (the offset) leaves the final data point for pollen as NA
 x_lag <- x_lag[-c(nrow(x_lag)),]
 
-# x_lag <- x_lag[-c(1),]
 # x_lag$bvPollen.centroidVelocity <- x_lag$bvPollen.centroidVelocity/4
-
 
 # Beyer vs Pollen
 b_lag <- ggplot(x_lag, aes(bvPollen.centroidVelocity, bvBeyerMeans.centroidVelocity, 
@@ -430,4 +427,72 @@ plot(e_lag)
 plot(c_lag)
 plot_grid(b_lag, e_lag, c_lag, ncol = 2)
 
+dev.off()
+
+
+############################
+jpeg(file = '/Users/laurenjenkins/Downloads/bv_by_species.jpeg',
+     width = 18, height = 21, units = 'cm', res = 300)
+plot_grid(b_all_sp, e_all_sp, c_all_sp, ncol = 1)
+dev.off()
+
+jpeg(file = '/Users/laurenjenkins/Downloads/bv_by_select_species.jpeg',
+     width = 18, height = 21, units = 'cm', res = 300)
+plot_grid(b_select_sp, e_select_sp, e_select_sp, ncol = 1)
+dev.off()
+
+jpeg(file = '/Users/laurenjenkins/Downloads/bv_beyer_lag.jpeg',
+     width = 21, height = 21, units = 'cm', res = 300)
+plot(b_lag)
+dev.off()
+
+jpeg(file = '/Users/laurenjenkins/Downloads/bv_ecbilt_lag.jpeg',
+     width = 21, height = 21, units = 'cm', res = 300)
+plot(e_lag)
+dev.off()
+
+jpeg(file = '/Users/laurenjenkins/Downloads/bv_ccsm_lag.jpeg',
+     width = 21, height = 21, units = 'cm', res = 300)
+plot(c_lag)
+dev.off()
+
+jpeg(file = '/Users/laurenjenkins/Downloads/bv_beyer_ccsm.jpeg',
+     width = 21, height = 21, units = 'cm', res = 300)
+plot(bc)
+dev.off()
+
+jpeg(file = '/Users/laurenjenkins/Downloads/bv_beyer_ecbilt.jpeg',
+     width = 21, height = 21, units = 'cm', res = 300)
+plot(eb)
+dev.off()
+
+jpeg(file = '/Users/laurenjenkins/Downloads/bv_ccsm_ecbilt.jpeg',
+     width = 21, height = 21, units = 'cm', res = 300)
+plot(ce)
+dev.off()
+
+jpeg(file = '/Users/laurenjenkins/Downloads/bv_beyer.jpeg',
+     width = 21, height = 21, units = 'cm', res = 300)
+plot(b)
+dev.off()
+
+jpeg(file = '/Users/laurenjenkins/Downloads/bv_ecbilt.jpeg',
+     width = 21, height = 21, units = 'cm', res = 300)
+plot(e)
+dev.off()
+
+jpeg(file = '/Users/laurenjenkins/Downloads/bv_ccsm.jpeg',
+     width = 21, height = 21, units = 'cm', res = 300)
+plot(c)
+dev.off()
+
+jpeg(file = '/Users/laurenjenkins/Downloads/bv_gcm.jpeg',
+     width = 21, height = 21, units = 'cm', res = 300)
+ggplot(bv, aes(x = Time, y = centroidVelocity, group = climateSource, 
+               color = climateSource)) +
+  geom_point() + geom_line() + theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "Biotic Velocity\n", x = "Time Period", 
+       y = "Centroid Velocity (m/yr)", color = "GCM") +
+  scale_color_manual(values = c('#66c2a5','#fc8d62','#8da0cb','#e78ac3'))
 dev.off()

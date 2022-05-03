@@ -21,6 +21,7 @@ world <- ne_countries(scale = "medium", returnclass = "sf")
 world <- as(world, "Spatial")
 
 pollenRast <- brick('/Volumes/lj_mac_22/pollen/predictions-FRAXINUS_meanpred.tif')
+projection(pollenRast) <- getCRS('wgs84')
 colors <- c('#a50026','#d73027','#f46d43','#fdae61','#fee08b','#ffffbf',
             '#d9ef8b','#a6d96a','#66bd63','#1a9850','#006837')
 
@@ -33,6 +34,7 @@ for(a in 1:22) {
     if(gcm == 'ecbilt') g <- 'ECBilt'
     if(gcm == 'Beyer') g <- 'HadAM3H'
     t <- paste0('Pearson Correlation,\nPollen & ', g, '\n', climYears[a], ' ybp')
+    projection(meansList) <- getCRS('wgs84')
     thisRast <- raster::resample(meansList[[a]], pollenRast[[a]], method = 'bilinear')
     
     cor <- rasterCorrelation(thisRast, pollenRast[[a]], type = 'pearson', s = 5)
@@ -162,7 +164,7 @@ colnames(corDf)[1] <- 'Time'
 corDf$Time <- factor(corDf$Time, 
                           levels = rev(mixedsort(corDf$Time)))
 
-corDf_plot <- cbind(corDf[1], utils::stack(corDf[2:ncol(corDf)]))
+corDf_plot <- cbind(corDf[1], utils::stack(corDf[2:7]))
 corDf_plot_pollen <- cbind(corDf[1], utils::stack(corDf[2:4]))
 corDf_plot_gcm <- cbind(corDf[1], utils::stack(corDf[5:ncol(corDf)]))
 
@@ -188,6 +190,125 @@ ggplot(corDf_plot_pollen, aes(Time, cor, color = Models, group = Models)) +
 ggplot(corDf_plot_gcm, aes(Time, cor, color = Models, group = Models)) + 
   geom_point() + geom_line() + 
   theme_classic() + 
+  labs(title = "Rank Correlation", x = "Time", 
+       y = "cor") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+dev.off()
+
+###################################################################
+###### Individual Species
+###################################################################
+gcm <- 'ecbilt'
+fileName <- list.files(path = paste0('./predictions/', gcm),
+                       pattern = paste0('PC', pc,'.tif'),
+                       full.names = T)
+load(paste0('./workspaces/06 - ', gcm, ' Projections'))
+if(gcm == 'Lorenz_ccsm') g <- 'CCSM'
+if(gcm == 'ecbilt') g <- 'ECBilt'
+if(gcm == 'Beyer') g <- 'HadAM3H'
+
+for(f in fileName) {
+  s <- gsub('\\..*', '', gsub('\\./predictions/*', '', f))
+  speciesAb_ <-  gsub('\\_GCM.*', '', gsub(paste0('\\./predictions/', gcm, '/*'), '', f))
+  load(paste0('./Models/Maxent/all_model_outputs/', speciesAb_, '_GCM', gcm, 
+              '_PC', pc, '.rData'))
+  b <- stack(f)
+  names(b) <- c(paste0(seq(21000, 0, by = -1000), ' ybp'))
+  projection(b) <- getCRS('wgs84')
+  
+  for(a in 1:22) {
+    t <- paste0('Pearson Correlation,\nPollen & ', g, '\n(', speciesAb_,
+                ')\n', climYears[a], ' ybp')
+    thisRast <- raster::resample(b[[a]], pollenRast[[a]], method = 'bilinear')
+    
+    cor <- rasterCorrelation(thisRast, pollenRast[[a]], type = 'pearson', s = 5)
+    plot(cor, main = t, axes = F, box = F, legend.mar = 10, col = colors)
+    plot(raster::crop(sp::spTransform(world, CRS(projection(cor))), extent(cor)), 
+         border = 'black', add = T)
+  }
+}
+
+for(a in 1:22) {
+  for(gcm in gcmList_) {
+    load(paste0('./workspaces/06 - ', gcm, ' Projections'))
+    if(gcm == 'Lorenz_ccsm') g <- 'CCSM'
+    if(gcm == 'ecbilt') g <- 'ECBilt'
+    if(gcm == 'Beyer') g <- 'HadAM3H'
+    t <- paste0('Pearson Correlation,\nPollen & ', g, '\n', climYears[a], ' ybp')
+    projection(meansList) <- getCRS('wgs84')
+    thisRast <- raster::resample(meansList[[a]], pollenRast[[a]], method = 'bilinear')
+    
+    cor <- rasterCorrelation(thisRast, pollenRast[[a]], type = 'pearson', s = 5)
+    plot(cor, main = t, axes = F, box = F, legend.mar = 10, col = colors)
+    plot(raster::crop(sp::spTransform(world, CRS(projection(cor))), extent(cor)), 
+         border = 'black', add = T)
+  }
+  
+  load('./workspaces/06 - Beyer Projections')
+  beyer <- 'HadAM3H'
+  bMeans <- meansList
+  load('./workspaces/06 - ecbilt Projections')
+  ecbilt <- 'ECBilt'
+  eMeans <- meansList
+  load('./workspaces/06 - Lorenz_ccsm Projections')
+  ccsm <- 'CCSM'
+  cMeans <- meansList
+  
+  t <- paste0('Pearson Correlation,\n', beyer, '& ', ecbilt, '\n', climYears[a], ' ybp')
+  cor <- rasterCorrelation(bMeans[[a]], eMeans[[a]], type = 'pearson')
+  plot(cor, main = t, axes = F, box = F, legend.mar = 10, col = colors)
+  plot(raster::crop(sp::spTransform(world, CRS(projection(cor))), extent(cor)),
+       border = 'black', add = T)
+  
+  t <- paste0('Pearson Correlation,\n', beyer, '& ', ccsm, '\n', climYears[a], ' ybp')
+  cor <- rasterCorrelation(bMeans[[a]], cMeans[[a]], type = 'pearson')
+  plot(cor, main = t, axes = F, box = F, legend.mar = 10, col = colors)
+  plot(raster::crop(sp::spTransform(world, CRS(projection(cor))), extent(cor)),
+       border = 'black', add = T)
+  
+  t <- paste0('Pearson Correlation,\n', ccsm, '& ', ecbilt, '\n', climYears[a], ' ybp')
+  cor <- rasterCorrelation(cMeans[[a]], eMeans[[a]], type = 'pearson')
+  plot(cor, main = t, axes = F, box = F, legend.mar = 10, col = colors)
+  plot(raster::crop(sp::spTransform(world, CRS(projection(cor))), extent(cor)),
+       border = 'black', add = T)
+}
+
+
+
+###################################################################
+###### JPEGS
+###################################################################
+jpeg(file = '/Users/laurenjenkins/Downloads/rank_corr_all.jpeg',
+     width = 21, height = 21, units = 'cm', res = 300)
+ggplot(corDf_plot, aes(Time, cor, color = Models, group = Models)) + 
+  geom_point() + geom_line() + 
+  geom_hline(yintercept = 0, linetype="dashed", color = "red", size=0.5) + 
+  geom_hline(yintercept = 0.5 , linetype="dashed", color = "red", size=0.5) +
+  theme_classic() + 
+  labs(title = "Rank Correlation", x = "Time", 
+       y = "cor") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+dev.off()
+
+jpeg(file = '/Users/laurenjenkins/Downloads/rank_corr_pollen.jpeg',
+     width = 21, height = 21, units = 'cm', res = 300)
+ggplot(corDf_plot_pollen, aes(Time, cor, color = Models, group = Models)) + 
+  geom_point() + geom_line() + 
+  geom_hline(yintercept = 0, linetype="dashed", color = "red", size=0.5) + 
+  geom_hline(yintercept = 0.5 , linetype="dashed", color = "red", size=0.5) +
+  theme_minimal() + 
+  labs(title = "Rank Correlation", x = "Time", 
+       y = "cor") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+dev.off()
+
+jpeg(file = '/Users/laurenjenkins/Downloads/rank_corr_gcm.jpeg',
+     width = 21, height = 21, units = 'cm', res = 300)
+ggplot(corDf_plot_gcm, aes(Time, cor, color = Models, group = Models)) + 
+  geom_point() + geom_line() + 
+  geom_hline(yintercept = 0, linetype="dashed", color = "red", size=0.5) + 
+  geom_hline(yintercept = 0.5 , linetype="dashed", color = "red", size=0.5) +
+  theme_minimal() + 
   labs(title = "Rank Correlation", x = "Time", 
        y = "cor") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
