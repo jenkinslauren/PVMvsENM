@@ -30,12 +30,12 @@ for(a in 1:length(speciesList)) {
   rangeName <- paste0('littleRange_', speciesAb)
   
   folderName <- paste0('./Models/Maxent/', speciesAb_,
-                       '_Maxent/Model Evaluation - Random K-Folds - ', gcm)
+                       '_Maxent/Model Evaluation - Geographic K-Folds - ', gcm)
   
   # load bg sites, records, and rangeMap
   load(paste0('./Background Sites/Random Background Sites across Study Region - ', 
-              speciesAb_, '_', gcm, '.Rdata'))
-  load(paste0('./Models/Maxent/model_outputs/', speciesAb_, '_GCM', gcm, 
+              speciesAb, '.Rdata'))
+  load(paste0('./Models/Maxent/all_model_outputs/', speciesAb_, '_GCM', gcm, 
               '_PC', pc, '.rData'))
   load(paste0('./data_and_analyses/study_region/regions/little_range_map/', 
               rangeName, '.Rdata'))
@@ -48,7 +48,8 @@ for(a in 1:length(speciesList)) {
     
     load(paste0(folderName, '/Model ', i, '.Rdata'))
     
-    temp <- enmSdm::thresholdWeighted(predPres, predBg, na.rm = T)
+    # temp <- enmSdm::thresholdWeighted(predPres, predBg, na.rm = T)
+    temp <- enmSdm::thresholdWeighted(gPres, gTestBg, na.rm = T)
     t <- append(t, temp['msss'])
   }
   thresholds[[a]] <- t
