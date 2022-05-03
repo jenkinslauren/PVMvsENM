@@ -50,18 +50,12 @@ for (gcm in gcmList) {
     load(paste0('./in/models/maxent/all_model_outputs/', speciesAb_, '_GCM', gcm, 
                 '_PC', pc, '.Rdata'))
     
-    isNa <- is.na(rowSums(bgCalib))
-    if (any(isNa)) {
-      bgCalib <- bgCalib[-which(isNa), ]
-    }
-    
-    # only keep 10,000 background sites
-    bgCalib <- bgCalib[1:10000,]
-    randomBg <- bgCalib
-    
+    load(paste0('./in/workspaces/05 - Modeling Workspace - ', speciesAb_,
+                      ' Model Output - PC', pc, '_GCM_', gcm))
+
     # calculate k-folds for presences and background sites
     kPres <- kfold(records, k = 5)
-    kBg <- kfold(randomBg, k = 5)
+    kBg <- kfold(bg, k = 5)
     
     # visualize fold #1
     # plot(rangeMap, main = paste0(sp, ', k-fold #1'))
@@ -79,7 +73,7 @@ for (gcm in gcmList) {
     #        bg='white',
     #        cex=0.8
     # )
-    
+
     # folderName <- paste0('./Models/Maxent/', speciesAb_,
     #                      '_Maxent/Model Evaluation - Random K-Folds - ', gcm)
     
@@ -97,7 +91,7 @@ for (gcm in gcmList) {
       
       # create training data, with presences/absences vector of 0/1 with all points 
       # EXCEPT the ones in the fold
-      envData <- rbind(records[kPres != i, predictors], randomBg[kBg != i, predictors])
+      envData <- rbind(records[kPres != i, predictors], bg[kBg != i, predictors])
       presBg <- c(rep(1, sum(kPres != i)), rep(0, sum(kBg != i)))
       trainData <- cbind(presBg, envData)
       
@@ -110,7 +104,7 @@ for (gcm in gcmList) {
                                   clamp = F,
                                   type = 'cloglog')
       predBg <- raster::predict(model, 
-                                newdata = randomBg[kPres == i,],
+                                newdata = bg[kPres == i,],
                                 clamp = F,
                                 type = 'cloglog')
       
