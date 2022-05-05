@@ -669,10 +669,10 @@ for(sp in speciesList) {
     # prediction
     # envMap <- predict(climate[[predictors]], envModel, clamp = F, type = 'cloglog')
     envMap <- predict(
-      climate[[predictors]],
+      climate[[predictors]], 
       envModel,
-      filename = paste0('./Models/Maxent/', speciesAb_, '_Maxent/prediction_PC',
-                        pc, '_GCM', gcm, '_', climYear, 'ybp'),
+      filename = paste0('./Models/Maxent/', speciesAb_, '_Maxent/GCM_', gcm,
+                        '_PC', pc, '_', climYear, 'ybp'),
       clamp = F,
       format='GTiff',
       overwrite = T,
