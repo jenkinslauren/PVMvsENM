@@ -22,7 +22,7 @@ speciesList <- c('Fraxinus americana','Fraxinus caroliniana', 'Fraxinus cuspidat
                  'Fraxinus greggii', 'Fraxinus nigra', 'Fraxinus pennsylvanica',
                  'Fraxinus profunda', 'Fraxinus quadrangulata')
 
-pollen <- readRDS('/Volumes/lj_mac_22/pollen/bv/FRAXINUS_bvs_n200_v4.1.RDS')
+# pollen <- readRDS('/Volumes/lj_mac_22/pollen/bv/FRAXINUS_bvs_n200_v4.1.RDS')
 pollen <- readRDS('/Volumes/lj_mac_22/pollen/polya-gamma-predictions_4.1_overdispersed-001.RDS')
 pollen_locs <- readRDS('/Volumes/lj_mac_22/pollen/pollen_locs_4.1.RDS')
 pollen_dat <- readRDS('/Volumes/lj_mac_22/pollen/pollen_dat_4.1.RDS')
