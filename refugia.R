@@ -8,6 +8,7 @@ library(raster)
 library(data.table)
 library(dplyr)
 library(viridis)
+library(maps)
 
 setwd('/Volumes/lj_mac_22/MOBOT/PVMvsENM')
 # setwd('/mnt/research/TIMBER/PVMvsENM')
@@ -20,6 +21,45 @@ predictors <- c(paste0('pca', 1:pc))
 speciesList <- c('Fraxinus americana','Fraxinus caroliniana', 'Fraxinus cuspidata',
                  'Fraxinus greggii', 'Fraxinus nigra', 'Fraxinus pennsylvanica',
                  'Fraxinus profunda', 'Fraxinus quadrangulata')
+
+pollen <- readRDS('/Volumes/lj_mac_22/pollen/bv/FRAXINUS_bvs_n200_v4.1.RDS')
+pollen <- readRDS('/Volumes/lj_mac_22/pollen/polya-gamma-predictions_4.1_overdispersed-001.RDS')
+pollen_locs <- readRDS('/Volumes/lj_mac_22/pollen/pollen_locs_4.1.RDS')
+pollen_dat <- readRDS('/Volumes/lj_mac_22/pollen/pollen_dat_4.1.RDS')
+pollen_taxa <- readRDS('/Volumes/lj_mac_22/pollen/taxa_4.1.RDS')
+pollen_grid <- readRDS('/Volumes/lj_mac_22/pollen/grid_4.1.RDS')
+
+# keep only fraxinus
+pollen_dat <- pollen_dat[1:465, 8, 1:22]
+pollen_dat <- as.data.frame(pollen_dat)
+View(pollen_dat)
+colnames(pollen_dat) <- c(1:22)
+
+pollen <- pollen$pi[1:200, 1:3951, 8, 1:22]
+pollen <- as.data.frame(matrix(pollen, prod(dim(pollen)[1:2]), dim(pollen)[3]))
+pollen <- cbind(pollen_grid, pollen)
+
+alb_proj <-  '+proj=aea +lat_1=50 +lat_2=70 +lat_0=40 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs'
+wgs_proj = "+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"
+
+# assigning a crs to the pollen coordinates
+spdf <- SpatialPointsDataFrame(coords = pollen_grid[,c('x', 'y')], data = pollen_grid,
+                               proj4string = CRS(alb_proj))
+
+# transforming to the lat long crs
+dat_transform <- spTransform(spdf, wgs_proj)
+dat <- coordinates(dat_transform)
+dat <- data.frame(dat_transform)
+dat <- dat[,1:4]
+colnames(dat)[3:4] <- ll
+
+pollen <- merge(dat, pollen, by = c('x', 'y'))
+pollen_1 <- data.frame('longitude' = pollen$longitude, 'latitude' = pollen$latitude, 
+                       'abund' = pollen$V1)
+pollen_sp <- SpatialPointsDataFrame(coords = pollen_1[,ll], data = pollen_1,
+                               proj4string = CRS(alb_proj))
+plot(as(pollen_sp, 'Spatial'))
+
 
 cols <- c('gray83', '#ccece6', '#99d8c9', '#66c2a4', '#41ae76', '#238b45', '#006d2c', '#00441b')
 
@@ -120,8 +160,51 @@ for(gcm in gcmList_) {
     par(mfrow=c(1,2))
     plot(out$simulationScale[[1]], main = paste0('Refugia\n', speciesAb_, '\n', gcm), 
          col = cols, axes = F)
+    map("world", add = T)
     plot(out$simulationScale[[2]], main = paste0('Refugia abundance\n', speciesAb_, '\n', gcm), 
          col = cols, axes = F)
+    map("world", add = T)
   }
   dev.off()
 }
+
+pollen_threshold <- 0.03
+# par(mfrow=c(1,2))
+for (i in 1:nrow(pollen)) {
+  if()
+}
+refugia <- b >= pollen_threshold
+refugiaId <- raster::clump(refugia, directions = 8, gaps = F)
+names(refugiaId) <- 'refugiaId'
+# plot(refugiaId, main = paste0(names(b),' ', title), axes = F)
+abund <- b * refugia
+names(abund) <- 'refugiaAbund'
+
+nrows <- nrow(b)
+ncols <- ncol(b)
+ncells <- raster::ncell(b)
+
+v <- rep(seq(nrows * (ncols - 1) - 1, 1, by=-ncols), each=ncols) + 0:(ncols - 1)
+cellNum <- matrix(v, nrow=nrows, ncol=ncols, byrow=TRUE)
+cellNum <- raster::raster(cellNum, template=b)
+cellNum <- as.vector(cellNum)
+simRefugiaBinary <- as.vector(refugia)
+refugeCellNum <- cellNum[simRefugiaBinary]
+if (any(is.na(refugeCellNum))) refugeCellNum <- refugeCellNum[!is.na(refugeCellNum)]
+
+# mean refuge abundance
+meanRefugeAbund <- raster::cellStats(abund, 'sum') / length(refugeCellNum)
+
+out <- list(
+  simulationScale = raster::stack(refugiaId, abund),
+  refugeCellNum = refugeCellNum,
+  meanRefugeAbund = meanRefugeAbund
+)
+
+par(mfrow=c(1,2))
+plot(out$simulationScale[[1]], main = paste0('Refugia\n', speciesAb_, '\n', gcm), 
+     col = cols, axes = F)
+map("world", add = T)
+plot(out$simulationScale[[2]], main = paste0('Refugia abundance\n', speciesAb_, '\n', gcm), 
+     col = cols, axes = F)
+map("world", add = T)
