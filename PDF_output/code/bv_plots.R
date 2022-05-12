@@ -14,7 +14,16 @@ setwd('/Volumes/lj_mac_22/MOBOT/PVMvsENM')
 
 gcm <- 'pollen'
 fileName <- '/Volumes/lj_mac_22/pollen/predictions-FRAXINUS_meanpred.tif'
-pollenRast <- brick(fileName)
+pollenRast <- stack(fileName)
+dalton <- stack <- stack('./data_and_analyses/study_region/regions/study_region_daltonIceMask_lakesMasked_linearIceSheetInterpolation.tif')
+
+load('./data_and_analyses/study_region/Study Region Extent.Rdata')
+
+dalton <- projectRaster(dalton, pollenRast)
+
+for (i in 1:nlayers(dalton)) {
+  pollenRast[[i]] <- mask(pollenRast[[i]], dalton[[i]])
+}
 
 pollenStack <- stack(fileName)
 projection(pollenStack) <- getCRS('albersNA')
