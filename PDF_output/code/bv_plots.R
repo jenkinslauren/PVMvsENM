@@ -10,11 +10,28 @@ library(utils)
 library(ggrepel)
 library(dplyr)
 
+library(rnaturalearth)
+library(rnaturalearthdata)
+library(rnaturalearthhires)
+
 setwd('/Volumes/lj_mac_22/MOBOT/PVMvsENM')
 
 gcm <- 'pollen'
 fileName <- '/Volumes/lj_mac_22/pollen/predictions-FRAXINUS_meanpred.tif'
 pollenRast <- stack(fileName)
+
+world <- ne_countries(scale = "medium", returnclass = "sf")
+world <- as(world, "Spatial")
+
+pdf('/Users/laurenjenkins/Downloads/pollen_Fraxinus_meanpred.pdf', width = 11, 
+    height = 8.5)
+par(mfrow=c(2,2), mar=c(2,1,5,1)+0.1)
+for(i in 1:nlayers(pollenRast)) {
+  plot(pollenRast[[i]], main = names(pollenRast[[i]]), col = viridis(256), axes = F, box = F)
+  plot(sp::spTransform(world, CRS(projection(pollenRast[[i]]))), border = 'black', add = T)
+}
+dev.off()
+
 dalton <- stack <- stack('./data_and_analyses/study_region/regions/study_region_daltonIceMask_lakesMasked_linearIceSheetInterpolation.tif')
 
 load('./data_and_analyses/study_region/Study Region Extent.Rdata')
@@ -23,6 +40,8 @@ dalton <- projectRaster(dalton, pollenRast)
 
 for (i in 1:nlayers(dalton)) {
   pollenRast[[i]] <- mask(pollenRast[[i]], dalton[[i]])
+  plot(pollenRast[[i]], main = names(pollenRast[[i]]), col = viridis(256), axes = F, box = F)
+  plot(sp::spTransform(world, CRS(projection(pollenRast[[i]]))), border = 'black', add = T)
 }
 
 pollenStack <- stack(fileName)
