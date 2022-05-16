@@ -24,7 +24,7 @@ for (dir in dirList) {
   fileList <- list.files(path = dir, pattern = '*.tif', 
                          all.files = TRUE, full.names = TRUE)
   
-  # remove wdi & etr variables 
+  # remove wdi & etr variables, leaving only 38 variables 
   fileList <- Filter(function(x) !any(grepl("ETR", x)), fileList)
   fileList <- Filter(function(x) !any(grepl("WDI", x)), fileList)
   # print(paste0(sub('.+LJ/(.+)', '\\1', dir), 'YBP ', length(fileList)))

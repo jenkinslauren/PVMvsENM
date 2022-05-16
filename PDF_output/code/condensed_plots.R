@@ -10,6 +10,7 @@ library(enmSdm)
 library(terra)
 library(maxnet)
 library(sf)
+library(viridis)
 
 library(maps)
 library(rnaturalearth)
