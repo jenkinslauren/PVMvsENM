@@ -4,6 +4,7 @@ library(enmSdm)
 library(dplyr)
 library(terra)
 library(gtools)
+library(dismo)
 setwd('/Volumes/lj_mac_22/MOBOT/PVMvsENM')
 
 # set constants, define gcm & number of pc's to use in predictions
@@ -17,6 +18,8 @@ workingFolder <- paste0('./data_and_analyses/env_data/Lorenz/V2/',
 dirList <- list.dirs(path = workingFolder,
                      recursive = FALSE)
 dirList <- mixedsort(dirList)
+
+climYears <- paste0(seq(0, 21, by = 1), 'KYBP')
 
 if(exists('clim')) rm(clim)
 
@@ -53,18 +56,18 @@ for (j in 1:38) {
 i <- 1
 vars <- sub('\\_[0-9].*', '', names(thisClim))
 for (var in vars) {
-  outfile <- paste0(workingFolder, '/', var, '.tif')
-  writeRaster(bricks[[i]], outfile, format = 'GTiff', overwrite = T)
+  outfile <- paste0(workingFolder, '/vars/', var, '.tif')
+  writeRaster(stack(bricks[[i]]), outfile, format = 'GTiff', overwrite = T)
   i <- i + 1
 }
 
-fileList <- list.files(path = workingFolder, 
+fileList <- list.files(path = paste0(workingFolder, '/vars'), 
                        pattern='*.tif', all.files = TRUE, full.names = TRUE)
 lorenz <- lapply(fileList, brick)
 lorenz <- stack(lorenz)
 climDf <- as.data.frame(lorenz)
 
-vars <- sub('\\.tif.*', '', list.files(path = workingFolder, 
+vars <- sub('\\.tif.*', '', list.files(path = paste0(workingFolder, '/vars/'), 
                                        pattern='*.tif', all.files = TRUE, full.names = FALSE))
 
 climList <- list()
@@ -72,7 +75,7 @@ for(i in 1:22) {
   climTimes <- list()
   for(var in vars) {
     index <- paste0(var, ".", i)
-    climTimes <- append(climTimes, lorenz[[i]])
+    climTimes <- append(climTimes, lorenz[[index]])
   }
   climList <- append(climList,brick(climTimes))
 }
@@ -80,7 +83,7 @@ for(i in 1:22) {
 lorenz <- lapply(climList, stack)
 
 for (i in 1:length(lorenz)) {
-  names(lorenz[[i]]) <- vars
+  names(lorenz[[i]]) <- paste0(vars, '_', climYears)
 }
 
 # build climate over all time periods, not just the latest
@@ -95,11 +98,15 @@ buildClim <- function(brick) {
     randomBgEnv <- as.data.frame(randomBgEnv)
     
     # remove any NAs for at least one variable
-    # isNa <- is.na(rowSums(randomBgEnv))
-    # if (any(isNa)) {
-    #   randomBgSites <- randomBgSites[-which(isNa), ]
-    #   randomBgEnv <- randomBgEnv[-which(isNa), ]
-    # }
+    isNa <- is.na(rowSums(randomBgEnv))
+    if (any(isNa)) {
+      randomBgSites <- randomBgSites[-which(isNa), ]
+      randomBgEnv <- randomBgEnv[-which(isNa), ]
+    }
+    
+    # randomBgSites <- randomBgSites[1:10000,]
+    # randomBgEnv <- randomBgEnv[1:10000,]
+    
     randomBg <- cbind(randomBgSites, randomBgEnv)
     names(randomBg)[1:3] <- c('longitude', 'latitude', 
                               sub("\\..*", "", names(brick[[1]])))
