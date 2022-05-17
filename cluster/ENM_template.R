@@ -115,7 +115,7 @@ for(sp in speciesList) {
     # check projections = wgs84
     print("Ensure that the projection of these rasters is WGS84:")
     print(paste0("Projection of envYr = ", projection(envYr)))
-
+    
     # clip environmental PCAs to study extent for given species, visualize, and save:
     envDataClipped <- list()
     for (n in 1:nlayers(envYr)) {
@@ -235,9 +235,9 @@ for(sp in speciesList) {
   # model species
   # envModel <- enmSdm::trainMaxNet(data = env, resp = 'presBg')
   envModel_tune <- enmSdm::trainMaxNet(data = env, resp = 'presBg',
-                                  out = c('models', 'tuning'))
+                                       classes = 'lpq', out = c('models', 'tuning'))
   envModel <- envModel_tune$models[[95]]
-
+  
   predictors <- c(paste0('pca', 1:pc))
   # prediction
   # envMap <- predict(climate[[predictors]], envModel, clamp = F, type = 'cloglog')

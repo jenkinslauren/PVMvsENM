@@ -36,6 +36,7 @@ setwd('/Volumes/lj_mac_22/MOBOT/PVMvsENM')
 
 # nad27
 default_crs = sf::st_crs(4267)
+wgs_crs <- getCRS('wgs84')
 
 # setwd('/Users/laurenjenkins/Documents/MOBOT/PVMvsENM/')
 # load('./workspaces/01 - Modeling Workspace - Fraxinus Range Maps (BIEN + Little)')
@@ -210,11 +211,11 @@ for(sp in speciesList) {
     speciesSf <- st_as_sf(x = finalThinned,
                           coords = c(x = 'longitude',
                                      y = 'latitude'),
-                          crs = default_crs)
+                          crs = wgs_crs)
     speciesSfThin <- st_as_sf(x = occs,
                               coords = c(x = 'longitude',
                                          y = 'latitude'),
-                              crs = default_crs)
+                              crs = wgs_crs)
     
     # load country/world basemap data
     world <- ne_countries(scale = "medium", returnclass = "sf")
@@ -564,6 +565,7 @@ for(sp in speciesList) {
     records <- cbind(records, occsEnvDf)
     
     # records in the water:
+    if (exists('water')) rm(water) # will keep "water" from previous species being used
     if (any(is.na(rowSums(occsEnvDf)))) {
       water <- records[which(is.na(rowSums(occsEnvDf))), ] 
       water <- SpatialPointsDataFrame(water[,ll], data = water,
@@ -659,8 +661,9 @@ for(sp in speciesList) {
     
     # model species
     envModel <- enmSdm::trainMaxNet(data = env, resp = 'presBg')
-    # envModel <- enmSdm::trainMaxNet(data = env, resp = 'presBg', 
+    # envModel <- enmSdm::trainMaxNet(data = env, resp = 'presBg',
     #                                 out = c('models', 'tuning'))
+    envModel <- envModel$models
     modelFileName <- paste0('./Models/Maxent/', speciesAb_, '_Maxent/Model_PC', 
                             pc, '_GCM_', gcm, '.Rdata')
     save(envModel, file = modelFileName, compress = T, overwrite = T)
