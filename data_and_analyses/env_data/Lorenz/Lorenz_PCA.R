@@ -8,7 +8,7 @@ library(dismo)
 setwd('/Volumes/lj_mac_22/MOBOT/PVMvsENM')
 
 # set constants, define gcm & number of pc's to use in predictions
-gcm <- 'ecbilt'
+gcm <- 'ccsm'
 pc <- 5
 workingFolder <- paste0('./data_and_analyses/env_data/Lorenz/V2/',
                         gcm, '_21-0k_all_tifs_LJ')
@@ -67,7 +67,7 @@ lorenz <- lapply(fileList, brick)
 lorenz <- stack(lorenz)
 climDf <- as.data.frame(lorenz)
 
-vars <- sub('\\.tif.*', '', list.files(path = paste0(workingFolder, '/vars/'), 
+vars <- sub('\\.tif.*', '', list.files(path = paste0(workingFolder, '/vars/'),
                                        pattern='*.tif', all.files = TRUE, full.names = FALSE))
 
 climList <- list()
@@ -180,7 +180,7 @@ nonNas <- which(complete.cases(climDf))
 climDf <- climDf[nonNas, ]
 
 pca <- prcomp(climxDf, center = TRUE, scale = TRUE)
-fileName <- if(gcm == 'Lorenz_ccsm') { 
+fileName <- if(gcm == 'ccsm') { 
   paste0('./data_and_analyses/env_data/Lorenz/V2/ccsm_21-0k_all_tifs_LJ/pca_pc', pc, '.Rdata') 
   } else {
   paste0('./data_and_analyses/env_data/Lorenz/V2/ecbilt_21-0k_all_tifs_LJ/pca_pc', pc, '.Rdata') 
