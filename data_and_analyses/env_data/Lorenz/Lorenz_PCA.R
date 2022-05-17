@@ -98,11 +98,11 @@ buildClim <- function(brick) {
     randomBgEnv <- as.data.frame(randomBgEnv)
     
     # remove any NAs for at least one variable
-    isNa <- is.na(rowSums(randomBgEnv))
-    if (any(isNa)) {
-      randomBgSites <- randomBgSites[-which(isNa), ]
-      randomBgEnv <- randomBgEnv[-which(isNa), ]
-    }
+    # isNa <- is.na(rowSums(randomBgEnv))
+    # if (any(isNa)) {
+    #   randomBgSites <- randomBgSites[-which(isNa), ]
+    #   randomBgEnv <- randomBgEnv[-which(isNa), ]
+    # }
     
     # randomBgSites <- randomBgSites[1:10000,]
     # randomBgEnv <- randomBgEnv[1:10000,]
