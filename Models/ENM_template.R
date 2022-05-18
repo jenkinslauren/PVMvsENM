@@ -660,10 +660,10 @@ for(sp in speciesList) {
     env <- env[complete.cases(env), ]
     
     # model species
-    envModel <- enmSdm::trainMaxNet(data = env, resp = 'presBg')
-    # envModel <- enmSdm::trainMaxNet(data = env, resp = 'presBg',
-    #                                 out = c('models', 'tuning'))
-    envModel <- envModel$models
+    envModel_tune <- enmSdm::trainMaxNet(data = env, resp = 'presBg', 
+                                         classes = 'lpq', out = c('models', 'tuning'))
+    envModel <- envModel_tune$models[[1]]
+    
     modelFileName <- paste0('./Models/Maxent/', speciesAb_, '_Maxent/Model_PC', 
                             pc, '_GCM_', gcm, '.Rdata')
     save(envModel, file = modelFileName, compress = T, overwrite = T)
