@@ -21,18 +21,17 @@ plotVar <- function(varName) {
   
   clim <- brick(file, varname = upperVar, level = 1)
   
-  pdf(file = paste0('./data_and_analyses/env_data/Beyer/climRasts_', upperVar, '.pdf'), 
-      width = 11, height = 8.5)
+  # pdf(file = paste0('./data_and_analyses/env_data/Beyer/climRasts_', upperVar, '.pdf'), 
+  #     width = 11, height = 8.5)
   for (i in 1:nlayers(clim)) {
     x <- crop(clim[[i]], studyRegion)
     plot(x, main = names(x))
   }
-  dev.off()
+  # dev.off()
 }
 
 vars <- c('bio1', paste0('bio', 4:19), 'cloudiness', 'relative_humidity')
 lapply(vars, plotVar)
-
 
 file <- list.files(path = './data_and_analyses/env_data/Beyer/tifs', pattern = '.tif', 
                    full.names = T)
