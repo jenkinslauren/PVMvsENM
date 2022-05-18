@@ -183,20 +183,24 @@ for(sp in speciesList) {
   
   # calculate calibration region buffer at 160-km to extract bg sites
   calibBuffer <- st_buffer(st_transform(st_as_sf(x = recordsSp), getCRS('albersNA')), 
-                           dist = as_units(160, 'km'))
+                           dist = as_units(320, 'km'))
   calibBuffer <- st_union(calibBuffer)
   
   calibRegionSpAlb <- sp::spTransform(as(calibBuffer, 'Spatial'), getCRS('albersNA', TRUE))
   calibRegionSpWgs <- sp::spTransform(calibRegionSpAlb, getCRS('wgs84', TRUE))
   
-  bgFileName <- paste0('./in/bg_sites/Background Sites/Random Background Sites across Study Region - ', 
-                       speciesAb, '.Rdata')
+  # bgFileName <- paste0('./in/bg_sites/Background Sites/Random Background Sites across Study Region - ', 
+  #                      speciesAb, '.Rdata')
+  bgFileName <- './in/bg_sites/Random Background Sites across Study Region.Rdata'
   
   # load bg sites in calibration region for a species if they have already been defined
   # loaded in: bgTestSp, bgCalib, bgEnv, bg
   # otherwise, get 20,000 random background sites from calibration region
   # we will only keep 10,000 points...this accounts for points that may fall in water
-  if (file.exists(bgFileName)) load(bgFileName) else {
+  if (file.exists(bgFileName)) {
+    print("Loading bg sites!")
+    load(bgFileName) 
+  } else {
     bgTestSpAlb <- suppressWarnings(sp::spsample(calibRegionSpAlb, n=20000, 
                                                  type='random', iter = 10))
     bgTestSp <- sp::spTransform(bgTestSpAlb, getCRS('wgs84', TRUE))

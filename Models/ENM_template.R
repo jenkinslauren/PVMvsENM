@@ -599,8 +599,10 @@ for(sp in speciesList) {
     # load(paste0("./workspaces/03 - Modeling Workspace - ", speciesAb, " Cleaning"))
     
     # calculate calibration region buffer at 160-km to extract bg sites
+    # calibBuffer <- st_buffer(st_transform(st_as_sf(x = recordsSp), getCRS('albersNA')), 
+    #                          dist = as_units(160, 'km'))
     calibBuffer <- st_buffer(st_transform(st_as_sf(x = recordsSp), getCRS('albersNA')), 
-                             dist = as_units(160, 'km'))
+                             dist = as_units(320, 'km'))
     calibBuffer <- st_union(calibBuffer)
     
     calibRegionSpAlb <- sp::spTransform(as(calibBuffer, 'Spatial'), getCRS('albersNA', TRUE))
