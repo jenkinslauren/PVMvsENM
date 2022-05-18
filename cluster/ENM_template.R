@@ -37,6 +37,7 @@ gcm <- args[1]
 
 # nad27
 default_crs = sf::st_crs(4267)
+wgs_crs <- getCRS('wgs84')
 
 # set constants
 ll <- c('longitude', 'latitude')
@@ -148,6 +149,7 @@ for(sp in speciesList) {
   records <- cbind(records, occsEnvDf)
   
   # records in the water:
+  if (exists('water')) rm(water) # will keep "water" from previous species being used
   if (any(is.na(rowSums(occsEnvDf)))) {
     water <- records[which(is.na(rowSums(occsEnvDf))), ] 
     water <- SpatialPointsDataFrame(water[,ll], data = water,
@@ -236,7 +238,7 @@ for(sp in speciesList) {
   # envModel <- enmSdm::trainMaxNet(data = env, resp = 'presBg')
   envModel_tune <- enmSdm::trainMaxNet(data = env, resp = 'presBg',
                                        classes = 'lpq', out = c('models', 'tuning'))
-  envModel <- envModel_tune$models[[95]]
+  envModel <- envModel_tune$models[[1]]
   
   predictors <- c(paste0('pca', 1:pc))
   # prediction
