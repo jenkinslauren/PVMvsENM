@@ -18,7 +18,7 @@ library(rnaturalearthhires)
 setwd('/Volumes/lj_mac_22/MOBOT/PVMvsENM')
 
 # constants
-gcm <- 'Beyer'
+gcm <- 'ecbilt'
 pc <- 5
 
 # load(paste0('./workspaces/06 - ', gcm, ' Projections'))
@@ -90,7 +90,7 @@ getClimRasts <- function(pc, climYear) {
     envDataClipped <- list()
     for (n in 1:nlayers(envYr)) {
       x <- envYr[[n]]
-      x <- crop(x, extent(studyRegionRasts[[yrs[(climYear/1000) + 1]]]))
+      x <- crop(x, extent(studyRegionRasts[[which(climYears == 21000)]]))
       # x <<- mask(x, studyRegion)
       projection(x) <- getCRS("WGS84")
       envDataClipped[[n]] <- x
@@ -129,10 +129,10 @@ for(sp in speciesList) {
   speciesAb <- paste0(substr(sp,1,4), toupper(substr(sp,10,10)), substr(sp,11,13))
   speciesAb_ <- sub("(.{4})(.*)", "\\1_\\2", speciesAb)
   
-  fileName <- list.files(path = paste0('./Models/Maxent/', speciesAb_, '_Maxent/'),
+  modelFileName <- list.files(path = paste0('./Models/Maxent/', speciesAb_, '_Maxent/'),
                          pattern = paste0(gcm, '.rData'),
                          full.names = T)
-  load(fileName)
+  load(modelFileName)
   
   if(exists('preds')) rm(preds)
   preds <- predictions(speciesAb_, pc)
