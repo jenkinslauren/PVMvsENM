@@ -601,7 +601,7 @@ for(sp in speciesList) {
     # calculate calibration region buffer at 160-km to extract bg sites
     # calibBuffer <- st_buffer(st_transform(st_as_sf(x = recordsSp), getCRS('albersNA')), 
     #                          dist = as_units(160, 'km'))
-    calibBuffer <- st_buffer(st_transform(st_as_sf(x = recordsSp), getCRS('albersNA')), 
+    calibBuffer <- st_buffer(st_transform(st_as_sf(x = recordsSp), getCRS('albersNA')),
                              dist = as_units(320, 'km'))
     calibBuffer <- st_union(calibBuffer)
     
@@ -611,6 +611,8 @@ for(sp in speciesList) {
     bgFileName <- paste0('./Background Sites/Random Background Sites across Study Region - ', 
                          speciesAb_, '.Rdata')
     
+    # studyRegionRastsAlb <- rasterToPolygons(studyRegionRasts[[1]])
+    
     # load bg sites in calibration region for a species if they have already been defined
     # loaded in: bgTestSp, bgCalib, bgEnv, bg
     # otherwise, get 20,000 random background sites from calibration region
@@ -618,6 +620,8 @@ for(sp in speciesList) {
     if (file.exists(bgFileName)) load(bgFileName) else {
       bgTestSpAlb <- suppressWarnings(sp::spsample(calibRegionSpAlb, n=20000, 
                                                    type='random', iter = 10))
+      # bgTestSpAlb <- suppressWarnings(sp::spsample(studyRegionRastsAlb, n=20000, 
+      #                                              type='random', iter = 10))
       bgTestSp <- sp::spTransform(bgTestSpAlb, getCRS('wgs84', TRUE))
       bgCalib <- as.data.frame(coordinates(bgTestSp))
       names(bgCalib) <- ll
