@@ -20,10 +20,10 @@ library(rnaturalearthhires)
 setwd('/Volumes/lj_mac_22/MOBOT/PVMvsENM')
 
 # constants
-gcm <- 'Beyer'
+gcm_ <- 'ecbilt'
 pc <- 5
 
-load(paste0('./workspaces/06 - ', gcm, ' Projections'))
+load(paste0('./workspaces/06 - ', gcm_, ' Projections'))
 
 speciesList <- c('Fraxinus americana','Fraxinus caroliniana', 'Fraxinus cuspidata', 
                  'Fraxinus greggii', 'Fraxinus nigra', 'Fraxinus pennsylvanica', 
@@ -35,8 +35,11 @@ climYears <- seq(21000, 0, by = -1000)
 studyRegionFileName <- './data_and_analyses/study_region/regions/study_region_daltonIceMask_lakesMasked_linearIceSheetInterpolation.tif'
 studyRegionRasts <- brick(studyRegionFileName)
 
-title <- paste0('Fraxinus, \nGCM = ', gcm)
-pdf(file = paste0('./PDF_output/', gcm, '_predictions_allSp.pdf'), width = 11, height = 8.5)
+fileName <- list.files(path = paste0('./predictions/', gcm_),
+                       pattern = paste0('PC', pc,'.tif'),
+                       full.names = T)
+title <- paste0('Fraxinus, \nGCM = ', gcm_)
+pdf(file = paste0('./PDF_output/', gcm_, '_predictions_allSp.pdf'), width = 11, height = 8.5)
 for(i in 1:22) {
   par(mfrow=c(2,5), mar=c(2,1,5,1)+0.1)
   plot(meansList[[i]], 
@@ -49,8 +52,8 @@ for(i in 1:22) {
        col = colors, axes = F, legend.mar = 10, box = F)
   for(f in fileName) {
     s <- gsub('\\..*', '', gsub('\\./predictions/*', '', f))
-    speciesAb_ <-  gsub('\\_GCM.*', '', gsub(paste0('\\./predictions/', gcm, '/*'), '', f))
-    load(paste0('./Models/Maxent/all_model_outputs/', speciesAb_, '_GCM', gcm, 
+    speciesAb_ <-  gsub('\\_GCM.*', '', gsub(paste0('\\./predictions/', gcm_, '/*'), '', f))
+    load(paste0('./Models/Maxent/all_model_outputs/', speciesAb_, '_GCM', gcm_, 
                 '_PC', pc, '.rData'))
     b <- brick(f)
     names(b) <- c(paste0(seq(21000, 0, by = -1000), ' ybp'))
@@ -63,7 +66,7 @@ for(i in 1:22) {
 }
 dev.off()
 
-fileName <- list.files(path = paste0('./predictions/', gcm),
+fileName <- list.files(path = paste0('./predictions/', gcm_),
                        pattern = paste0('PC', pc,'.tif'),
                        full.names = T)
 pollenRast <- brick('/Volumes/lj_mac_22/pollen/predictions-FRAXINUS_meanpred.tif')
@@ -132,8 +135,8 @@ for (j in 1:length(tmp)){
   skip <- skip + 1
 }
 
-title <- paste0('Fraxinus, \nGCM = ', gcm)
-pdf(file = paste0('./PDF_output/', gcm, '_predictions_removedSp_mean.pdf'), width = 11, height = 8.5)
+title <- paste0('Fraxinus, \nGCM = ', gcm_)
+pdf(file = paste0('./PDF_output/', gcm_, '_predictions_removedSp_mean.pdf'), width = 11, height = 8.5)
 for (i in 1:22) {
   par(mfrow=c(3,3), mar=c(2,1,5,1)+0.1)
   plot(meansList[[i]], main = paste0(sub('\\.', ' ', 
@@ -147,7 +150,7 @@ for (i in 1:22) {
 }
 dev.off()
 
-pdf(file = paste0('./PDF_output/', gcm, '_predictions_removedSp_max.pdf'), width = 11, height = 8.5)
+pdf(file = paste0('./PDF_output/', gcm_, '_predictions_removedSp_max.pdf'), width = 11, height = 8.5)
 for (i in 1:22) {
   par(mfrow=c(3,3), mar=c(2,1,5,1)+0.1)
   plot(maxList[[i]], main = paste0(sub('\\.', ' ', 
