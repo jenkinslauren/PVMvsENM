@@ -26,11 +26,11 @@ predictors <- c(paste0('pca', 1:pc))
 speciesList <- c('Fraxinus americana','Fraxinus caroliniana', 'Fraxinus cuspidata',
                  'Fraxinus greggii', 'Fraxinus nigra', 'Fraxinus pennsylvanica',
                  'Fraxinus profunda', 'Fraxinus quadrangulata')
-
+print(paste0("GCM = ", gcm))
 for(s in 1:length(speciesList)) {
   sp <- speciesList[s]
   species <- gsub(tolower(sp), pattern=' ', replacement='_')
-  print(paste0("GCM = ", gcm))
+  
   print(paste0("Species = ", species))
   speciesAb <- paste0(substr(sp,1,4), toupper(substr(sp,10,10)), substr(sp,11,13))
   speciesAb_ <- sub("(.{4})(.*)", "\\1_\\2", speciesAb)
