@@ -48,7 +48,7 @@ for(s in 1:length(speciesList)) {
   folderName <- paste0('./in/models/maxent/', speciesAb_,
                        '_Maxent/Model Evaluation - Geographic K-Folds - ', gcm)
   # create output directory for geographically distributed model evaluation
-  dir.create(folderName)
+  dir.create(folderName, recursive = TRUE, showWarnings = FALSE)
   
   # for storing model evaluation metrics for each k-fold
   aucGeog <- cbiGeog <- rep(NA, 5)
