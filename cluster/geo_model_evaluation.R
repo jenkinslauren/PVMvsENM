@@ -19,13 +19,13 @@ setwd('/mnt/research/TIMBER/PVMvsENM')
 pc <- 5
 predictors <- c(paste0('pca', 1:pc))
 
-if (gcm == 'Lorenz_ccsm') speciesList <- paste('Fraxinus', c('cuspidata', 'greggii'))
-if (gcm == 'ecbilt') speciesList <- paste('Fraxinus', c('americana', 'cuspidata',
-                                                        'greggii', 'profunca'))
+# if (gcm == 'Lorenz_ccsm') speciesList <- paste('Fraxinus', c('cuspidata', 'greggii'))
+# if (gcm == 'ecbilt') speciesList <- paste('Fraxinus', c('americana', 'cuspidata',
+#                                                         'greggii', 'profunda'))
 
-# speciesList <- c('Fraxinus americana','Fraxinus caroliniana', 'Fraxinus cuspidata',
-#                  'Fraxinus greggii', 'Fraxinus nigra', 'Fraxinus pennsylvanica',
-#                  'Fraxinus profunda', 'Fraxinus quadrangulata')
+speciesList <- c('Fraxinus americana','Fraxinus caroliniana', 'Fraxinus cuspidata',
+                 'Fraxinus greggii', 'Fraxinus nigra', 'Fraxinus pennsylvanica',
+                 'Fraxinus profunda', 'Fraxinus quadrangulata')
 
 for(s in 1:length(speciesList)) {
   sp <- speciesList[s]
@@ -37,8 +37,9 @@ for(s in 1:length(speciesList)) {
   rangeName <- paste0('littleRange_', speciesAb)
   
   # load bg sites, records, and rangeMap
-  load(paste0('./in/bg_sites/Background Sites/Random Background Sites across Study Region - ', 
-              speciesAb, '.Rdata'))
+  # load(paste0('./in/bg_sites/Background Sites/Random Background Sites across Study Region - ', 
+  #             speciesAb, '.Rdata'))
+  load('./in/bg_sites/Background Sites/Random Background Sites across Study Region.Rdata')
   load(paste0('./in/models/maxent/all_model_outputs/', speciesAb_, '_GCM', gcm, 
               '_PC', pc, '.Rdata'))
   load(paste0('./in/workspaces/05 - Modeling Workspace - ', speciesAb_,
@@ -146,10 +147,10 @@ for(gcm in gcmList) {
 }
 
 
-for (gcm in gcmList) {
-  load(paste0('./Models/Maxent/', gcm, '_geoEvals.Rdata'))
-  write.xlsx(a, file = './Models/Maxent/geo_evals.xlsx', sheetName = paste0(gcm, '_auc'),
-             append = T, row.names = F)
-  write.xlsx(c, file = './Models/Maxent/geo_evals.xlsx', sheetName = paste0(gcm, '_cbi'),
-             append = T, row.names = F)
-}
+# for (gcm in gcmList) {
+#   load(paste0('./Models/Maxent/', gcm, '_geoEvals.Rdata'))
+#   write.xlsx(a, file = './Models/Maxent/geo_evals.xlsx', sheetName = paste0(gcm, '_auc'),
+#              append = T, row.names = F)
+#   write.xlsx(c, file = './Models/Maxent/geo_evals.xlsx', sheetName = paste0(gcm, '_cbi'),
+#              append = T, row.names = F)
+# }
