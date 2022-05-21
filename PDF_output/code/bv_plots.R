@@ -17,7 +17,7 @@ library(rnaturalearthhires)
 setwd('/Volumes/lj_mac_22/MOBOT/PVMvsENM')
 
 gcm <- 'pollen'
-fileName <- '/Volumes/lj_mac_22/pollen/predictions-FRAXINUS_meanpred.tif'
+fileName <- '/Volumes/lj_mac_22/pollen/predictions-FRAXINUS_meanpred_iceMask.tif'
 pollenRast <- stack(fileName)
 
 world <- ne_countries(scale = "medium", returnclass = "sf")
@@ -32,24 +32,26 @@ for(i in 1:nlayers(pollenRast)) {
 }
 dev.off()
 
-dalton <- stack <- stack('./data_and_analyses/study_region/regions/study_region_daltonIceMask_lakesMasked_linearIceSheetInterpolation.tif')
+# dalton <- stack <- stack('./data_and_analyses/study_region/regions/study_region_daltonIceMask_lakesMasked_linearIceSheetInterpolation.tif')
+# dalton <- projectRaster(dalton, pollenRast)
 
 load('./data_and_analyses/study_region/Study Region Extent.Rdata')
 
-dalton <- projectRaster(dalton, pollenRast)
+# this is already done in 'masking_pdm_by_land_and_ice.R' script
+# for (i in 1:nlayers(dalton)) {
+#   pollenRast[[i]] <- mask(pollenRast[[i]], dalton[[i]])
+#   plot(pollenRast[[i]], main = names(pollenRast[[i]]), col = viridis(256), axes = F, box = F)
+#   plot(sp::spTransform(world, CRS(projection(pollenRast[[i]]))), border = 'black', add = T)
+# }
 
-for (i in 1:nlayers(dalton)) {
-  pollenRast[[i]] <- mask(pollenRast[[i]], dalton[[i]])
-  plot(pollenRast[[i]], main = names(pollenRast[[i]]), col = viridis(256), axes = F, box = F)
-  plot(sp::spTransform(world, CRS(projection(pollenRast[[i]]))), border = 'black', add = T)
-}
-
-pollenStack <- stack(fileName)
-projection(pollenStack) <- getCRS('albersNA')
+# pollenRast <- stack(fileName)
+projection(pollenRast) <- getCRS('albersNA')
 # note: there is no difference in output between onlyInSharedCells = T & F
-bvPollen <- bioticVelocity(pollenStack, times = seq(-21000,0, by=1000), onlyInSharedCells = T)
+bvPollen <- bioticVelocity(pollenRast, times = seq(-21000,0, by=1000), 
+                           onlyInSharedCells = T)
 
-bvPollen$time <- paste0(abs(bvPollen$timeFrom)/1000, '-', abs(bvPollen$timeTo)/1000, ' kybp')
+bvPollen$time <- paste0(abs(bvPollen$timeFrom)/1000, '-', 
+                        abs(bvPollen$timeTo)/1000, ' kybp')
 bvPollen$time <- factor(bvPollen$time, levels = rev(mixedsort(bvPollen$time)))
 # bvPollen$time <- as.factor(bvPollen$time)
 
@@ -63,10 +65,13 @@ load(paste0('./workspaces/06 - Beyer Projections'))
 # Beyer Means
 stackMeansList <- stack(meansList)
 projection(stackMeansList) <- getCRS('albersNA')
-bvBeyerMeans <- bioticVelocity(stackMeansList, times = seq(-21000, 0, by = 1000), onlyInSharedCells = T)
+bvBeyerMeans <- bioticVelocity(stackMeansList, times = seq(-21000, 0, by = 1000), 
+                               onlyInSharedCells = T)
 
-bvBeyerMeans$time <- paste0(abs(bvBeyerMeans$timeFrom)/1000, '-', abs(bvBeyerMeans$timeTo)/1000, ' kybp')
-bvBeyerMeans$time <- factor(bvBeyerMeans$time, levels = rev(mixedsort(bvBeyerMeans$time)))
+bvBeyerMeans$time <- paste0(abs(bvBeyerMeans$timeFrom)/1000, '-', 
+                            abs(bvBeyerMeans$timeTo)/1000, ' kybp')
+bvBeyerMeans$time <- factor(bvBeyerMeans$time, 
+                            levels = rev(mixedsort(bvBeyerMeans$time)))
 
 bMean <- ggplot(bvBeyerMeans, aes(time, centroidVelocity, group = 1)) + 
   geom_point() + geom_line() +
@@ -96,10 +101,13 @@ load(paste0('./workspaces/06 - Lorenz_ccsm Projections'))
 # Lorenz_ccsm Means
 stackMeansList <- stack(meansList)
 projection(stackMeansList) <- getCRS('albersNA')
-bvCCSMMean <- bioticVelocity(stackMeansList, times = seq(-21000, 0, by = 1000), onlyInSharedCells = T)
+bvCCSMMean <- bioticVelocity(stackMeansList, times = seq(-21000, 0, by = 1000), 
+                             onlyInSharedCells = T)
 
-bvCCSMMean$time <- paste0(abs(bvCCSMMean$timeFrom)/1000, '-', abs(bvCCSMMean$timeTo)/1000, ' kybp')
-bvCCSMMean$time <- factor(bvCCSMMean$time, levels = rev(mixedsort(bvCCSMMean$time)))
+bvCCSMMean$time <- paste0(abs(bvCCSMMean$timeFrom)/1000, '-', 
+                          abs(bvCCSMMean$timeTo)/1000, ' kybp')
+bvCCSMMean$time <- factor(bvCCSMMean$time, 
+                          levels = rev(mixedsort(bvCCSMMean$time)))
 
 cMean <- ggplot(bvCCSMMean, aes(time, centroidVelocity, group = 1)) + 
   geom_point() + geom_line() +
@@ -110,10 +118,13 @@ cMean <- ggplot(bvCCSMMean, aes(time, centroidVelocity, group = 1)) +
 # Lorenz_ccsm Max
 stackMaxList <- stack(maxList)
 projection(stackMaxList) <- getCRS('albersNA')
-bvCCSMMax <- bioticVelocity(stackMaxList, times = seq(-21000,0, by = 1000), onlyInSharedCells = T) 
+bvCCSMMax <- bioticVelocity(stackMaxList, times = seq(-21000,0, by = 1000), 
+                            onlyInSharedCells = T) 
 
-bvCCSMMax$time <- paste0(abs(bvCCSMMax$timeFrom)/1000, '-', abs(bvCCSMMax$timeTo)/1000, ' kybp')
-bvCCSMMax$time <- factor(bvCCSMMax$time, levels = rev(mixedsort(bvCCSMMax$time)))
+bvCCSMMax$time <- paste0(abs(bvCCSMMax$timeFrom)/1000, '-', 
+                         abs(bvCCSMMax$timeTo)/1000, ' kybp')
+bvCCSMMax$time <- factor(bvCCSMMax$time, 
+                         levels = rev(mixedsort(bvCCSMMax$time)))
 
 cMax <- ggplot(bvCCSMMax, aes(time, centroidVelocity, group = 1)) + 
   geom_point() + geom_line() +
@@ -129,10 +140,13 @@ load(paste0('./workspaces/06 - ecbilt Projections'))
 # ECBilt Means
 stackMeansList <- stack(meansList)
 projection(stackMeansList) <- getCRS('albersNA')
-bvECBiltMean <- bioticVelocity(stackMeansList, times = seq(-21000, 0, by = 1000), onlyInSharedCells = T)
+bvECBiltMean <- bioticVelocity(stackMeansList, times = seq(-21000, 0, by = 1000), 
+                               onlyInSharedCells = T)
 
-bvECBiltMean$time <- paste0(abs(bvECBiltMean$timeFrom)/1000, '-', abs(bvECBiltMean$timeTo)/1000, ' kybp')
-bvECBiltMean$time <- factor(bvECBiltMean$time, levels = rev(mixedsort(bvECBiltMean$time)))
+bvECBiltMean$time <- paste0(abs(bvECBiltMean$timeFrom)/1000, '-', 
+                            abs(bvECBiltMean$timeTo)/1000, ' kybp')
+bvECBiltMean$time <- factor(bvECBiltMean$time, 
+                            levels = rev(mixedsort(bvECBiltMean$time)))
 
 eMean <- ggplot(bvECBiltMean, aes(time, centroidVelocity, group = 1)) + 
   geom_point() + geom_line() +
@@ -143,10 +157,13 @@ eMean <- ggplot(bvECBiltMean, aes(time, centroidVelocity, group = 1)) +
 # ECBilt Max
 stackMaxList <- stack(maxList)
 projection(stackMaxList) <- getCRS('albersNA')
-bvECBiltMax <- bioticVelocity(stackMaxList, times = seq(-21000,0, by = 1000), onlyInSharedCells = T) 
+bvECBiltMax <- bioticVelocity(stackMaxList, times = seq(-21000,0, by = 1000), 
+                              onlyInSharedCells = T) 
 
-bvECBiltMax$time <- paste0(abs(bvECBiltMax$timeFrom)/1000, '-', abs(bvECBiltMax$timeTo)/1000, ' kybp')
-bvECBiltMax$time <- factor(bvECBiltMax$time, levels = rev(mixedsort(bvECBiltMax$time)))
+bvECBiltMax$time <- paste0(abs(bvECBiltMax$timeFrom)/1000, '-', 
+                           abs(bvECBiltMax$timeTo)/1000, ' kybp')
+bvECBiltMax$time <- factor(bvECBiltMax$time, 
+                           levels = rev(mixedsort(bvECBiltMax$time)))
 
 eMax <- ggplot(bvECBiltMax, aes(time, centroidVelocity, group = 1)) + 
   geom_point() + geom_line() +

@@ -18,7 +18,7 @@ library(rnaturalearthhires)
 setwd('/Volumes/lj_mac_22/MOBOT/PVMvsENM')
 
 # constants
-gcm <- 'ecbilt'
+gcm <- 'Lorenz_ccsm'
 pc <- 5
 
 # load(paste0('./workspaces/06 - ', gcm, ' Projections'))
@@ -212,7 +212,7 @@ for (i in 1:length(climYears)) {
   # sumList <- append(sumList, sumRasterCorrected)
 }
 
-pollenFile <- './predictions/pollen/predictions-FRAXINUS_meanpred.tif'
+pollenFile <- '/Volumes/lj_mac_22/pollen/predictions-FRAXINUS_meanpred_iceMask.tif'
 pollenRast <- brick(pollenFile)
 lists <- list(meansList, maxList)
 temp <- list()

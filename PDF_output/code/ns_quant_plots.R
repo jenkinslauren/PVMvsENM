@@ -13,7 +13,7 @@ setwd('/Volumes/lj_mac_22/MOBOT/PVMvsENM')
 pdf <- pdf(file = './PDF_output/ns_quant.pdf', width = 11, height = 8.5)
   
 gcm <- 'pollen'
-fileName <- '/Volumes/lj_mac_22/pollen/predictions-FRAXINUS_meanpred.tif'
+fileName <- '/Volumes/lj_mac_22/pollen/predictions-FRAXINUS_meanpred_iceMask.tif'
 pollenRast <- brick(fileName)
 
 pollenStack <- stack(fileName)

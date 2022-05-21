@@ -20,7 +20,7 @@ studyRegionRasts <- brick(studyRegionFileName)
 world <- ne_countries(scale = "medium", returnclass = "sf")
 world <- as(world, "Spatial")
 
-pollenRast <- brick('/Volumes/lj_mac_22/pollen/predictions-FRAXINUS_meanpred.tif')
+pollenRast <- brick('/Volumes/lj_mac_22/pollen/predictions-FRAXINUS_meanpred_iceMask.tif')
 projection(pollenRast) <- getCRS('wgs84')
 colors <- c('#a50026','#d73027','#f46d43','#fdae61','#fee08b','#ffffbf',
             '#d9ef8b','#a6d96a','#66bd63','#1a9850','#006837')
@@ -198,7 +198,7 @@ dev.off()
 ###################################################################
 ###### Individual Species
 ###################################################################
-gcm <- 'ecbilt'
+gcm <- 'Lorenz_ccsm'
 fileName <- list.files(path = paste0('./predictions/', gcm),
                        pattern = paste0('PC', pc,'.tif'),
                        full.names = T)
