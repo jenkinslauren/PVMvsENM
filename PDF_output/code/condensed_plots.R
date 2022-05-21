@@ -185,7 +185,7 @@ studyRegionRasts <- brick(studyRegionFileName)
 world <- ne_countries(scale = "medium", returnclass = "sf")
 world <- as(world, "Spatial")
 
-pollenRast <- brick('/Volumes/lj_mac_22/pollen/predictions-FRAXINUS_meanpred.tif')
+pollenRast <- brick('/Volumes/lj_mac_22/pollen/predictions-FRAXINUS_meanpred_iceMask.tif')
 projection(pollenRast) <- getCRS('wgs84')
 
 pdf(file = './PDF_output/all_gcm_predictions_means.pdf', 
@@ -214,11 +214,15 @@ for(a in 1:22) {
       mnv <- cellStats(meansList[[a]],'min')
       mxv <- cellStats(meansList[[a]],'max')
       meansList[[a]] <- (meansList[[a]] - mnv) / (mxv - mnv)
+      meansList[[a]] <- mask(meansList[[a]], pollenRast[[a]])
       
+      colors <- c('#ffffe5','#f7fcb9','#d9f0a3','#addd8e','#78c679','#41ab5d','#238443','#006837','#004529')
       plot(meansList[[a]], main = paste0(sub('\\.', ' ', 
                                              gsub('\\X*', '', names(meansList[[a]]))), '\nMEANS, ', t), 
-           col = colors, axes = F, legend.mar = 10, box = F)
+           col = colors, axes = F, legend.mar = 10, box = F,
+           legend.args = list(text = 'Suitability', side = 4, font = 2, line = 2.5))
       plot(sp::spTransform(world, CRS(projection(meansList[[a]]))), border = 'black', add = T)
+      
     }
   }
 }

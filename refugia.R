@@ -87,8 +87,7 @@ for(gcm in gcmList_) {
                          '_Maxent/Model Evaluation - Random K-Folds - ', gcm)
     
     # load bg sites, records, and rangeMap
-    load(paste0('./Background Sites/Random Background Sites across Study Region - ', 
-                speciesAb, '.Rdata'))
+    load('./Background Sites/Random Background Sites across Study Region.Rdata')
     load(paste0('./Models/Maxent/all_model_outputs/', speciesAb_, '_GCM', gcm, 
                 '_PC', pc, '.rData'))
     load(paste0('./data_and_analyses/study_region/regions/little_range_map/', 
@@ -121,7 +120,6 @@ for(gcm in gcmList_) {
                          pattern = paste0('PC', pc,'.tif'),
                          full.names = T)
   t <- c(thresholds['mean',])
-  
   for(z in 1:length(t)) {
     threshold <- t[[z]]
     f <- fileName[z]
@@ -147,7 +145,6 @@ for(gcm in gcmList_) {
     nrows <- nrow(b)
     ncols <- ncol(b)
     ncells <- raster::ncell(b)
-    
     v <- rep(seq(nrows * (ncols - 1) - 1, 1, by=-ncols), each=ncols) + 0:(ncols - 1)
     cellNum <- matrix(v, nrow=nrows, ncol=ncols, byrow=TRUE)
     cellNum <- raster::raster(cellNum, template=b)
@@ -164,21 +161,20 @@ for(gcm in gcmList_) {
       refugeCellNum = refugeCellNum,
       meanRefugeAbund = meanRefugeAbund
     )
-    
-    par(mfrow=c(1,2))
-    plot(out$simulationScale[[1]], main = paste0('Refugia\n', speciesAb_, '\n', gcm), 
-         col = cols, axes = F)
-    map("world", add = T)
+    # par(mfrow=c(1,2))
+    # plot(out$simulationScale[[1]], main = paste0('Refugia\n', speciesAb_, '\n', gcm), 
+    #      col = cols, axes = F)
+    # map("world", add = T)
     plot(out$simulationScale[[2]], main = paste0('Refugia abundance\n', speciesAb_, '\n', gcm), 
-         col = cols, axes = F)
-    map("world", add = T)
+         col = cols, axes = F, box = F)
+    maps::map("world", add = T)
   }
   dev.off()
 }
 
 pollen_threshold <- 0.03
 # par(mfrow=c(1,2))
-fileName <- '/Volumes/lj_mac_22/pollen/predictions-FRAXINUS_meanpred.tif'
+fileName <- '/Volumes/lj_mac_22/pollen/predictions-FRAXINUS_meanpred_iceMask.tif'
 pollenRast <- brick(fileName)
 b <- pollenRast$predictions.FRAXINUS_meanpred.1
 thresholds <- seq(0.001, 1, by = 0.001)

@@ -18,7 +18,7 @@ library(rnaturalearthhires)
 setwd('/Volumes/lj_mac_22/MOBOT/PVMvsENM')
 
 # constants
-gcm <- 'Lorenz_ccsm'
+gcm <- 'Beyer'
 pc <- 5
 
 # load(paste0('./workspaces/06 - ', gcm, ' Projections'))
@@ -42,6 +42,8 @@ getClimRasts <- function(pc, climYear) {
     fileName <- paste0('./data_and_analyses/env_data/Beyer/envDataClipped_',
                        climYear, 'YBP_pc', pc, '.tif')
     vars <- c("BIO1", paste0('BIO', 4:19), "cloudiness", "relative_humidity")
+    land <- raster(paste0('./data_and_analyses/env_data/Beyer/tifs/BIO1_', 
+                          climYear, 'ybp.tif'))
   } else if (gcm == 'Lorenz_ccsm') { # CCSM
     load(paste0('./data_and_analyses/env_data/Lorenz/PCA_', gcm, '_clim.Rdata')) 
     load(paste0('./data_and_analyses/env_data/Lorenz/V2/ccsm_21-0k_all_tifs_LJ/pca_pc', pc, '.Rdata')) 
@@ -51,6 +53,8 @@ getClimRasts <- function(pc, climYear) {
     workingFolder <- paste0('./data_and_analyses/env_data/Lorenz/V2/ccsm_21-0k_all_tifs_LJ/', 
                             climYear, 'BP')
     vars <- names(clim[[1]])
+    land <- raster(paste0('./data_and_analyses/env_data/Lorenz/V2/ccsm_21-0k_all_tifs_LJ/', 
+                          climYear, 'BP/an_avg_TMAX.tif'))
   } else { # ECBilt
     load(paste0('./data_and_analyses/env_data/Lorenz/PCA_', gcm, '_clim.Rdata')) 
     load(paste0('./data_and_analyses/env_data/Lorenz/V2/ecbilt_21-0k_all_tifs_LJ/pca_pc', pc, '.Rdata'))
@@ -60,6 +64,8 @@ getClimRasts <- function(pc, climYear) {
     workingFolder <- paste0('./data_and_analyses/env_data/Lorenz/V2/',
                             gcm, '_21-0k_all_tifs_LJ/', climYear, 'BP')
     vars <- names(clim[[1]])
+    land <- raster(paste0('./data_and_analyses/env_data/Lorenz/V2/ccsm_21-0k_all_tifs_LJ/', 
+                          climYear, 'BP/an_avg_TMAX.tif'))
   }
   
   if (file.exists(fileName)) {
@@ -89,6 +95,10 @@ getClimRasts <- function(pc, climYear) {
     # clip environmental PCAs to study extent for given species, visualize, and save:
     envDataClipped <- list()
     for (n in 1:nlayers(envYr)) {
+      # land <- land * 0 + 1
+      # land <- projectRaster(land, envYr)
+      # land <- land * 0 + 1
+      # envYr[[n]] <- envYr[[n]] * land
       x <- envYr[[n]]
       x <- crop(x, extent(studyRegionRasts[[which(climYears == 21000)]]))
       # x <<- mask(x, studyRegion)
