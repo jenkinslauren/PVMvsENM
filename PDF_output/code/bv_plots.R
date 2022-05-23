@@ -19,6 +19,9 @@ setwd('/Volumes/lj_mac_22/MOBOT/PVMvsENM')
 gcm <- 'pollen'
 fileName <- '/Volumes/lj_mac_22/pollen/predictions-FRAXINUS_meanpred_iceMask.tif'
 pollenRast <- stack(fileName)
+names(pollenRast) <- c(paste0("Fraxinus_pollen_predictions_", 0:21, "kybp"))
+pollenRast <- unstack(pollenRast)
+pollenRast <- stack(rev(pollenRast))
 
 world <- ne_countries(scale = "medium", returnclass = "sf")
 world <- as(world, "Spatial")
@@ -335,13 +338,96 @@ plot_grid(p, plot_grid(bMean, bMax), plot_grid(cMean, cMax),
           plot_grid(eMean, eMax), ncol = 1)
 # plot_grid(p, bMean, bMax, cMean, cMax, eMean, eMax)
 
+ggplot(bv[bv$climateSource == 'Pollen',], aes(x = Time, y = centroidVelocity, group = climateSource, 
+               color = climateSource)) +
+  geom_point() + geom_line() + theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  ylim(0, 350) +
+  labs(title = "Biotic Velocity\n", x = "Time Period", 
+       y = "Centroid Velocity (m/yr)", color = "GCM") +
+  scale_color_manual(values = c('#66c2a5'))
+
+ggplot(bv[bv$climateSource == 'HadAM3H',], aes(x = Time, y = centroidVelocity, group = climateSource, 
+               color = climateSource)) +
+  geom_point() + geom_line() + theme_classic() +
+  ylim(0, 350) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "Biotic Velocity\n", x = "Time Period", 
+       y = "Centroid Velocity (m/yr)", color = "GCM") +
+  scale_color_manual(values = c('#fc8d62'))
+
+ggplot(bv[bv$climateSource == 'CCSM',], aes(x = Time, y = centroidVelocity, group = climateSource, 
+               color = climateSource)) +
+  geom_point() + geom_line() + theme_classic() +
+  ylim(0, 350) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "Biotic Velocity\n", x = "Time Period", 
+       y = "Centroid Velocity (m/yr)", color = "GCM") +
+  scale_color_manual(values = c('#8da0cb'))
+
+ggplot(bv[bv$climateSource == 'ECBilt',], aes(x = Time, y = centroidVelocity, group = climateSource, 
+               color = climateSource)) +
+  geom_point() + geom_line() + theme_classic() +
+  ylim(0, 350) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "Biotic Velocity\n", x = "Time Period", 
+       y = "Centroid Velocity (m/yr)", color = "GCM") +
+  scale_color_manual(values = c('#e78ac3'))
+
+ggplot(bv[bv$climateSource != 'Pollen',], aes(x = Time, y = centroidVelocity, group = climateSource, 
+                                              color = climateSource)) +
+  geom_point() + geom_line() + theme_classic() +
+  ylim(0, 350) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "Biotic Velocity\n", x = "Time Period", 
+       y = "Centroid Velocity (m/yr)", color = "GCM") +
+  scale_color_manual(values = c('#fc8d62','#8da0cb','#e78ac3'))
+
 ggplot(bv, aes(x = Time, y = centroidVelocity, group = climateSource, 
                color = climateSource)) +
   geom_point() + geom_line() + theme_classic() +
+  ylim(0, 350) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   labs(title = "Biotic Velocity\n", x = "Time Period", 
        y = "Centroid Velocity (m/yr)", color = "GCM") +
   scale_color_manual(values = c('#66c2a5','#fc8d62','#8da0cb','#e78ac3'))
+
+ggplot(bv[bv$climateSource == 'Pollen',], aes(x = Time, y = centroidVelocity, group = climateSource, 
+                                              color = climateSource)) +
+  geom_point() + geom_line() + theme_classic() +
+  ylim(0, 350) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "Biotic Velocity\n", x = "Time Period", 
+       y = "Centroid Velocity (m/yr)", color = "GCM") +
+  scale_color_manual(values = c('yellow'))
+
+ggplot(bv, aes(x = Time, y = centroidVelocity, group = climateSource, 
+               color = climateSource)) +
+  geom_point() + geom_line() + theme_classic() +
+  ylim(0, 350) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "Biotic Velocity\n", x = "Time Period", 
+       y = "Centroid Velocity (m/yr)", color = "GCM") +
+  scale_color_manual(values = c('yellow','gray84','gray84','gray84'))
+
+ggplot(bv[bv$climateSource == 'ECBilt' | bv$climateSource == 'HadAM3H',], 
+       aes(x = Time, y = centroidVelocity, group = climateSource, 
+                                              color = climateSource)) +
+  geom_point() + geom_line() + theme_classic() +
+  ylim(0, 350) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "Biotic Velocity\n", x = "Time Period", 
+       y = "Centroid Velocity (m/yr)", color = "GCM") +
+  scale_color_manual(values = c('#fc8d62','gray84'))
+
+ggplot(bv[bv$climateSource != 'Pollen',], aes(x = Time, y = centroidVelocity, group = climateSource, 
+                                              color = climateSource)) +
+  geom_point() + geom_line() + theme_classic() +
+  ylim(0, 350) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "Biotic Velocity\n", x = "Time Period", 
+       y = "Centroid Velocity (m/yr)", color = "GCM") +
+  scale_color_manual(values = c('#8da0cb','gray84','gray84'))
 
 plot_grid(e_all_sp, e_select_sp, c_all_sp, c_select_sp, b_all_sp, b_select_sp, ncol = 2)
 
@@ -351,35 +437,31 @@ plot_grid(e_all_sp, e_select_sp, c_all_sp, c_select_sp, b_all_sp, b_select_sp, n
 x <- data.frame(bvPollen$time, bvPollen$centroidVelocity, 
                 bvBeyerMeans$centroidVelocity, bvECBiltMean$centroidVelocity,
                 bvCCSMMean$centroidVelocity)
+x$`Time Period` <- c(rep('15-21 Kybp', 6), rep('10-15 Kybp', 5), 
+                  rep('5-10 Kybp', 5), rep('0-5 Kybp', 5)) 
 
 
 # Beyer vs Pollen
 b <- ggplot(x, aes(bvPollen.centroidVelocity, bvBeyerMeans.centroidVelocity, 
-              color = bvPollen.time, label = bvPollen.time)) + 
-  geom_point() + 
-  geom_text_repel(min.segment.length = 0) + 
-  theme_classic() + 
-  theme(legend.position = "none") + 
+              color = `Time Period`)) + 
+  geom_point(size = 2) + xlim(0, 350) + ylim(0,350) +
+  geom_abline(slope = 1, intercept = 0, color = 'gray84') + theme_classic() + 
   labs(title = "Pollen vs HadAM3H Biotic Velocities", x = "Pollen Centroid Velocity (m/yr)", 
        y = "HadAM3H Centroid Velocity (m/yr)")
 
 # ECBilt vs Pollen
 e <- ggplot(x, aes(bvPollen.centroidVelocity, bvECBiltMean.centroidVelocity, 
-              color = bvPollen.time, label = bvPollen.time)) + 
-  geom_point() + 
-  geom_text_repel(min.segment.length = 0) + 
-  theme_classic() + 
-  theme(legend.position = "none") + 
+                   color = `Time Period`)) + 
+  geom_point(size = 2) + xlim(0, 350) + ylim(0,350) + 
+  geom_abline(slope = 1, intercept = 0, color = 'gray84') + theme_classic() + 
   labs(title = "Pollen vs ECBilt Biotic Velocities", x = "Pollen Centroid Velocity (m/yr)", 
        y = "ECBilt Centroid Velocity (m/yr)")
 
 # CCSM vs Pollen
 c <- ggplot(x, aes(bvPollen.centroidVelocity, bvCCSMMean.centroidVelocity, 
-              color = bvPollen.time, label = bvPollen.time)) + 
-  geom_point() + 
-  geom_text_repel(min.segment.length = 0) + 
-  theme_classic() + 
-  theme(legend.position = "none") + 
+                   color = `Time Period`)) + 
+  geom_point(size = 2) + xlim(0, 350) + ylim(0,350) +
+  geom_abline(slope = 1, intercept = 0, color = 'gray84') + theme_classic() + 
   labs(title = "Pollen vs CCSM Biotic Velocities", x = "Pollen Centroid Velocity (m/yr)", 
        y = "CCSM Centroid Velocity (m/yr)")
 plot(b)
