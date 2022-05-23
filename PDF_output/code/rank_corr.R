@@ -22,6 +22,11 @@ world <- as(world, "Spatial")
 
 pollenRast <- brick('/Volumes/lj_mac_22/pollen/predictions-FRAXINUS_meanpred_iceMask.tif')
 projection(pollenRast) <- getCRS('wgs84')
+pollenRast <- stack(fileName)
+names(pollenRast) <- c(paste0("Fraxinus_pollen_predictions_", 0:21, "kybp"))
+pollenRast <- unstack(pollenRast)
+pollenRast <- stack(rev(pollenRast))
+
 colors <- c('#a50026','#d73027','#f46d43','#fdae61','#fee08b','#ffffbf',
             '#d9ef8b','#a6d96a','#66bd63','#1a9850','#006837')
 
@@ -174,25 +179,28 @@ colnames(corDf_plot_gcm) <- c("Time", "cor", "Models")
 
 pdf(file = './PDF_output/rank_correlation_line.pdf', width = 11, height = 8.5)
 ggplot(corDf_plot, aes(Time, cor, color = Models, group = Models)) + 
-  geom_point() + geom_line() + 
-  theme_classic() + 
+  geom_point() + geom_line() + ylim(-0.25, 1.05) +
+  theme_classic() + geom_hline(yintercept = 1, linetype="dashed", color = "gray") +
   labs(title = "Rank Correlation", x = "Time", 
        y = "cor") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_color_manual(values = c('#fc8d62','#8da0cb','#e78ac3', "#56B4E9", "#009E73", "#F0E442"))
 
 ggplot(corDf_plot_pollen, aes(Time, cor, color = Models, group = Models)) + 
-  geom_point() + geom_line() + 
-  theme_classic() + 
+  geom_point() + geom_line() + ylim(-0.25, 1.05) +
+  theme_classic() + geom_hline(yintercept = 1, linetype="dashed", color = "grey") +
   labs(title = "Rank Correlation", x = "Time", 
        y = "cor") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_color_manual(values = c('#fc8d62','#8da0cb','#e78ac3'))
 
 ggplot(corDf_plot_gcm, aes(Time, cor, color = Models, group = Models)) + 
-  geom_point() + geom_line() + 
-  theme_classic() + 
+  geom_point() + geom_line() + ylim(-0.25, 1.05) +
+  theme_classic() + geom_hline(yintercept = 1, linetype="dashed", color = "gray") +
   labs(title = "Rank Correlation", x = "Time", 
        y = "cor") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_color_manual(values = c("#56B4E9", "#009E73", "#F0E442"))
 dev.off()
 
 ###################################################################
