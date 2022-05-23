@@ -556,6 +556,8 @@ plot_grid(b_lag, e_lag, c_lag, ncol = 2)
 
 dev.off()
 
+save.image('./workspaces/07 - Analyses: Biotic Velocity')
+
 
 ############################
 jpeg(file = '/Users/laurenjenkins/Downloads/bv_by_species.jpeg',
