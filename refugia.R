@@ -70,6 +70,8 @@ speciesList <- c('Fraxinus americana','Fraxinus caroliniana', 'Fraxinus cuspidat
 # plot(as(pollen_sp, 'Spatial'))
 
 cols <- c('gray83', '#ccece6', '#99d8c9', '#66c2a4', '#41ae76', '#238b45', '#006d2c', '#00441b')
+world <- ne_countries(scale = "medium", returnclass = "sf")
+world <- as(world, "Spatial")
 
 for(gcm in gcmList_) {
   thresholds <- list()
@@ -260,23 +262,26 @@ for(gcm in gcmList_) {
   # plot(out$simulationScale[[1]], main = paste0('Refugia\n', speciesAb_, '\n', gcm), 
   #      col = cols, axes = F)
   # map("world", add = T)
-  plot(out$simulationScale[[2]], main = paste0('Refugia abundance\n', gcm), 
+  plot(mask(out$simulationScale[[2]], pollenRast[[22]]), main = paste0('Refugia abundance\n', gcm), 
        col = cols, axes = F, box = F)
-  maps::map("world", add = T)
+  # plot(raster::crop(sp::spTransform(world, CRS(projection(out$simulationScale[[2]]))), 
+  #                   extent(out$simulationScale[[2]])),
+  #      border = 'black', add = T)
   save.image(paste0('./workspaces/07 - Analyses, ', gcm, ' Refugia'))
 }
 
 
 pollen_threshold <- 0.03
 # par(mfrow=c(1,2))
-fileName <- '/Volumes/lj_mac_22/pollen/predictions-FRAXINUS_meanpred_iceMask.tif'
-pollenRast <- brick(fileName)
-b <- pollenRast$predictions.FRAXINUS_meanpred.1
+# fileName <- '/Volumes/lj_mac_22/pollen/predictions-FRAXINUS_meanpred_iceMask.tif'
+# pollenRast <- brick(fileName)
+b <- pollenRast$Fraxinus_pollen_predictions_21kybp
 thresholds <- seq(0.001, 1, by = 0.001)
 kappa <- data.frame('threshold' = thresholds, 'kappa' = NA)
 
 for(t in thresholds) {
-  refugia <- b >= t
+  # refugia <- b >= t
+  refugia <- b >= pollen_threshold
   refugiaId <- raster::clump(refugia, directions = 8, gaps = F)
   names(refugiaId) <- 'refugiaId'
   # plot(refugiaId, main = paste0(names(b),' ', title), axes = F)
@@ -297,7 +302,7 @@ for(t in thresholds) {
   # 
   # # mean refuge abundance
   # meanRefugeAbund <- raster::cellStats(abund, 'sum') / length(refugeCellNum)
-  
+
   # k <- raster.change(abund, b, stat = c("kappa"), mask = T)
   
   # generate a cohen's kappa value for pollen refugia vs GCM refugia
@@ -309,12 +314,25 @@ for(t in thresholds) {
   #   refugeCellNum = refugeCellNum,
   #   meanRefugeAbund = meanRefugeAbund
   # )
-  
+
   # par(mfrow=c(1,2))
   # plot(out$simulationScale[[1]], main = paste0('Refugia\n', speciesAb_, '\n', gcm), 
   #      col = cols, axes = F)
   # map("world", add = T)
-  # plot(out$simulationScale[[2]], main = paste0('Refugia abundance\n', speciesAb_, '\n', gcm), 
-  #      col = cols, axes = F)
+  plot(out$simulationScale[[2]], main = paste0('Refugia abundance\nPollen'),
+       col = cols, axes = F, box = F)
   # map("world", add = T)
 }
+
+par(mfrow=c(2,2))
+plot(out$simulationScale[[2]], main = paste0('Refugia abundance\nPollen'),
+     col = cols, axes = F, box = F)
+load('./workspaces/07 - Analyses, ecbilt Refugia')
+plot(mask(out$simulationScale[[2]], pollenRast[[22]]), main = 'Refugia abundance\nECBilt', 
+     col = cols, axes = F, box = F)
+load('./workspaces/07 - Analyses, Lorenz_ccsm Refugia')
+plot(mask(out$simulationScale[[2]], pollenRast[[22]]), main = 'Refugia abundance\nCCSM', 
+     col = cols, axes = F, box = F)
+load('./workspaces/07 - Analyses, Beyer Refugia')
+plot(mask(out$simulationScale[[2]], pollenRast[[22]]), main = 'Refugia abundance\nHadAM3H', 
+     col = cols, axes = F, box = F)
