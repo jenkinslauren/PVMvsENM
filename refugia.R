@@ -73,8 +73,8 @@ cols <- c('gray83', '#ccece6', '#99d8c9', '#66c2a4', '#41ae76', '#238b45', '#006
 
 for(gcm in gcmList_) {
   thresholds <- list()
-  pdf(file = paste0('./PDF_output/', gcm, '_refugia', '.pdf'), 
-      width = 11, height = 8.5)
+  # pdf(file = paste0('./PDF_output/', gcm, '_refugia', '.pdf'), 
+  #     width = 11, height = 8.5)
   for(a in 1:length(speciesList)) {
     sp <- speciesList[a]
     species <- gsub(tolower(sp), pattern=' ', replacement='_')
@@ -169,8 +169,103 @@ for(gcm in gcmList_) {
          col = cols, axes = F, box = F)
     maps::map("world", add = T)
   }
-  dev.off()
+  # dev.off()
 }
+
+fileName <- '/Volumes/lj_mac_22/pollen/predictions-FRAXINUS_meanpred_iceMask.tif'
+pollenRast <- stack(fileName)
+names(pollenRast) <- c(paste0("Fraxinus_pollen_predictions_", 0:21, "kybp"))
+pollenRast <- unstack(pollenRast)
+pollenRast <- stack(rev(pollenRast))
+
+for(gcm in gcmList_) {
+  thresholds <- list()
+  for(a in 1:length(speciesList)) {
+    sp <- speciesList[a]
+    species <- gsub(tolower(sp), pattern=' ', replacement='_')
+    print(paste0("Species = ", species))
+    speciesAb <- paste0(substr(sp,1,4), toupper(substr(sp,10,10)), substr(sp,11,13))
+    speciesAb_ <- sub("(.{4})(.*)", "\\1_\\2", speciesAb)
+    rangeName <- paste0('littleRange_', speciesAb)
+    
+    folderName <- paste0('./Models/Maxent/', speciesAb_,
+                         '_Maxent/Model Evaluation - Random K-Folds - ', gcm)
+    
+    # load bg sites, records, and rangeMap
+    load('./Background Sites/Random Background Sites across Study Region.Rdata')
+    load(paste0('./Models/Maxent/all_model_outputs/', speciesAb_, '_GCM', gcm, 
+                '_PC', pc, '.rData'))
+    load(paste0('./data_and_analyses/study_region/regions/little_range_map/', 
+                rangeName, '.Rdata'))
+    # load(paste0('./Models/Maxent/', gcm, '_evals.Rdata'))
+    
+    # load k-folds for presences and background sites from model evaluations
+    t <- list()
+    for(i in 1:5) {
+      print(paste0('K-fold ', i, ':'))
+      
+      load(paste0(folderName, '/Model ', i, '.Rdata'))
+      
+      # temp <- enmSdm::thresholdWeighted(predPres, predBg, na.rm = T)
+      temp <- enmSdm::thresholdWeighted(predPres, predBg, na.rm = T)
+      t <- append(t, temp['msss'])
+    }
+    thresholds[[a]] <- t
+    
+  }
+  
+  thresholds <- data.frame(t(rbindlist(thresholds, fill = T)))
+  colnames(thresholds) <- speciesList
+  rownames(thresholds) <- paste("K-fold", 1:5) 
+  thresholds[thresholds == 0] <- NA
+  
+  thresholds <- rbind(thresholds, mean = summarize_all(thresholds, mean, na.rm = T))
+  
+  threshold <- as.numeric(rowMeans(thresholds)['mean'])
+  
+  load(paste0('./workspaces/06 - ', gcm, ' Projections'))
+  b <- stack(meansList)
+  
+  b <- b[[1]]
+  names(b) <- paste0(21, ' Kybp')
+  
+  # par(mfrow=c(1,2))
+  refugia <- b >= threshold
+  refugiaId <- raster::clump(refugia, directions = 8, gaps = F)
+  names(refugiaId) <- 'refugiaId'
+  # plot(refugiaId, main = paste0(names(b),' ', title), axes = F)
+  abund <- b * refugia
+  names(abund) <- 'refugiaAbund'
+  
+  nrows <- nrow(b)
+  ncols <- ncol(b)
+  ncells <- raster::ncell(b)
+  v <- rep(seq(nrows * (ncols - 1) - 1, 1, by=-ncols), each=ncols) + 0:(ncols - 1)
+  cellNum <- matrix(v, nrow=nrows, ncol=ncols, byrow=TRUE)
+  cellNum <- raster::raster(cellNum, template=b)
+  cellNum <- as.vector(cellNum)
+  simRefugiaBinary <- as.vector(refugia)
+  refugeCellNum <- cellNum[simRefugiaBinary]
+  if (any(is.na(refugeCellNum))) refugeCellNum <- refugeCellNum[!is.na(refugeCellNum)]
+  
+  # mean refuge abundance
+  meanRefugeAbund <- raster::cellStats(abund, 'sum') / length(refugeCellNum)
+  
+  out <- list(
+    simulationScale = raster::stack(refugiaId, abund),
+    refugeCellNum = refugeCellNum,
+    meanRefugeAbund = meanRefugeAbund
+  )
+  # par(mfrow=c(1,2))
+  # plot(out$simulationScale[[1]], main = paste0('Refugia\n', speciesAb_, '\n', gcm), 
+  #      col = cols, axes = F)
+  # map("world", add = T)
+  plot(out$simulationScale[[2]], main = paste0('Refugia abundance\n', gcm), 
+       col = cols, axes = F, box = F)
+  maps::map("world", add = T)
+  save.image(paste0('./workspaces/07 - Analyses, ', gcm, ' Refugia'))
+}
+
 
 pollen_threshold <- 0.03
 # par(mfrow=c(1,2))
@@ -208,7 +303,7 @@ for(t in thresholds) {
   # generate a cohen's kappa value for pollen refugia vs GCM refugia
   k <- cohen.kappa(cbind(as.vector(as.matrix(abund)), as.vector(as.matrix(b))))
   kappa$kappa[which(kappa$threshold == t)] <- k$kappa
-            
+  
   # out <- list(
   #   simulationScale = raster::stack(refugiaId, abund),
   #   refugeCellNum = refugeCellNum,
