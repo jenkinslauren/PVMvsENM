@@ -429,6 +429,16 @@ ggplot(bv[bv$climateSource != 'Pollen',], aes(x = Time, y = centroidVelocity, gr
        y = "Centroid Velocity (m/yr)", color = "GCM") +
   scale_color_manual(values = c('#8da0cb','gray84','gray84'))
 
+ggplot(bv, aes(x = Time, y = centroidVelocity, group = climateSource, 
+                                              color = climateSource)) +
+  geom_point() + geom_line(aes(size = climateSource)) + theme_classic() +
+  ylim(0, 350) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "Biotic Velocity\n", x = "Time Period", 
+       y = "Centroid Velocity (m/yr)", color = "GCM") +
+  scale_color_manual(values = c('gold','gray84', 'gray84','gray84')) +
+  scale_size_manual(values = c(1, 0.5, 0.5, 0.5))
+
 plot_grid(e_all_sp, e_select_sp, c_all_sp, c_select_sp, b_all_sp, b_select_sp, ncol = 2)
 
 ###############################################################################
@@ -556,7 +566,7 @@ plot_grid(b_lag, e_lag, c_lag, ncol = 2)
 
 dev.off()
 
-save.image('./workspaces/07 - Analyses: Biotic Velocity')
+save.image('./workspaces/07 - Analyses,l Biotic Velocity')
 
 
 ############################
