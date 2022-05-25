@@ -427,7 +427,7 @@ ggplot(bv[bv$climateSource != 'Pollen',], aes(x = Time, y = centroidVelocity, gr
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   labs(title = "Biotic Velocity\n", x = "Time Period", 
        y = "Centroid Velocity (m/yr)", color = "GCM") +
-  scale_color_manual(values = c('#8da0cb','gray84','gray84'))
+  scale_color_manual(values = c('gray84', '#8da0cb', 'gray84'))
 
 ggplot(bv, aes(x = Time, y = centroidVelocity, group = climateSource, 
                                               color = climateSource)) +
@@ -449,8 +449,8 @@ x <- data.frame(bvPollen$time, bvPollen$centroidVelocity,
                 bvCCSMMean$centroidVelocity)
 x$`Time Period` <- c(rep('15-21 Kybp', 6), rep('10-15 Kybp', 5), 
                   rep('5-10 Kybp', 5), rep('0-5 Kybp', 5)) 
-
-
+x$`Time Period` <- factor(x$`Time Period`, levels = c('0-5 Kybp', '5-10 Kybp',
+                                                      '10-15 Kybp', '15-21 Kybp'))
 # Beyer vs Pollen
 b <- ggplot(x, aes(bvPollen.centroidVelocity, bvBeyerMeans.centroidVelocity, 
               color = `Time Period`)) + 
@@ -566,7 +566,7 @@ plot_grid(b_lag, e_lag, c_lag, ncol = 2)
 
 dev.off()
 
-save.image('./workspaces/07 - Analyses,l Biotic Velocity')
+save.image('./workspaces/07 - Analyses, Biotic Velocity')
 
 
 ############################
