@@ -270,18 +270,26 @@ for(gcm in gcmList_) {
   save.image(paste0('./workspaces/07 - Analyses, ', gcm, ' Refugia'))
 }
 
+library(psych)
+library(vegan)
+
+jaccard_fun <- function(x, y) {
+  intersection = length(intersect(x, y))
+  union = length(x) + length(y) - intersection
+  return (intersection/union)
+}
 
 pollen_threshold <- 0.03
 # par(mfrow=c(1,2))
 # fileName <- '/Volumes/lj_mac_22/pollen/predictions-FRAXINUS_meanpred_iceMask.tif'
 # pollenRast <- brick(fileName)
-b <- pollenRast$Fraxinus_pollen_predictions_21kybp
+b <- out$simulationScale[[2]]
 thresholds <- seq(0.001, 1, by = 0.001)
 kappa <- data.frame('threshold' = thresholds, 'kappa' = NA)
+jaccard <- data.frame('threshold' = thresholds, 'j' = NA)
 
 for(t in thresholds) {
-  # refugia <- b >= t
-  refugia <- b >= pollen_threshold
+  refugia <- b >= t
   refugiaId <- raster::clump(refugia, directions = 8, gaps = F)
   names(refugiaId) <- 'refugiaId'
   # plot(refugiaId, main = paste0(names(b),' ', title), axes = F)
@@ -309,19 +317,18 @@ for(t in thresholds) {
   k <- cohen.kappa(cbind(as.vector(as.matrix(abund)), as.vector(as.matrix(b))))
   kappa$kappa[which(kappa$threshold == t)] <- k$kappa
   
+  j <- jaccard_fun(as.vector(as.matrix(abund)), as.vector(as.matrix(b)))
+  jaccard$j[which(jaccard$threshold == t)] <- j
+  
   # out <- list(
   #   simulationScale = raster::stack(refugiaId, abund),
   #   refugeCellNum = refugeCellNum,
   #   meanRefugeAbund = meanRefugeAbund
   # )
-
-  # par(mfrow=c(1,2))
-  # plot(out$simulationScale[[1]], main = paste0('Refugia\n', speciesAb_, '\n', gcm), 
-  #      col = cols, axes = F)
-  # map("world", add = T)
-  plot(out$simulationScale[[2]], main = paste0('Refugia abundance\nPollen'),
-       col = cols, axes = F, box = F)
-  # map("world", add = T)
+  # write.xlsx(kappa, file = './pollen_refugia_thresholds.xlsx', sheetName = paste0(gcm, '_kappa'),
+  #            append = T, row.names = F)
+  # write.xlsx(jaccard, file = './pollen_refugia_thresholds.xlsx', sheetName = paste0(gcm, '_jaccard'),
+  #            append = T, row.names = F)
 }
 
 par(mfrow=c(2,2))
