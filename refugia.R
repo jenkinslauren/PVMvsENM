@@ -351,8 +351,23 @@ gcm <- 'Lorenz_ccsm'
 t <- read_excel('./pollen_refugia_thresholds.xlsx', sheet = paste0(gcm, "_jaccard"))
 
 ggplot(t, aes(threshold, j)) + 
-  geom_point() + theme_classic() + 
+  geom_point(size = 0.3) + theme_classic() + 
   labs(title = "Pollen thresholds", x = "Threshold", 
        y = "Jaccard Similarity")
 
+gcm <- 'ecbilt'
+t <- read_excel('./pollen_refugia_thresholds.xlsx', sheet = paste0(gcm, "_jaccard"))
+
+ggplot(t, aes(threshold, j)) + 
+  geom_point(size = 0.3) + theme_classic() + 
+  labs(title = "Pollen thresholds", x = "Threshold", 
+       y = "Jaccard Similarity")
+
+gcm <- 'Beyer'
+t <- read_excel('./pollen_refugia_thresholds.xlsx', sheet = paste0(gcm, "_jaccard"))
+
+ggplot(t, aes(threshold, j)) + 
+  geom_point(size = 0.3) + theme_classic() + 
+  labs(title = "Pollen thresholds", x = "Threshold", 
+       y = "Jaccard Similarity")
 
