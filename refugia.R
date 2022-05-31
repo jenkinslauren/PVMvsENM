@@ -343,3 +343,16 @@ plot(mask(out$simulationScale[[2]], pollenRast[[22]]), main = 'Refugia abundance
 load('./workspaces/07 - Analyses, Beyer Refugia')
 plot(mask(out$simulationScale[[2]], pollenRast[[22]]), main = 'Refugia abundance\nHadAM3H', 
      col = cols, axes = F, box = F)
+
+# plot results of pollen thresholds experiment
+# X = threshold, Y = Jaccard value
+library(readxl)
+gcm <- 'Lorenz_ccsm'
+t <- read_excel('./pollen_refugia_thresholds.xlsx', sheet = paste0(gcm, "_jaccard"))
+
+ggplot(t, aes(threshold, j)) + 
+  geom_point() + theme_classic() + 
+  labs(title = "Pollen thresholds", x = "Threshold", 
+       y = "Jaccard Similarity")
+
+
