@@ -57,11 +57,10 @@ clean <- function(sp) {
   speciesAb_ <- sub("(.{4})(.*)", "\\1_\\2", speciesAb)
   
   if (sp == 'Fraxinus all') {
-    range.list <- list(littleRange_FraxAmer, littleRange_FraxCaro, 
-                       littleRange_FraxCusp, littleRange_FraxGreg,
-                       littleRange_FraxNigr, littleRange_FraxPenn, 
-                       littleRange_FraxProf, littleRange_FraxQuad)
-    range <- do.call(merge, range.list) 
+    range <- rgeos::gUnion(rgeos::gUnion(rgeos::gUnion(littleRange_FraxAmer, littleRange_FraxCaro), 
+                           rgeos::gUnion(littleRange_FraxCusp, littleRange_FraxGreg)),
+                           rgeos::gUnion(rgeos::gUnion(littleRange_FraxNigr, littleRange_FraxPenn), 
+                           rgeos::gUnion(littleRange_FraxProf, littleRange_FraxQuad)))
   } else {
     rangeName <- paste0('littleRange_', speciesAb)
     range <- get(rangeName)
