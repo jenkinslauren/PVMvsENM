@@ -162,3 +162,9 @@ cluster/workspaces/05 - Modeling Workspace - Frax_Quad Model Output - PC5_GCM_Lo
 workspaces/PCA_ccsm_PC5
 workspaces/07 - Analyses: Biotic Velocity
 workspaces/07 - Analyses, Biotic Velocity
+workspaces/03 - Modeling Workspace - Fraxinus Cleaning
+workspaces/04 - Modeling Workspace - Clipping Fraxinus_PC_5_GCM_Beyer
+workspaces/04 - Modeling Workspace - Clipping Fraxinus_PC_5_GCM_ecbilt
+workspaces/04 - Modeling Workspace - Clipping Fraxinus_PC_5_GCM_Lorenz_ccsm
+workspaces/05 - Modeling Workspace - Fraxinus Model Output - PC5_GCM_Beyer
+workspaces/05 - Modeling Workspace - Fraxinus Model Output - PC5_GCM_Lorenz_ccsm
