@@ -608,8 +608,9 @@ for(sp in speciesList) {
     calibRegionSpAlb <- sp::spTransform(as(calibBuffer, 'Spatial'), getCRS('albersNA', TRUE))
     calibRegionSpWgs <- sp::spTransform(calibRegionSpAlb, getCRS('wgs84', TRUE))
     
-    bgFileName <- paste0('./Background Sites/Random Background Sites across Study Region - ', 
-                         speciesAb_, '.Rdata')
+    # bgFileName <- paste0('./Background Sites/Random Background Sites across Study Region - ', 
+    #                      speciesAb_, '.Rdata')
+    bgFileName <- './Background Sites/Random Background Sites across Study Region.Rdata'
     
     # studyRegionRastsAlb <- rasterToPolygons(studyRegionRasts[[1]])
     

@@ -18,7 +18,6 @@ library(maps)
 library(ggplot2)
 library(rnaturalearth)
 library(rnaturalearthdata)
-library(rnaturalearthhires)
 
 # additional tools
 library(tools)
@@ -35,18 +34,38 @@ load('./workspaces/01 - Modeling Workspace - Fraxinus Range Maps (BIEN + Little)
 
 # set constants
 ll <- c('longitude', 'latitude')
-# speciesList <- c('Fraxinus americana', 'Fraxinus caroliniana', 'Fraxinus cuspidata'
-#                  ,'Fraxinus greggii', 'Fraxinus nigra', 'Fraxinus pennsylvanica',
-#                  'Fraxinus profunda', 'Fraxinus quadrangulata')
+speciesList <- c('Fraxinus americana', 'Fraxinus caroliniana', 'Fraxinus cuspidata'
+                 ,'Fraxinus greggii', 'Fraxinus nigra', 'Fraxinus pennsylvanica',
+                 'Fraxinus profunda', 'Fraxinus quadrangulata')
 
-speciesList <- 'Fraxinus quadrangulata'
+lorenzRast <- raster::raster('./data_and_analyses/env_data/Lorenz/V2/ccsm_21-0k_all_tifs_LJ/0BP/an_avg_ETR.tif')
+
+occs <- data.frame()
+for(sp in speciesList) {
+  species <- gsub(tolower(sp), pattern=' ', replacement='_')
+  speciesFileName <- paste0('./data_and_analyses/species_records/01_', 
+                            gsub(tolower(species), pattern = ' ', 
+                                 replacement = '_'), '_retained_records.rds')
+  
+  occs_current <- readRDS(speciesFileName)
+  occs <- rbind(occs, occs_current)
+}
 
 clean <- function(sp) {
   species <- gsub(tolower(sp), pattern=' ', replacement='_')
   speciesAb <- paste0(substr(sp,1,4), toupper(substr(sp,10,10)), substr(sp,11,13))
   speciesAb_ <- sub("(.{4})(.*)", "\\1_\\2", speciesAb)
-  rangeName <- paste0('littleRange_', speciesAb)
-  range <- get(rangeName)
+  
+  if (sp == 'Fraxinus all') {
+    range.list <- list(littleRange_FraxAmer, littleRange_FraxCaro, 
+                       littleRange_FraxCusp, littleRange_FraxGreg,
+                       littleRange_FraxNigr, littleRange_FraxPenn, 
+                       littleRange_FraxProf, littleRange_FraxQuad)
+    range <- do.call(merge, range.list) 
+  } else {
+    rangeName <- paste0('littleRange_', speciesAb)
+    range <- get(rangeName)
+  }
 
   # Standard cleaning procedures: 
   # * remove records without coordinates or dates
@@ -131,48 +150,50 @@ clean <- function(sp) {
   
   
   # Thin data.
-  thinnedFileName <- paste0('./species_records/02_', 
+  thinnedFileName <- paste0('./data_and_analyses/species_records/02_', 
                             gsub(tolower(species), pattern = ' ', 
                                  replacement = '_'), '_thinned_records.rData')
   
   if (file.exists(thinnedFileName)) {
     load(thinnedFileName)
   } else {
-    # memory.limit() - will give you something with memory (how much is remaining or it's capacity)
-    # lsos might also help with identifying how much memory
-    k <- nrow(occs) / 1000
-    # cut_number divides the dataframe into k groups by longitude value
-    occs$folds <- as.numeric(cut_number(occs$longitude, k))
-    folds <- split(occs, occs$folds)
+    # # memory.limit() - will give you something with memory (how much is remaining or it's capacity)
+    # # lsos might also help with identifying how much memory
+    # k <- nrow(occs) / 1000
+    # # cut_number divides the dataframe into k groups by longitude value
+    # occs$folds <- as.numeric(cut_number(occs$longitude, k))
+    # folds <- split(occs, occs$folds)
+    # 
+    # # sanity check
+    # print(paste0("Sanity check: does (# of occurrences) ", nrow(occs), 
+    #              " = (# of occurrences in folds) ", sum(sapply(folds, nrow)), "?"))
+    # 
+    # i <- 1 
+    # thinnedFolds <- list()
+    # 
+    # thin <- function(df) {
+    #   p <- paste0("*X", i, ".")
+    #   names(df) <- gsub(pattern = p, replacement = "", x = names(df))
+    #   return(geoThinApprox(df, 1000, c('longitude', 'latitude')))
+    # }
+    # 
+    # while(TRUE) {
+    #   currentFold <- thin(data.frame(folds[i]))
+    #   thinnedFolds[[i]] <- currentFold
+    #   i <- i + 1
+    #   if (i > (k + 1)) {
+    #     break
+    #   }
+    # }
+    # 
+    # thinned <- as.data.frame(do.call(rbind, thinnedFolds))
+    # thinned <- geoThinApprox(thinned, 1000, c('longitude', 'latitude'))
+    # 
+    # finalThinned <- elimCellDups(thinned, raster::raster(), longLat = c('longitude', 'latitude'))
     
-    # sanity check
-    print(paste0("Sanity check: does (# of occurrences) ", nrow(occs), 
-                 " = (# of occurrences in folds) ", sum(sapply(folds, nrow)), "?"))
+    finalThinned <- elimCellDups(occs, lorenzRast, longLat = ll)
     
-    i <- 1 
-    thinnedFolds <- list()
-    
-    thin <- function(df) {
-      p <- paste0("*X", i, ".")
-      names(df) <- gsub(pattern = p, replacement = "", x = names(df))
-      return(geoThinApprox(df, 1000, c('longitude', 'latitude')))
-    }
-    
-    while(TRUE) {
-      currentFold <- thin(data.frame(folds[i]))
-      thinnedFolds[[i]] <- currentFold
-      i <- i + 1
-      if (i > (k + 1)) {
-        break
-      }
-    }
-    
-    thinned <- as.data.frame(do.call(rbind, thinnedFolds))
-    thinned <- geoThinApprox(thinned, 1000, c('longitude', 'latitude'))
-    
-    finalThinned <- elimCellDups(thinned, raster::raster(), longLat = c('longitude', 'latitude'))
-    
-    save(thinned, finalThinned, file = thinnedFileName)
+    save(finalThinned, file = thinnedFileName)
   }
   
   # Before eliminating cell duplicates (X observations):
@@ -184,6 +205,7 @@ clean <- function(sp) {
   map("state", add = TRUE)
   map("world", add = TRUE)
   
+  thinned <- finalThinned
   # Using sf for spatial visualization (easily customizable):
   speciesSf <- st_as_sf(x = finalThinned,
                         coords = c(x = 'longitude',
@@ -196,8 +218,8 @@ clean <- function(sp) {
   
   # load country/world basemap data
   world <- ne_countries(scale = "medium", returnclass = "sf")
-  states <- st_as_sf(ne_states(country = 'united states of america'))
-  canada <- st_as_sf(ne_states(country = 'canada'))
+  states <- ne_states(returnclass = "sf")
+  canada <- ne_states(country = 'canada', returnclass = "sf")
   
   ggplot(data = world) +
     theme_bw() +
@@ -215,7 +237,7 @@ clean <- function(sp) {
   
   
   # Set buffer.
-  bufferFileName <- paste0('./cleaning_records/', 
+  bufferFileName <- paste0('./data_and_analyses/cleaned_records/', 
                            gsub(tolower(species), pattern = ' ', 
                                 replacement = '_'), '_buffer.rData')
   
@@ -365,7 +387,7 @@ clean <- function(sp) {
   # range_buffer_final <- range_buffer %>% filter(AREA == max(range_buffer$AREA))
   range_buffer_final <- st_union(range_buffer)
   
-  cleanedRecordsFileName <- paste0('./cleaning_records/', 
+  cleanedRecordsFileName <- paste0('./data_and_analyses/cleaned_records/', 
                                    gsub(tolower(species), pattern = ' ', 
                                         replacement = '_'), '_finalRecords.rData')
   
