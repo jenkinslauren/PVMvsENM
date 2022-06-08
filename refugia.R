@@ -350,24 +350,29 @@ library(readxl)
 gcm <- 'Lorenz_ccsm'
 t <- read_excel('./pollen_refugia_thresholds.xlsx', sheet = paste0(gcm, "_jaccard"))
 
-ggplot(t, aes(threshold, j)) + 
+jaccard_ccsm <- ggplot(t, aes(threshold, j)) + 
   geom_point(size = 0.3) + theme_classic() + 
-  labs(title = "Pollen thresholds", x = "Threshold", 
+  labs(title = "Pollen threshold\ncompared to CCSM", x = "Threshold", 
        y = "Jaccard Similarity")
 
 gcm <- 'ecbilt'
 t <- read_excel('./pollen_refugia_thresholds.xlsx', sheet = paste0(gcm, "_jaccard"))
 
-ggplot(t, aes(threshold, j)) + 
+jaccard_ecbilt <- ggplot(t, aes(threshold, j)) + 
   geom_point(size = 0.3) + theme_classic() + 
-  labs(title = "Pollen thresholds", x = "Threshold", 
+  labs(title = "Pollen thresholds\ncompared to ECBilt", x = "Threshold", 
        y = "Jaccard Similarity")
 
 gcm <- 'Beyer'
 t <- read_excel('./pollen_refugia_thresholds.xlsx', sheet = paste0(gcm, "_jaccard"))
 
-ggplot(t, aes(threshold, j)) + 
+jaccard_hadley <- ggplot(t, aes(threshold, j)) + 
   geom_point(size = 0.3) + theme_classic() + 
-  labs(title = "Pollen thresholds", x = "Threshold", 
+  labs(title = "Pollen threshold\ncompared to HadAM3H", x = "Threshold", 
        y = "Jaccard Similarity")
+
+library(cowplot)
+pdf('./pollen_Jaccard.pdf', width = 11, height = 8.5)
+plot_grid(jaccard_ccsm, jaccard_ecbilt, jaccard_hadley)
+dev.off()
 
