@@ -281,19 +281,21 @@ jaccard_fun <- function(x, y) {
 
 pollen_threshold <- 0.03
 # par(mfrow=c(1,2))
-# fileName <- '/Volumes/lj_mac_22/pollen/predictions-FRAXINUS_meanpred_iceMask.tif'
-# pollenRast <- brick(fileName)
-b <- out$simulationScale[[2]]
+fileName <- '/Volumes/lj_mac_22/pollen/predictions-FRAXINUS_meanpred_iceMask.tif'
+pollenRast <- brick(fileName)
+pollenRast <- pollenRast$predictions.FRAXINUS_meanpred_iceMask.22
+gcmRast <- out$simulationScale[[2]]
 thresholds <- seq(0.001, 1, by = 0.001)
 kappa <- data.frame('threshold' = thresholds, 'kappa' = NA)
 jaccard <- data.frame('threshold' = thresholds, 'j' = NA)
 
+pdf(file = '/Users/laurenjenkins/Downloads/pollen_refugia.pdf', width = 11.5, height = 8.5)
 for(t in thresholds) {
-  refugia <- b >= t
-  refugiaId <- raster::clump(refugia, directions = 8, gaps = F)
+  refugia <- pollenRast >= t
+  refugiaId <- raster::clump(refugia, directions = 4, gaps = F)
   names(refugiaId) <- 'refugiaId'
-  # plot(refugiaId, main = paste0(names(b),' ', title), axes = F)
-  abund <- b * refugia
+  plot(refugiaId, main = paste0(names(pollenRast),' ', title), axes = F)
+  abund <- pollenRast * refugia
   names(abund) <- 'refugiaAbund'
   
   # nrows <- nrow(b)
@@ -314,10 +316,10 @@ for(t in thresholds) {
   # k <- raster.change(abund, b, stat = c("kappa"), mask = T)
   
   # generate a cohen's kappa value for pollen refugia vs GCM refugia
-  k <- cohen.kappa(cbind(as.vector(as.matrix(abund)), as.vector(as.matrix(b))))
+  k <- cohen.kappa(cbind(as.vector(as.matrix(gcmRast)), as.vector(as.matrix(abund))))
   kappa$kappa[which(kappa$threshold == t)] <- k$kappa
   
-  j <- jaccard_fun(as.vector(as.matrix(abund)), as.vector(as.matrix(b)))
+  j <- jaccard_fun(as.vector(as.matrix(gcmRast)), as.vector(as.matrix(abund)))
   jaccard$j[which(jaccard$threshold == t)] <- j
   
   # out <- list(
@@ -330,6 +332,7 @@ for(t in thresholds) {
   # write.xlsx(jaccard, file = './pollen_refugia_thresholds.xlsx', sheetName = paste0(gcm, '_jaccard'),
   #            append = T, row.names = F)
 }
+dev.off()
 
 par(mfrow=c(2,2))
 plot(out$simulationScale[[2]], main = paste0('Refugia abundance\nPollen'),
