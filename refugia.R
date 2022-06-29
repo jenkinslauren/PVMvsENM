@@ -1,99 +1,123 @@
 rm(list = ls())
+
 library(dismo)
 library(sp)
 library(enmSdm)
-library(xlsx)
 library(geosphere)
 library(raster)
-library(data.table)
-library(dplyr)
-library(viridis)
+
 library(maps)
 library(sf)
 library(spatialEco)
 
-setwd('/Volumes/lj_mac_22/MOBOT/PVMvsENM')
+library(xlsx)
+library(data.table)
+library(dplyr)
+library(viridis)
+
+genus <- 'fraxinus'
+speciesList <- paste0('Fraxinus ', 
+                      c('americana', 'caroliniana', 'cuspidata',
+                        'greggii', 'nigra', 'pennsylvanica', 
+                        'profunda', 'quadrangulata'))
+
+setwd(paste0('/Volumes/lj_mac_22/MOBOT/by_genus/', genus))
 # setwd('/mnt/research/TIMBER/PVMvsENM')
 
 ll <- c('longitude', 'latitude')
+gcmList <- c('hadley','ccsm', 'ecbilt')
 
-gcmList_ <- c('Beyer','Lorenz_ccsm', 'ecbilt')
 pc <- 5
 predictors <- c(paste0('pca', 1:pc))
-speciesList <- c('Fraxinus americana','Fraxinus caroliniana', 'Fraxinus cuspidata',
-                 'Fraxinus greggii', 'Fraxinus nigra', 'Fraxinus pennsylvanica',
-                 'Fraxinus profunda', 'Fraxinus quadrangulata')
 
-# pollen <- readRDS('/Volumes/lj_mac_22/pollen/bv/FRAXINUS_bvs_n200_v4.1.RDS')
-# pollen <- readRDS('/Volumes/lj_mac_22/pollen/polya-gamma-predictions_4.1_overdispersed-001.RDS')
-# pollen_locs <- readRDS('/Volumes/lj_mac_22/pollen/pollen_locs_4.1.RDS')
-# pollen_dat <- readRDS('/Volumes/lj_mac_22/pollen/pollen_dat_4.1.RDS')
-# pollen_taxa <- readRDS('/Volumes/lj_mac_22/pollen/taxa_4.1.RDS')
-# pollen_grid <- readRDS('/Volumes/lj_mac_22/pollen/grid_4.1.RDS')
-# 
-# # keep only fraxinus
-# pollen_dat <- pollen_dat[1:465, 8, 1:22]
-# pollen_dat <- as.data.frame(pollen_dat)
-# View(pollen_dat)
-# colnames(pollen_dat) <- c(1:22)
-# 
-# pollen <- pollen$pi[1:200, 1:3951, 8, 1:22]
-# pollen <- as.data.frame(matrix(pollen, prod(dim(pollen)[1:2]), dim(pollen)[3]))
-# pollen <- cbind(pollen_grid, pollen)
-# 
-# alb_proj <-  '+proj=aea +lat_1=50 +lat_2=70 +lat_0=40 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs'
-# wgs_proj = "+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"
-# 
-# # assigning a crs to the pollen coordinates
-# spdf <- SpatialPointsDataFrame(coords = pollen_grid[,c('x', 'y')], data = pollen_grid,
-#                                proj4string = CRS(alb_proj))
-# 
-# # transforming to the lat long crs
-# dat_transform <- spTransform(spdf, wgs_proj)
-# dat <- coordinates(dat_transform)
-# dat <- data.frame(dat_transform)
-# dat <- dat[,1:4]
-# colnames(dat)[3:4] <- ll
-# 
-# pollen <- merge(dat, pollen, by = c('x', 'y'))
-# pollen_1 <- data.frame('longitude' = pollen$longitude, 'latitude' = pollen$latitude, 
-#                        'abund' = pollen$V1)
-# pollen_sp <- st_as_sf(pollen_1, coords = ll, crs = getCRS('wgs84'))
-# plot(pollen_sp)
-# 
-# pollen_refuge <- pollen_1[pollen_1$abund >= 0.03,]
-# pollen_refuge <- st_as_sf(pollen_refuge, coords = ll, crs = getCRS('wgs84'))
-# plot(pollen_refuge)
-# 
-# pollen_sp <- SpatialPointsDataFrame(coords = pollen_1[,ll], data = pollen_1,
-#                                proj4string = CRS(alb_proj))
-# plot(as(pollen_sp, 'Spatial'))
-
-cols <- c('gray83', '#ccece6', '#99d8c9', '#66c2a4', '#41ae76', '#238b45', '#006d2c', '#00441b')
 world <- ne_countries(scale = "medium", returnclass = "sf")
 world <- as(world, "Spatial")
 
-for(gcm in gcmList_) {
+colors <- c('gray83', '#ccece6', '#99d8c9', '#66c2a4', '#41ae76', '#238b45', '#006d2c', '#00441b')
+
+# function for masking pollen model by land & ice # 
+getPollen <- function(times) {
+  if(!file.exists(paste0('/Volumes/lj_mac_22/pollen/predictions-', 
+                         toupper(genus), '_meanpred_iceMask.tif'))) {
+    
+    maps <- stack(paste0('/Volumes/lj_mac_22/pollen/predictions-', 
+                         toupper(genus), '_meanpred.tif'))
+    
+    ### mask by glaciers and available land ###
+    daltonAges <- read.csv('/Volumes/lj_mac_22/Dalton et al 2020 QSR Ice Layers/Dalton et al 2020 QSR Dates from Shapefile Names.csv')
+    
+    # mask by land (for visualization) #
+    for (countTime in seq_along(times)) {
+      time <- times[countTime]
+      
+      # land mask
+      land <- raster(paste0('/Volumes/lj_mac_22/MOBOT/by_genus/env_data/ccsm/tifs/', 
+                            -1 * time, 'BP/an_avg_TMAX.tif'))
+      # land <- land * 0 + 1
+      land <- projectRaster(land, maps)
+      land <- land * 0 + 1
+      maps[[countTime]] <- maps[[countTime]] * land
+      
+    }
+    
+    ### mask by ice (for calculating BV) ### 
+    mapsMasked <- maps
+    
+    for (countTime in seq_along(times)) {
+      time <- times[countTime]
+      
+      # ice mask
+      closestDalton <- which.min(abs(-1000 * daltonAges$calKiloYear - time))
+      
+      load(paste0('/Volumes/lj_mac_22/Dalton et al 2020 QSR Ice Layers/RDA Files/daltonEtAl2020_', 
+                  sprintf('%.2f', daltonAges$calKiloYear[closestDalton]), '_kiloCalYBP.rda'))
+      daltonIce <- sp::spTransform(daltonIce, getCRS('albersNA', TRUE))
+      
+      daltonIce <- rasterize(daltonIce, maps)
+      daltonIceMask <- calc(daltonIce, fun=function(x) ifelse(is.na(x), 1, NA))
+      mapsMasked[[countTime]] <- mapsMasked[[countTime]] * daltonIceMask
+      
+    }
+    
+    writeRaster(stack(maps), 
+                paste0('/Volumes/lj_mac_22/pollen/predictions-', 
+                       toupper(genus), '_meanpred_landMask.tif'), 
+                format = 'GTiff', overwrite = T)
+    
+    writeRaster(stack(mapsMasked), 
+                paste0('/Volumes/lj_mac_22/pollen/predictions-', 
+                       toupper(genus), '_meanpred_iceMask.tif'), 
+                format = 'GTiff', overwrite = T)
+  } 
+  
+  return(stack(paste0('/Volumes/lj_mac_22/pollen/predictions-', 
+                      toupper(genus), 
+                      '_meanpred_iceMask.tif')))
+}
+
+for(gcm in gcmList) {
   thresholds <- list()
-  # pdf(file = paste0('./PDF_output/', gcm, '_refugia', '.pdf'), 
-  #     width = 11, height = 8.5)
+  
   for(a in 1:length(speciesList)) {
     sp <- speciesList[a]
-    species <- gsub(tolower(sp), pattern=' ', replacement='_')
-    print(paste0("Species = ", species))
-    speciesAb <- paste0(substr(sp,1,4), toupper(substr(sp,10,10)), substr(sp,11,13))
     speciesAb_ <- sub("(.{4})(.*)", "\\1_\\2", speciesAb)
     rangeName <- paste0('littleRange_', speciesAb)
     
-    folderName <- paste0('./Models/Maxent/', speciesAb_,
-                         '_Maxent/Model Evaluation - Random K-Folds - ', gcm)
+    print(paste0("Species = ", species))
     
-    # load bg sites, records, and rangeMap
-    load('./Background Sites/Random Background Sites across Study Region.Rdata')
-    load(paste0('./Models/Maxent/all_model_outputs/', speciesAb_, '_GCM', gcm, 
-                '_PC', pc, '.rData'))
-    load(paste0('./data_and_analyses/study_region/regions/little_range_map/', 
-                rangeName, '.Rdata'))
+    folderName <- paste0('./models/predictions/', speciesAb_,
+                         '/Model Evaluation - Random K-Folds - ', gcm)
+    if(!dir.exists(folderName)) dir.create(folderName)
+    
+    # load bg sites # 
+    load('/Volumes/lj_mac_22/MOBOT/by_genus/background_sites/Random Background Sites across Study Region.Rdata')
+    
+    # load model #
+    load(paste0('./models/', speciesAb_, '_Maxent_PC', pc, '_GCM_', gcm, '.rData'))
+   
+     # load range map #
+    load(paste0('./range_maps/', rangeName, '.Rdata'))
+    
     # load(paste0('./Models/Maxent/', gcm, '_evals.Rdata'))
     
     # load k-folds for presences and background sites from model evaluations
@@ -103,25 +127,26 @@ for(gcm in gcmList_) {
       
       load(paste0(folderName, '/Model ', i, '.Rdata'))
       
-      # temp <- enmSdm::thresholdWeighted(predPres, predBg, na.rm = T)
       temp <- enmSdm::thresholdWeighted(predPres, predBg, na.rm = T)
       t <- append(t, temp['msss'])
     }
+    
     thresholds[[a]] <- t
     
   }
   
+  # view thresholds as data frame & organize columns #
   thresholds <- data.frame(t(rbindlist(thresholds, fill = T)))
   colnames(thresholds) <- speciesList
   rownames(thresholds) <- paste("K-fold", 1:5) 
   thresholds[thresholds == 0] <- NA
-  
   thresholds <- rbind(thresholds, mean = summarize_all(thresholds, mean, na.rm = T))
   
   fileName <- list.files(path = paste0('./predictions/', gcm),
                          pattern = paste0('PC', pc,'.tif'),
                          full.names = T)
   t <- c(thresholds['mean',])
+  
   for(z in 1:length(t)) {
     threshold <- t[[z]]
     f <- fileName[z]
@@ -163,12 +188,15 @@ for(gcm in gcmList_) {
       refugeCellNum = refugeCellNum,
       meanRefugeAbund = meanRefugeAbund
     )
+    
+    # pdf(file = paste0('./pdf/', gcm, '_refugia', '.pdf'), width = 11, height = 8.5)
+    
     # par(mfrow=c(1,2))
     # plot(out$simulationScale[[1]], main = paste0('Refugia\n', speciesAb_, '\n', gcm), 
-    #      col = cols, axes = F)
+    #      col = colors, axes = F)
     # map("world", add = T)
     plot(out$simulationScale[[2]], main = paste0('Refugia abundance\n', speciesAb_, '\n', gcm), 
-         col = cols, axes = F, box = F)
+         col = colors, axes = F, box = F)
     maps::map("world", add = T)
   }
   # dev.off()
@@ -260,10 +288,10 @@ for(gcm in gcmList_) {
   )
   # par(mfrow=c(1,2))
   # plot(out$simulationScale[[1]], main = paste0('Refugia\n', speciesAb_, '\n', gcm), 
-  #      col = cols, axes = F)
+  #      col = colors, axes = F)
   # map("world", add = T)
   plot(mask(out$simulationScale[[2]], pollenRast[[22]]), main = paste0('Refugia abundance\n', gcm), 
-       col = cols, axes = F, box = F)
+       col = colors, axes = F, box = F)
   # plot(raster::crop(sp::spTransform(world, CRS(projection(out$simulationScale[[2]]))), 
   #                   extent(out$simulationScale[[2]])),
   #      border = 'black', add = T)
@@ -336,16 +364,16 @@ dev.off()
 
 par(mfrow=c(2,2))
 plot(out$simulationScale[[2]], main = paste0('Refugia abundance\nPollen'),
-     col = cols, axes = F, box = F)
+     col = colors, axes = F, box = F)
 load('./workspaces/07 - Analyses, ecbilt Refugia')
 plot(mask(out$simulationScale[[2]], pollenRast[[22]]), main = 'Refugia abundance\nECBilt', 
-     col = cols, axes = F, box = F)
+     col = colors, axes = F, box = F)
 load('./workspaces/07 - Analyses, Lorenz_ccsm Refugia')
 plot(mask(out$simulationScale[[2]], pollenRast[[22]]), main = 'Refugia abundance\nCCSM', 
-     col = cols, axes = F, box = F)
+     col = colors, axes = F, box = F)
 load('./workspaces/07 - Analyses, Beyer Refugia')
 plot(mask(out$simulationScale[[2]], pollenRast[[22]]), main = 'Refugia abundance\nHadAM3H', 
-     col = cols, axes = F, box = F)
+     col = colors, axes = F, box = F)
 
 # plot results of pollen thresholds experiment
 # X = threshold, Y = Jaccard value
