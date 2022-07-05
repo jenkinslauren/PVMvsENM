@@ -1,0 +1,24 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2638
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 #!/bin/sh\
+#SBATCH -C [intel16|intel18]\
+#SBATCH -N 1 -c 1\
+#SBATCH -t 24:00:00\
+#SBATCH -o /mnt/research/TIMBER/PVMvsENM/fraxinus/QSTAT/ENM_ccsm.o\
+#SBATCH --mem 64G\
+#SBATCH -J ENM_ccsm\
+\
+newgrp - TIMBER\
+\
+module load GCC/8.3.0 OpenMPI/3.1.4 R/4.0.2\
+\
+cd /mnt/research/TIMBER/PVMvsENM/fraxinus/code\
+\
+Rscript ENM_template.R \'91ccsm\'92 'fraxinus' 'Fraxinus americana, Fraxinus caroliniana, Fraxinus cuspidata, Fraxinus greggii, Fraxinus nigra, Fraxinus pennsylvanica, Fraxinus profunda, Fraxinus quadrangulata'\
+\
+scontrol show job $\{SLURM_JOB_ID\}}
