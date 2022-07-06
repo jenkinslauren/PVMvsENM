@@ -1,29 +1,52 @@
-# Random Model Evaluation
-# Date: 12 April 2022
-# Author: Lauren Jenkins
+# random model evaluations
+# author: Lauren Jenkins
+# 12 April 2022
+# last updated: 6 July 2022
 
 rm(list = ls())
-library(dismo)
-library(sp)
-library(enmSdm)
+
 library(xlsx)
+
+library(enmSdm)
 library(geosphere)
+library(sp)
+library(dismo)
 
-args <- commandArgs(TRUE)
-gcm <- args[1]
+cluster <- F
 
-# setwd('/Volumes/lj_mac_22/MOBOT/PVMvsENM')
-setwd('/mnt/research/TIMBER/PVMvsENM')
+if (cluster == T) { # constants for running on cluster
+  args <- commandArgs(TRUE)
+  
+  gcmList <- args[1]
+  gcmList <- unlist(gcmList)
+  
+  genus <- args[2]
+  genus <- as.character(genus)
+  
+  speciesList <- args[3]
+  speciesList <- strsplit(speciesList, split = ', ')
+  speciesList <- unlist(speciesList)
+  
+  baseFolder <- '/mnt/research/TIMBER/PVMvsENM/'
+  setwd('/mnt/research/TIMBER/PVMvsENM')
+} else {
+  ## genus constants ##
+  genus <- 'fraxinus'
+  speciesList <- paste0('Fraxinus ', 
+                        c('americana', 'caroliniana','cuspidata',
+                          'greggii', 'nigra', 'pennsylvanica', 
+                          'profunda', 'quadrangulata'))
+  
+  baseFolder <- '/Volumes/lj_mac_22/MOBOT/by_genus/'
+  setwd(paste0(baseFolder, genus))
+  gcmList <- c('hadley', 'ccsm', 'ecbilt') # general circulation models for env data
+}
 
 ll <- c('longitude', 'latitude')
-
-gcmList <- c('Beyer','Lorenz_ccsm', 'ecbilt')
 pc <- 5
 predictors <- c(paste0('pca', 1:pc))
 
-# if (gcm == 'Lorenz_ccsm') speciesList <- paste('Fraxinus', c('cuspidata', 'greggii'))
-# if (gcm == 'ecbilt') speciesList <- paste('Fraxinus', c('americana', 'cuspidata',
-#                                                         'greggii', 'profunda'))
+
 speciesList <- c('Fraxinus americana','Fraxinus caroliniana', 'Fraxinus cuspidata',
                  'Fraxinus greggii', 'Fraxinus nigra', 'Fraxinus pennsylvanica',
                  'Fraxinus profunda', 'Fraxinus quadrangulata')
